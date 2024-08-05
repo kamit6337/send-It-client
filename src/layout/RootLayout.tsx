@@ -1,4 +1,5 @@
-import Header from "@/components/Header";
+import SearchBar from "@/components/SearchBar";
+import SideNavbar from "@/components/SideNavbar";
 import useLoginCheck from "@/hooks/useLoginCheck";
 import Loading from "@/lib/Loading";
 import { useEffect } from "react";
@@ -10,7 +11,7 @@ const RootLayout = () => {
 
   useEffect(() => {
     if (error) {
-      navigate(`/login?msg=${error.message}`);
+      navigate(`/signup?msg=${error.message}`);
       return;
     }
   }, [error, navigate]);
@@ -22,12 +23,17 @@ const RootLayout = () => {
   if (!isSuccess) return;
 
   return (
-    <>
-      <div className="h-16 w-full bg-primary text-primary-foreground">
-        <Header />
+    <main className="w-full flex items-start">
+      <div className="sticky top-0 py-2 md:w-80 w-max h-screen border-r border-border">
+        <SideNavbar />
       </div>
-      <Outlet />
-    </>
+      <div className="flex-1">
+        <Outlet />
+      </div>
+      <div className="w-0 sticky top-0 py-2 lg:w-80 h-screen border-l border-border">
+        <SearchBar />
+      </div>
+    </main>
   );
 };
 

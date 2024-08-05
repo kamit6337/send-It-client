@@ -1,5 +1,4 @@
 import Box from "@/components/custom/Box";
-import { Button } from "@/components/ui/button";
 import Loading from "@/lib/Loading";
 import Toastify, { ToastContainer } from "@/lib/Toastify";
 import { useState } from "react";
@@ -44,13 +43,13 @@ const VerifySignUp = () => {
           <p className="font-medium">{email ? modifyEmail(email) : ""}</p>
         </div>
         <OtpInput otp={otp} cb={(value: string[]) => setOtp(value)} />
-        <Button
+        <button
           disabled={isLoading}
           onClick={handleSubmit}
-          className="w-full mt-12"
+          className="mt-12 auth_submit_btn"
         >
           {isLoading ? <Loading /> : "Verify"}
-        </Button>
+        </button>
       </Box>
       <ToastContainer />
     </>

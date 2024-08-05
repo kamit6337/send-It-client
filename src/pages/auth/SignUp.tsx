@@ -1,61 +1,23 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import Toastify, { ToastContainer } from "@/lib/Toastify";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import Box from "@/components/custom/Box";
-import Input from "@/components/custom/Input";
-import { Button } from "@/components/ui/button";
-import Loading from "@/lib/Loading";
-import { Link, useNavigate } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import environment from "@/utils/environment";
-import { postAuthReq } from "@/utils/api/authApi";
 import { Helmet } from "react-helmet";
-
-const schema = z
-  .object({
-    name: z.string().min(1, "Name must be provided"),
-    email: z.string().min(1, "Email must me provided"),
-    password: z.string().min(8, "Password should at least 8 character"),
-    confirmPassword: z.string().min(1, "Confirm password is required"),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ["confirmPassword"], // Set the path of the error
-  });
+import { useEffect } from "react";
+import ReactIcons from "@/assets/icons";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import SignIn from "@/components/SignIn";
+import CreateAccount from "@/components/CreateAccount";
+import MyImages from "@/assets/images";
 
 const SignUp = () => {
-  const navigate = useNavigate();
   const { showErrorMessage } = Toastify();
+  const msg = useSearchParams()[0].get("msg");
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm({
-    resolver: zodResolver(schema),
-    defaultValues: {
-      name: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-    },
-  });
-
-  const onSubmit = async (values: z.infer<typeof schema>) => {
-    const { confirmPassword, ...data } = values;
-    try {
-      await postAuthReq("/signup", data);
-      localStorage.setItem("email", data.email);
-      navigate("/signup/verify");
-    } catch (error) {
-      console.log("error", error);
-      showErrorMessage({
-        message:
-          error instanceof Error ? error?.message : "Something went wrong",
-      });
+  useEffect(() => {
+    if (msg) {
+      showErrorMessage({ message: msg });
     }
-  };
+  }, []);
 
   const googleOAuth = () => {
     const url = `${environment.SERVER_URL}/auth/google`;
@@ -79,55 +41,65 @@ const SignUp = () => {
   return (
     <>
       <Helmet>
-        <title>SignUp</title>
-        <meta name="discription" content="Sign up page of this project" />
+        <title>Login</title>
+        <meta name="discription" content="Login page of this project" />
       </Helmet>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Box title="Create Your Account" gap={20}>
-          <Input
-            name="name"
-            title="Name"
-            register={register}
-            error={errors.name?.message}
-          />
-          <Input
-            name="email"
-            type="email"
-            title="Email"
-            register={register}
-            error={errors.email?.message}
-          />
-          <Input
-            name="password"
-            type="password"
-            title="Password"
-            register={register}
-            error={errors.password?.message}
-          />
-          <Input
-            name="confirmPassword"
-            type="password"
-            title="Confirm Password"
-            register={register}
-            error={errors.confirmPassword?.message}
-          />
-          <Button disabled={isSubmitting} className="w-full">
-            {isSubmitting ? <Loading /> : "Create Account"}
-          </Button>
-          <div className="flex items-center gap-3">
-            <p className="text-light_black">Have an Account?</p>
-            <button className="font-semibold uppercase tracking-wider">
-              <Link to={`/login`}>Login</Link>
-            </button>
-          </div>
-          <div className="btn_google_oauth" onClick={googleOAuth}>
-            <div className="">
-              Signup with{" "}
-              <span className="font-semibold tracking-wider">Google</span>
+      <main className="w-full md:h-screen h-full flex flex-col md:flex-row">
+        <p className="md:w-1/2 h-full flex justify-center items-center">
+          <ReactIcons.twitterLogo className="text-[250px]" />
+        </p>
+        <div className="flex-1 p-5 py-20 h-full flex flex-col items-center md:items-stretch">
+          <p className="text-7xl font-black mb-10 text-center md:text-start">
+            Happening now
+          </p>
+
+          <div className="w-96 flex-1 flex flex-col justify-between gap-10 md:gap-0">
+            <div className="flex flex-col gap-2 mt-10">
+              <p className="text-2xl font-black tracking-wider mb-5">
+                Join today.
+              </p>
+              <button
+                className="w-full bg-foreground py-[10px] rounded-full text-background flex justify-center items-center gap-2"
+                onClick={googleOAuth}
+              >
+                <div className="w-7">
+                  <img
+                    src={MyImages.googleIcon}
+                    alt="Google Icon"
+                    className="w-full"
+                  />
+                </div>
+                <p>Sign up with Google</p>
+              </button>
+              <div className="flex items-center gap-2">
+                <div className="w-full h-[2px] bg-search_bg" />
+                <p>or</p>
+                <div className="w-full h-[2px] bg-search_bg" />
+              </div>
+              <Dialog>
+                <DialogTrigger className="w-full">
+                  <button className="w-full bg-sky_blue py-3 rounded-full text-foreground text-center">
+                    Create Account
+                  </button>
+                </DialogTrigger>
+
+                <CreateAccount />
+              </Dialog>
+            </div>
+
+            <div className="space-y-2">
+              <p>Already have an account?</p>
+              <Dialog>
+                <DialogTrigger className="w-full">
+                  <button className="auth_submit_btn">Sign In</button>
+                </DialogTrigger>
+                <SignIn />
+              </Dialog>
             </div>
           </div>
-        </Box>
-      </form>
+        </div>
+      </main>
+
       <ToastContainer />
     </>
   );

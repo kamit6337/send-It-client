@@ -6,7 +6,6 @@ const Header = () => {
     <div className="section_padding h-full flex justify-between items-center">
       <p>Company</p>
       <div className="flex items-center gap-5">
-        <Profile />
         <ModeToggle />
       </div>
     </div>

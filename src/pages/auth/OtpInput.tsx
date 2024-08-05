@@ -54,7 +54,7 @@ const OtpInput = ({
               }}
               onKeyDown={(e) => handleKeyDown(e, index)}
               onChange={(e) => handleChange(e, index)}
-              className="flex h-[48px] w-[46px] items-center justify-center rounded-md border border-box_border px-4 text-lg text-black shadow-sm"
+              className="otp_input"
             />
           );
         })}

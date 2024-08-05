@@ -10,6 +10,20 @@ declare module "@/assets/icons" {
     rightDoubleAngle: IconType;
     downArrow: IconType;
     threeDot: IconType;
+    homeOutline: IconType;
+    homeSolid: IconType;
+    notificationOutline: IconType;
+    notificationSolid: IconType;
+    messageOutline: IconType;
+    messageSolid: IconType;
+    communityOutline: IconType;
+    communitySolid: IconType;
+    profileOutline: IconType;
+    profileSolid: IconType;
+    twitterLogo: IconType;
+    plus: IconType;
+    cancel: IconType;
+    media: IconType;
   };
 
   export default ReactIcons;

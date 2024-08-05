@@ -15,7 +15,7 @@ const Loading = ({
         style={{
           width,
           height,
-          borderColor: "var(--background)",
+          borderColor: "var(--foreground)",
           borderWidth: borderWidth,
           borderRightColor: "transparent",
           borderBottomColor: "transparent",

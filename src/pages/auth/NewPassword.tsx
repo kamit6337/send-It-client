@@ -4,8 +4,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Box from "@/components/custom/Box";
-import Input from "@/components/custom/Input";
-import { Button } from "@/components/ui/button";
 import Loading from "@/lib/Loading";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { postAuthReq } from "@/utils/api/authApi";
@@ -68,23 +66,37 @@ const NewPassword = () => {
       </Helmet>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Box title="Create New Password" gap={30}>
-          <Input
-            name="password"
-            type="password"
-            title="Password"
-            register={register}
-            error={errors.password?.message}
-          />
-          <Input
-            name="confirmPassword"
-            type="password"
-            title="Confirm Password"
-            register={register}
-            error={errors.confirmPassword?.message}
-          />
-          <Button disabled={isSubmitting} className="w-full">
+          <div className="w-full">
+            <div className="input_div">
+              <input
+                {...register("password")}
+                name="password"
+                type="password"
+                placeholder="Password"
+                className="input"
+              />
+            </div>
+            {errors.password && (
+              <p className="input_error">{errors.password.message}</p>
+            )}
+          </div>
+          <div className="w-full">
+            <div className="input_div">
+              <input
+                {...register("confirmPassword")}
+                name="confirmPassword"
+                type="password"
+                placeholder="Confirm Password"
+                className="input"
+              />
+            </div>
+            {errors.confirmPassword && (
+              <p className="input_error">{errors.confirmPassword.message}</p>
+            )}
+          </div>
+          <button disabled={isSubmitting} className="auth_submit_btn">
             {isSubmitting ? <Loading /> : "Submit"}
-          </Button>
+          </button>
         </Box>
       </form>
       <ToastContainer />

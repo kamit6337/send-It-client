@@ -20,11 +20,15 @@ export const theme = {
       sans: ["Poppins", "sans-serif"],
     },
     colors: {
-      border: "hsl(var(--border))",
+      sky_blue: "var(--sky-blue)",
+      div_hover: "var(--div-hover)",
+      grey: "var(--grey)",
+      search_bg: "var(--search-bg)",
+      border: "var(--border)",
       input: "hsl(var(--input))",
       ring: "hsl(var(--ring))",
-      background: "hsl(var(--background))",
-      foreground: "hsl(var(--foreground))",
+      background: "var(--background)",
+      foreground: "var(--foreground)",
       primary: {
         DEFAULT: "hsl(var(--primary))",
         foreground: "hsl(var(--primary-foreground))",

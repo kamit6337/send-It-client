@@ -6,8 +6,8 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: #000000;
+    --foreground: #e3e5e4;
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
@@ -22,7 +22,7 @@
     --accent-foreground: 222.2 47.4% 11.2%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
+    --border: #2b2b2b;
     --input: 214.3 31.8% 91.4%;
     --ring: 222.2 84% 4.9%;
     --radius: 0.5rem;
@@ -31,11 +31,15 @@
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
+    --sky-blue: #1d9bf0;
+    --search-bg: #2b2b2b;
+    --grey: #515154;
+    --div-hover: rgb(30 41 59);
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --background: #ffffff;
+    --foreground: #000000;
     --card: 222.2 84% 4.9%;
     --card-foreground: 210 40% 98%;
     --popover: 222.2 84% 4.9%;
@@ -68,6 +72,11 @@
   body {
     @apply font-sans bg-background text-foreground;
   }
+
+  input,
+  textarea {
+    @apply outline-none;
+  }
 }
 
 @layer utilities {
@@ -77,5 +86,25 @@
 
   .btn_google_oauth {
     @apply mt-10 w-full flex justify-center items-center bg-primary text-primary-foreground hover:bg-primary/90 rounded-md text-sm font-medium h-10 cursor-pointer;
+  }
+
+  .input {
+    @apply bg-search_bg text-sm w-full h-full py-3 px-5 rounded-full;
+  }
+
+  .otp_input {
+    @apply flex h-[48px] w-[46px] items-center justify-center rounded-md px-4 text-lg bg-search_bg;
+  }
+
+  .input_div {
+    @apply bg-search_bg rounded-full border border-transparent focus-within:border-sky_blue;
+  }
+
+  .input_error {
+    @apply mt-[2px] ml-4 text-xs text-red-500;
+  }
+
+  .auth_submit_btn {
+    @apply w-full py-3 rounded-full text-sky_blue border border-foreground hover:bg-primary;
   }
 }
