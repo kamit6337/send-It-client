@@ -10,11 +10,13 @@ import {
 } from "./ui/dropdown-menu";
 import Toastify, { ToastContainer } from "@/lib/Toastify";
 import { getAuthReq } from "@/utils/api/authApi";
+import useLoginCheck from "@/hooks/useLoginCheck";
 
 const SideNavbar = () => {
   const { pathname } = useLocation();
   const { showErrorMessage } = Toastify();
   const navigate = useNavigate();
+  const { data: user } = useLoginCheck();
 
   const handleLogout = async () => {
     try {
@@ -42,9 +44,16 @@ const SideNavbar = () => {
         </NavLink>
         {navlinks.map((obj, i) => {
           const { href, name, outline: OutlineIcon, solid: SolidIcon } = obj;
+
+          let to = href;
+
+          if (to === "/profile") {
+            to = user.username;
+          }
+
           return (
             <NavLink
-              to={href}
+              to={to}
               key={i}
               className={({ isActive }) =>
                 isActive ? "font-semibold" : "font-medium"

@@ -15,7 +15,7 @@ const schema = z.object({
 
 const UserName = () => {
   const navigate = useNavigate();
-  const { showErrorMessage, showSuccessMessage } = Toastify();
+  const { showErrorMessage, showSuccessMessage, showAlertMessage } = Toastify();
   const userName = useSearchParams()[0].get("username") as string;
 
   const {
@@ -45,10 +45,15 @@ const UserName = () => {
 
   const onSubmit = async (values: z.infer<typeof schema>) => {
     try {
-      const response = await patchReq("/user", values);
+      if (!values.username) {
+        showAlertMessage({ message: "Need to provide a username" });
+        return;
+      }
+
+      const response = await patchReq("/user/username", values);
       showSuccessMessage({ message: response.message });
       setTimeout(() => {
-        navigate("/login");
+        navigate("/");
       }, 2000);
     } catch (error) {
       showErrorMessage({
@@ -68,10 +73,7 @@ const UserName = () => {
     <>
       <Helmet>
         <title>User Profile</title>
-        <meta
-          name="discription"
-          content="Forgot Password page of this project"
-        />
+        <meta name="discription" content="Update username" />
       </Helmet>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Box

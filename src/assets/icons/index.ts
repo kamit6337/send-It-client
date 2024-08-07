@@ -12,11 +12,31 @@ import { GoHome, GoHomeFill } from "react-icons/go";
 import { IoMdNotificationsOutline, IoMdNotifications } from "react-icons/io";
 import { FaMessage, FaRegMessage } from "react-icons/fa6";
 import { IoPeopleOutline, IoPeopleSharp } from "react-icons/io5";
-import { BsPerson, BsFillPersonFill } from "react-icons/bs";
+import {
+  BsPerson,
+  BsFillPersonFill,
+  BsBookmark,
+  BsFillBookmarkFill,
+} from "react-icons/bs";
 import { FaXTwitter, FaPlus } from "react-icons/fa6";
-import { MdOutlineCancel, MdPermMedia } from "react-icons/md";
+import {
+  MdOutlineCancel,
+  MdPermMedia,
+  MdOutlineFileUpload,
+} from "react-icons/md";
+import { LuDot } from "react-icons/lu";
+import { IoIosHeartEmpty, IoMdHeart } from "react-icons/io";
+import { BiMessageRounded } from "react-icons/bi";
+import { RiBarChartFill } from "react-icons/ri";
 
 const ReactIcons = {
+  share: MdOutlineFileUpload,
+  bookMarkOutline: BsBookmark,
+  bookmarkSolid: BsFillBookmarkFill,
+  views: RiBarChartFill,
+  reply: BiMessageRounded,
+  heartOutline: IoIosHeartEmpty,
+  heartSolid: IoMdHeart,
   search: CiSearch,
   cart: PiShoppingCartSimpleThin,
   leftAngle: LiaAngleLeftSolid,
@@ -38,7 +58,8 @@ const ReactIcons = {
   twitterLogo: FaXTwitter,
   plus: FaPlus,
   cancel: MdOutlineCancel,
-  media : MdPermMedia
+  media: MdPermMedia,
+  dot: LuDot,
 };
 
 export default ReactIcons;

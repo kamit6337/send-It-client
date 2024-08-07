@@ -24,6 +24,14 @@ declare module "@/assets/icons" {
     plus: IconType;
     cancel: IconType;
     media: IconType;
+    dot: IconType;
+    share: IconType;
+    bookMarkOutline: IconType;
+    bookmarkSolid: IconType;
+    views: IconType;
+    reply: IconType;
+    heartOutline: IconType;
+    heartSolid: IconType;
   };
 
   export default ReactIcons;
