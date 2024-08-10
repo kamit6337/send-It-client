@@ -10,7 +10,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { z } from "zod";
 
 const schema = z.object({
-  username: z.string().min(1, "Email must me provided"),
+  username: z.string().min(1, "Username must me provided"),
 });
 
 const UserName = () => {
@@ -86,9 +86,8 @@ const UserName = () => {
             <div className="input_div">
               <input
                 {...register("username")}
-                name="email"
-                type="email"
-                placeholder="Email"
+                type="text"
+                placeholder="UserName"
                 className="input"
               />
             </div>

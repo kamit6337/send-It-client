@@ -1,6 +1,7 @@
 import FollowerLayout from "@/layout/FollowerLayout";
 import RootLayout from "@/layout/RootLayout";
 import UserLayout from "@/layout/UserLayout";
+import UserProfileLayout from "@/layout/UserProfileLayout";
 import ForgotPassword from "@/pages/auth/ForgotPassword";
 import NewPassword from "@/pages/auth/NewPassword";
 import SignUp from "@/pages/auth/SignUp";
@@ -9,10 +10,10 @@ import VerifySignUp from "@/pages/auth/VerifySignUp";
 import Followers from "@/pages/followers/Followers";
 import Following from "@/pages/followers/Following";
 import Home from "@/pages/home/Home";
-import Post from "@/pages/home/Post";
+import PostDetails from "@/pages/post/PostDetails";
 import Likes from "@/pages/user/Likes";
-import Profile from "@/pages/user/Profile";
 import Replies from "@/pages/user/Replies";
+import UserPosts from "@/pages/user/UserPosts";
 import { Route, Routes } from "react-router-dom";
 
 const Router = () => {
@@ -30,19 +31,21 @@ const Router = () => {
         <Route index element={<Home />} />
 
         {/* NOTE: USER PROFILE */}
-        <Route path="posts/:id" element={<Post />} />
+        <Route path="posts/:id" element={<PostDetails />} />
 
         {/* NOTE: USER PROFILE */}
         <Route path="/:username" element={<UserLayout />}>
-          <Route index element={<Profile />} />
-          <Route path="likes" element={<Likes />} />
-          <Route path="replies" element={<Replies />} />
-        </Route>
+          <Route path="/:username" element={<UserProfileLayout />}>
+            <Route index element={<UserPosts />} />
+            <Route path="likes" element={<Likes />} />
+            <Route path="replies" element={<Replies />} />
+          </Route>
 
-        {/* NOTE: USER FOLLWING AND FOLLOWER */}
-        <Route path="/" element={<FollowerLayout />}>
-          <Route path="following" element={<Following />} />
-          <Route path="followers" element={<Followers />} />
+          {/* NOTE: USER FOLLWING AND FOLLOWER */}
+          <Route path="/:username" element={<FollowerLayout />}>
+            <Route path="following" element={<Following />} />
+            <Route path="follower" element={<Followers />} />
+          </Route>
         </Route>
       </Route>
     </Routes>

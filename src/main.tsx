@@ -23,16 +23,14 @@ if (environment.NODE_ENV === PRODUCTION) disableReactDevTools();
 const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <QueryClientProvider client={queryClient}>
-        <Provider store={store}>
-          <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-            <App />
-          </ThemeProvider>
-        </Provider>
-        <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
-    </BrowserRouter>
-  </React.StrictMode>
+  <BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <Provider store={store}>
+        <ThemeProvider storageKey="vite-ui-theme">
+          <App />
+        </ThemeProvider>
+      </Provider>
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
+  </BrowserRouter>
 );

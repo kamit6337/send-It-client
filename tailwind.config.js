@@ -20,6 +20,12 @@ export const theme = {
       sans: ["Poppins", "sans-serif"],
     },
     colors: {
+      user_name: "var(--user-name)",
+      div_border: "var(--div-border)",
+      or_dash: "var(--or-dash)",
+      auth_input: "var(--auth-input)",
+      auth_btn_hover: "var(--auth-button-hover)",
+      sidebar_link_hover: "var(--sidebar-div-hover)",
       sky_blue: "var(--sky-blue)",
       div_hover: "var(--div-hover)",
       grey: "var(--grey)",

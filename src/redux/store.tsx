@@ -1,12 +1,15 @@
 import { configureStore } from "@reduxjs/toolkit";
+import { userReducer } from "./slice/userSlice";
 
 export const store = configureStore({
-  reducer: {},
+  reducer: {
+    user: userReducer,
+  },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false, // Disable strict mode
     }),
-  devTools: false,
+  devTools: true,
 });
 
 // Define and export RootState type

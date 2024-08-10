@@ -47,7 +47,7 @@ const NewPassword = () => {
       const response = await postAuthReq("/newPassword", data);
       showSuccessMessage({ message: response.message });
       setTimeout(() => {
-        navigate("/login");
+        navigate("/signup");
       }, 2000);
     } catch (error) {
       console.log("error", error);

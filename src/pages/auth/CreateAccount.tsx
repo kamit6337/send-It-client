@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useNavigate } from "react-router-dom";
-import { DialogContent } from "./ui/dialog";
 import Toastify from "@/lib/Toastify";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { postAuthReq } from "@/utils/api/authApi";
 import Loading from "@/lib/Loading";
+import { DialogContent } from "@/components/ui/dialog";
 
 const schema = z
   .object({
@@ -54,7 +54,7 @@ const CreateAccount = () => {
   };
 
   return (
-    <DialogContent className="sm:w-[576px] w-full">
+    <DialogContent className="sm:w-[576px] w-full p-5">
       <div className="space-y-1 text-center mb-10">
         <p className="text-3xl font-medium ">Sign Up</p>
       </div>

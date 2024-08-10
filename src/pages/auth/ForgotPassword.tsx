@@ -32,7 +32,7 @@ const ForgotPassword = () => {
       const response = await postAuthReq("/forgot", values);
       showSuccessMessage({ message: response.message });
       setTimeout(() => {
-        navigate("/login");
+        navigate("/signup");
       }, 2000);
     } catch (error) {
       showErrorMessage({

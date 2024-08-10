@@ -1,10 +1,9 @@
 import ReactIcons from "@/assets/icons";
 import useLoginCheck from "@/hooks/useLoginCheck";
+import Loading from "@/lib/Loading";
 import Toastify, { ToastContainer } from "@/lib/Toastify";
 import uploadToAWS from "@/lib/uploadToAWS";
 import { postReq } from "@/utils/api/api";
-import environment from "@/utils/environment";
-import axios from "axios";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -17,6 +16,7 @@ const CreatePost = ({ addNewPost }) => {
   const [selectedFile, setSelectedFile] = useState<SelectedFile | null>(null);
   const { data: user } = useLoginCheck();
   const { showErrorMessage, showAlertMessage } = Toastify();
+  const [isLoading, setIsLoading] = useState(false);
 
   const { register, getValues, reset } = useForm({
     defaultValues: {
@@ -50,6 +50,8 @@ const CreatePost = ({ addNewPost }) => {
         return;
       }
 
+      setIsLoading(true);
+
       let media;
 
       if (selectedFile) {
@@ -65,6 +67,8 @@ const CreatePost = ({ addNewPost }) => {
         message:
           error instanceof Error ? error?.message : "Something went wrong",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -74,7 +78,7 @@ const CreatePost = ({ addNewPost }) => {
 
   return (
     <>
-      <div className="border-b border-border w-full p-5 pb-0 flex gap-5">
+      <div className="border-b border-div_border w-full p-5 pb-0 flex gap-5">
         <div className="w-9 md:w-10">
           <img
             src={user.photo}
@@ -107,7 +111,7 @@ const CreatePost = ({ addNewPost }) => {
                 </video>
               )}
 
-              <div className="absolute z-10 top-0 left-0 w-full flex justify-between items-center px-5 ">
+              <div className="absolute z-10 top-0 left-0 w-full flex justify-between items-center px-2 ">
                 <button
                   className="bg-search_bg m-3 px-3 py-2 rounded-full"
                   onClick={openFile}
@@ -125,7 +129,7 @@ const CreatePost = ({ addNewPost }) => {
           )}
 
           <div className="sticky bottom-0 space-y-3 bg-background py-2">
-            <p className="text-sky_blue border-b border-border pb-2">
+            <p className="text-sky_blue border-b border-sky_blue pb-2">
               Everyone can reply
             </p>
             <div className="flex items-center justify-between">
@@ -140,10 +144,11 @@ const CreatePost = ({ addNewPost }) => {
                 className="hidden"
               />
               <button
-                className="py-[6px] px-4 rounded-full bg-sky_blue"
+                disabled={isLoading}
+                className="py-[6px] px-4 rounded-full bg-sky_blue text-white"
                 onClick={handleCreatePost}
               >
-                Post
+                {isLoading ? <Loading hScreen={false} small={true} /> : "Post"}
               </button>
             </div>
           </div>

@@ -12,12 +12,7 @@ import { GoHome, GoHomeFill } from "react-icons/go";
 import { IoMdNotificationsOutline, IoMdNotifications } from "react-icons/io";
 import { FaMessage, FaRegMessage } from "react-icons/fa6";
 import { IoPeopleOutline, IoPeopleSharp } from "react-icons/io5";
-import {
-  BsPerson,
-  BsFillPersonFill,
-  BsBookmark,
-  BsFillBookmarkFill,
-} from "react-icons/bs";
+import { BsPerson, BsBookmark, BsFillBookmarkFill } from "react-icons/bs";
 import { FaXTwitter, FaPlus } from "react-icons/fa6";
 import {
   MdOutlineCancel,
@@ -28,6 +23,7 @@ import { LuDot } from "react-icons/lu";
 import { IoIosHeartEmpty, IoMdHeart } from "react-icons/io";
 import { BiMessageRounded } from "react-icons/bi";
 import { RiBarChartFill } from "react-icons/ri";
+import { IoPersonSharp } from "react-icons/io5";
 
 const ReactIcons = {
   share: MdOutlineFileUpload,
@@ -54,7 +50,7 @@ const ReactIcons = {
   communityOutline: IoPeopleOutline,
   communitySolid: IoPeopleSharp,
   profileOutline: BsPerson,
-  profileSolid: BsFillPersonFill,
+  profileSolid: IoPersonSharp,
   twitterLogo: FaXTwitter,
   plus: FaPlus,
   cancel: MdOutlineCancel,

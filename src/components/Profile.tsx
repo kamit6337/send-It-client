@@ -1,19 +1,11 @@
 import ReactIcons from "@/assets/icons";
 import useLoginCheck from "@/hooks/useLoginCheck";
 
-const user = {
-  username: "@kamit6337",
-  name: "Amit Kumar",
-  email: "amitwick007@gmail.com",
-  photo:
-    "https://ui-avatars.com/api/?background=random&name=Amit&size=128&bold=true",
-};
-
 const Profile = () => {
   const { data: user } = useLoginCheck();
 
   return (
-    <div className="flex items-center p-1 gap-2 hover:bg-div_hover md:px-4 cursor-pointer rounded-full">
+    <div className="flex items-center p-1 gap-2 hover:bg-sidebar_link_hover md:px-4 cursor-pointer rounded-full">
       <div className="w-10 md:w-12">
         <img src={user.photo} alt={user.name} className="w-full rounded-full" />
       </div>

@@ -1,13 +1,12 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: #000000;
-    --foreground: #e3e5e4;
+    --background: #ffffff;
+    --foreground: #000000;
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
@@ -32,14 +31,22 @@
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --sky-blue: #1d9bf0;
-    --search-bg: #2b2b2b;
-    --grey: #727277;
     --div-hover: rgb(30 41 59);
+    --light-grey: rgba(183, 186, 189, 0.1);
+
+    --grey: #727277;
+    --search-bg: #ffffff;
+    --sidebar-div-hover: rgb(230, 232, 236);
+    --auth-button-hover: rgb(229, 229, 229);
+    --auth-input: #ffffff;
+    --or-dash: #ddd7d7;
+    --div-border: #e0dddd;
+    --user-name: #000000;
   }
 
   .dark {
-    --background: #ffffff;
-    --foreground: #000000;
+    --background: #000000;
+    --foreground: #e3e5e4;
     --card: 222.2 84% 4.9%;
     --card-foreground: 210 40% 98%;
     --popover: 222.2 84% 4.9%;
@@ -62,6 +69,14 @@
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
+
+    --search-bg: #2b2b2b;
+    --auth-button-hover: rgb(20, 20, 24);
+    --auth-input: #444141;
+    --or-dash: #2b2b2b;
+    --div-border: #2b2b2b;
+    --sidebar-div-hover: rgb(31, 32, 32);
+    --user-name: #ffffff;
   }
 }
 
@@ -74,6 +89,7 @@
   }
 
   input,
+  button,
   textarea {
     @apply outline-none;
   }
@@ -89,7 +105,7 @@
   }
 
   .input {
-    @apply bg-search_bg text-sm w-full h-full py-3 px-5 rounded-full;
+    @apply bg-inherit text-sm w-full h-full py-3 px-5 rounded-full;
   }
 
   .otp_input {
@@ -97,7 +113,7 @@
   }
 
   .input_div {
-    @apply bg-search_bg rounded-full border border-transparent focus-within:border-sky_blue;
+    @apply bg-auth_input rounded-full border border-foreground focus-within:border-sky_blue;
   }
 
   .input_error {
@@ -105,6 +121,6 @@
   }
 
   .auth_submit_btn {
-    @apply w-full py-3 rounded-full text-sky_blue border border-foreground hover:bg-primary;
+    @apply w-full py-3 rounded-full text-sky_blue border border-foreground hover:bg-auth_btn_hover;
   }
 }

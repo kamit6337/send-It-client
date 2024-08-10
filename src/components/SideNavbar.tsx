@@ -38,7 +38,7 @@ const SideNavbar = () => {
       <nav className="md:pl-10 px-2 flex flex-col h-full justify-between items-center md:items-stretch">
         <NavLink
           to={`/`}
-          className="p-3 md:px-4 md:py-2 w-max rounded-full hover:bg-slate-800"
+          className="p-3 md:px-4 md:py-2 w-max rounded-full hover:bg-sidebar_link_hover"
         >
           <ReactIcons.twitterLogo className="text-3xl" />
         </NavLink>
@@ -59,7 +59,7 @@ const SideNavbar = () => {
                 isActive ? "font-semibold" : "font-medium"
               }
             >
-              <div className="w-fit p-3   rounded-full flex items-center gap-3 hover:bg-slate-800">
+              <div className="w-fit p-3   rounded-full flex items-center gap-3 hover:bg-sidebar_link_hover">
                 <p className="text-2xl md:text-3xl ">
                   {pathname === href ? <SolidIcon /> : <OutlineIcon />}
                 </p>
@@ -68,10 +68,11 @@ const SideNavbar = () => {
             </NavLink>
           );
         })}
-        <div className="hidden bg-sky_blue rounded-full mr-10 md:flex justify-center py-3 font-semibold tracking-wider cursor-pointer hover:bg-sky-600">
+
+        <div className="hidden bg-sky_blue text-white rounded-full mr-10 md:flex justify-center py-3 font-semibold tracking-widest cursor-pointer hover:bg-sky-600">
           Post
         </div>
-        <div className="w-max md:hidden bg-sky_blue rounded-full flex justify-center p-4 font-semibold tracking-wider cursor-pointer hover:bg-sky-600">
+        <div className="w-max md:hidden bg-sky_blue  text-white rounded-full flex justify-center p-4 font-semibold tracking-wider cursor-pointer hover:bg-sky-600">
           <ReactIcons.plus />
         </div>
 
@@ -79,7 +80,7 @@ const SideNavbar = () => {
           <DropdownMenuTrigger className="w-full md:pr-4 mt-8">
             <Profile />
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-full mb-2">
+          <DropdownMenuContent className="w-full mb-2 " align="end">
             <DropdownMenuItem
               className="px-20 py-2 cursor-pointer"
               onClick={handleLogout}

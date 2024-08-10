@@ -5,9 +5,9 @@ import { Helmet } from "react-helmet";
 import { useEffect } from "react";
 import ReactIcons from "@/assets/icons";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import SignIn from "@/components/SignIn";
-import CreateAccount from "@/components/CreateAccount";
 import MyImages from "@/assets/images";
+import SignIn from "./SignIn";
+import CreateAccount from "./CreateAccount";
 
 const SignUp = () => {
   const { showErrorMessage } = Toastify();
@@ -41,8 +41,8 @@ const SignUp = () => {
   return (
     <>
       <Helmet>
-        <title>Login</title>
-        <meta name="discription" content="Login page of this project" />
+        <title>Sign Up</title>
+        <meta name="discription" content="Sign up page of this project" />
       </Helmet>
       <main className="w-full md:h-screen h-full flex flex-col md:flex-row">
         <p className="md:w-1/2 h-full flex justify-center items-center">
@@ -59,7 +59,7 @@ const SignUp = () => {
                 Join today.
               </p>
               <button
-                className="w-full bg-foreground py-[10px] rounded-full text-background flex justify-center items-center gap-2"
+                className="auth_submit_btn flex justify-center items-center gap-2"
                 onClick={googleOAuth}
               >
                 <div className="w-7">
@@ -72,13 +72,13 @@ const SignUp = () => {
                 <p>Sign up with Google</p>
               </button>
               <div className="flex items-center gap-2">
-                <div className="w-full h-[2px] bg-search_bg" />
+                <div className="w-full h-[2px] bg-or_dash" />
                 <p>or</p>
-                <div className="w-full h-[2px] bg-search_bg" />
+                <div className="w-full h-[2px] bg-or_dash" />
               </div>
               <Dialog>
                 <DialogTrigger className="w-full">
-                  <button className="w-full bg-sky_blue py-3 rounded-full text-foreground text-center">
+                  <button className="w-full bg-sky_blue py-3 rounded-full text-white text-center">
                     Create Account
                   </button>
                 </DialogTrigger>

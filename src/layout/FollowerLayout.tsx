@@ -1,11 +1,52 @@
-import { Outlet } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import { Outlet, useOutletContext, useParams } from "react-router-dom";
 
 const FollowerLayout = () => {
+  const { username } = useParams();
+  const { actualUser, user } = useOutletContext();
+  const { pathname } = useLocation();
+
+  const isItActualUser = actualUser._id === user._id;
+
+  const isFollowing = pathname === `/${username}/following`;
+  const isFollower = pathname === `/${username}/follower`;
   return (
-    <div>
-      <p>FollowerLayout</p>
+    <section>
+      <div className="sticky z-20 top-0 pt-2 bg-background flex flex-col gap-5 px-5 border-b border-div_border">
+        <div className="">
+          <p className="text-xl font-semibold tracking-wider">{user.name}</p>
+          <p className="text-grey text-sm">@{user.username}</p>
+        </div>
+        <div className="flex justify-between">
+          <Link
+            to={`/${username}/following`}
+            className={`flex-1 flex justify-center items-center hover:bg-gray-100 h-10  `}
+          >
+            <p
+              className={`${
+                isFollowing ? "border-b-4 border-sky_blue" : ""
+              } h-full w-max px-2 flex items-center `}
+            >
+              Followings
+            </p>
+          </Link>
+          <Link
+            to={`/${username}/follower`}
+            className={`flex-1 flex justify-center items-center hover:bg-gray-100 h-10 `}
+          >
+            <p
+              className={`${
+                isFollower ? "border-b-4 border-sky_blue" : ""
+              } h-full w-max px-2 flex items-center `}
+            >
+              Followers
+            </p>
+          </Link>
+        </div>
+      </div>
       <Outlet />
-    </div>
+    </section>
   );
 };
 

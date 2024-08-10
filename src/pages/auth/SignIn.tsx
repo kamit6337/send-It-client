@@ -1,15 +1,14 @@
 import Loading from "@/lib/Loading";
-import { DialogContent } from "./ui/dialog";
 import environment from "@/utils/environment";
 import { postAuthReq } from "@/utils/api/authApi";
-import { useEffect } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Toastify from "@/lib/Toastify";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import MyImages from "@/assets/images";
 import { Link } from "react-router-dom";
+import { DialogContent } from "@/components/ui/dialog";
 
 const schema = z.object({
   email: z.string().min(1, "Email must me provided"),
@@ -19,8 +18,6 @@ const schema = z.object({
 const SignIn = () => {
   const navigate = useNavigate();
   const { showErrorMessage } = Toastify();
-
-  const msg = useSearchParams()[0].get("msg");
 
   const {
     register,
@@ -33,12 +30,6 @@ const SignIn = () => {
       password: "",
     },
   });
-
-  useEffect(() => {
-    if (msg) {
-      showErrorMessage({ message: msg });
-    }
-  }, []);
 
   const onSubmit = async (values: z.infer<typeof schema>) => {
     try {
@@ -75,13 +66,13 @@ const SignIn = () => {
 
   return (
     <>
-      <DialogContent className="sm:w-[576px] w-full">
+      <DialogContent className="sm:w-[576px] w-full p-5">
         <div className="space-y-1 text-center">
           <p className="text-3xl font-medium mb-10">Login</p>
         </div>
 
         <button
-          className="w-full bg-foreground py-[10px] rounded-full text-background flex justify-center items-center gap-2"
+          className="auth_submit_btn flex justify-center items-center gap-2"
           onClick={googleOAuth}
         >
           <div className="w-7">
@@ -94,9 +85,9 @@ const SignIn = () => {
           <p>Login with Google</p>
         </button>
         <div className="flex items-center gap-2">
-          <div className="w-full h-[2px] bg-search_bg" />
+          <div className="w-full h-[2px] bg-or_dash" />
           <p>or</p>
-          <div className="w-full h-[2px] bg-search_bg" />
+          <div className="w-full h-[2px] bg-or_dash" />
         </div>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           <div>

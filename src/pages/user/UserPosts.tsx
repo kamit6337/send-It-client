@@ -1,12 +1,14 @@
 import Post from "@/components/Post";
-import useUserLikedPosts from "@/hooks/useUserLikedPosts";
+import useUserPosts from "@/hooks/useUserPosts";
 import Loading from "@/lib/Loading";
 import { useEffect, useState } from "react";
+import { useOutletContext } from "react-router-dom";
 
-const Likes = () => {
+const UserPosts = () => {
+  const { user } = useOutletContext();
+  const { isLoading, error, data } = useUserPosts(user._id);
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(1);
-  const { isLoading, error, data } = useUserLikedPosts();
 
   useEffect(() => {
     if (data) {
@@ -34,11 +36,11 @@ const Likes = () => {
   return (
     <>
       {posts.map((post) => {
-        return <Post key={post._id} post={post} defaultLike={true} />;
+        return <Post key={post._id} post={post} />;
       })}
       <div className="h-96" />
     </>
   );
 };
 
-export default Likes;
+export default UserPosts;
