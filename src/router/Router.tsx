@@ -10,7 +10,8 @@ import VerifySignUp from "@/pages/auth/VerifySignUp";
 import Followers from "@/pages/followers/Followers";
 import Following from "@/pages/followers/Following";
 import Home from "@/pages/home/Home";
-import PostDetails from "@/pages/post/PostDetails";
+import SinglePost from "@/pages/post/SinglePost";
+import SingleReply from "@/pages/reply/SingleReply";
 import Likes from "@/pages/user/Likes";
 import Replies from "@/pages/user/Replies";
 import UserPosts from "@/pages/user/UserPosts";
@@ -31,7 +32,8 @@ const Router = () => {
         <Route index element={<Home />} />
 
         {/* NOTE: USER PROFILE */}
-        <Route path="posts/:id" element={<PostDetails />} />
+        <Route path="posts/:id" element={<SinglePost />} />
+        <Route path="reply/:id" element={<SingleReply />} />
 
         {/* NOTE: USER PROFILE */}
         <Route path="/:username" element={<UserLayout />}>

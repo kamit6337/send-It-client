@@ -20,7 +20,7 @@ if (environment.GT4_MEASUREMENT_ID) {
 
 if (environment.NODE_ENV === PRODUCTION) disableReactDevTools();
 
-const queryClient = new QueryClient();
+export const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <BrowserRouter>

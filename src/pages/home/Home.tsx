@@ -4,22 +4,56 @@ import CreatePost from "./CreatePost";
 import usePosts from "@/hooks/usePosts";
 import Loading from "@/lib/Loading";
 import { useEffect, useState } from "react";
+import { isConnected, onNewPost } from "@/lib/socketIO";
+import { useOutletContext } from "react-router-dom";
+import { getReq } from "@/utils/api/api";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addFollowingPosts,
+  addSingleFollowingPost,
+  userInitialState,
+} from "@/redux/slice/userSlice";
 
 const Home = () => {
-  const { isLoading, error, data } = usePosts();
-  const [posts, setPosts] = useState([]);
+  const { followingPosts } = useSelector(userInitialState);
+  const dispatch = useDispatch();
   const [page, setPage] = useState(1);
+  const { isLoading, error, data } = usePosts();
+  const { actualUser } = useOutletContext();
+
+  useEffect(() => {
+    isConnected();
+
+    onNewPost(async (post) => {
+      const { user } = post;
+
+      if (user._id === actualUser._id) {
+        dispatch(addSingleFollowingPost(post));
+        return;
+      }
+
+      try {
+        const response = await getReq("/user/following/check", {
+          id: user._id,
+        });
+
+        if (!response?.data) return;
+        dispatch(addSingleFollowingPost(post));
+      } catch (error) {
+        console.log("error in getting post", error);
+      }
+    });
+  }, []);
 
   useEffect(() => {
     if (data) {
       if (page === 1) {
-        setPosts(data.data);
-
+        dispatch(addFollowingPosts(data.data));
         return;
       }
-      setPosts((prev) => [...data.data, ...prev]);
+      dispatch(addFollowingPosts(data.data));
     }
-  }, [data, page]);
+  }, [data, page, dispatch]);
 
   if (isLoading) {
     return (
@@ -49,10 +83,6 @@ const Home = () => {
     );
   }
 
-  const addNewPost = (post) => {
-    setPosts((prev) => [post, ...prev]);
-  };
-
   return (
     <>
       <Helmet>
@@ -60,9 +90,9 @@ const Home = () => {
         <meta name="discription" content="Home page of this project" />
       </Helmet>
       <div className="">
-        <CreatePost addNewPost={addNewPost} />
-        {posts.map((post, i) => {
-          return <Post post={post} key={i} />;
+        <CreatePost />
+        {followingPosts.map((post) => {
+          return <Post post={post} key={post._id} />;
         })}
         <div className="h-96" />
       </div>

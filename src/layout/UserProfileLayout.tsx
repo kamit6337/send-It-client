@@ -1,62 +1,54 @@
+import ReactIcons from "@/assets/icons";
 import userProfileLinks from "@/data/userProfileLinks";
+import { followersQuery } from "@/hooks/useFollowers";
+import { followingQuery } from "@/hooks/useFollowing";
+import useLoginCheck from "@/hooks/useLoginCheck";
 import useUserProfile from "@/hooks/useUserProfile";
 import Loading from "@/lib/Loading";
 import Toastify, { ToastContainer } from "@/lib/Toastify";
-import {
-  addFollowing,
-  removeFollowing,
-  userInitialState,
-} from "@/redux/slice/userSlice";
+import { queryClient } from "@/main";
+import { User } from "@/types";
 import { deleteReq, postReq } from "@/utils/api/api";
 import { useEffect, useMemo, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { NavLink, Outlet } from "react-router-dom";
-import { useOutletContext, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 const UserProfileLayout = () => {
-  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { username } = useParams();
   const { data } = useUserProfile(username);
-  const { actualUser } = useOutletContext();
   const [isLoading, setIsLoading] = useState(false);
   const { showErrorMessage } = Toastify();
-  const { removeFollowings, addFollowings } = useSelector(userInitialState);
-  const [currentUser, setCurrentUser] = useState(data.data);
+  const { data: actualUser } = useLoginCheck();
+  const [currentUser, setCurrentUser] = useState<User>(data.data);
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    setCurrentUser(data.data);
+  }, [username, data]);
 
   const userlinks = useMemo(() => {
     return userProfileLinks(username, actualUser);
   }, [username, actualUser]);
 
-  useEffect(() => {
-    if (currentUser.isFollowed) {
-      dispatch(addFollowing(currentUser._id));
-    } else {
-      dispatch(removeFollowing(currentUser._id));
+  const info = useMemo(() => {
+    if (pathname === `/${currentUser.username}`) {
+      return `${currentUser.postCount} posts`;
     }
-  }, [currentUser.isFollowed, dispatch, currentUser._id]);
-
-  const isFollowed = useMemo(() => {
-    const remove = removeFollowings.find((id) => id === currentUser._id);
-    if (remove) {
-      return false;
+    if (pathname === `/${currentUser.username}/likes`) {
+      return `${currentUser.likeCount} likes`;
     }
-
-    const add = addFollowings.find((id) => id === currentUser._id);
-    if (add) {
-      return true;
-    }
-
-    return false;
-  }, [addFollowings, removeFollowings, currentUser._id]);
+    return "";
+  }, [pathname, currentUser]);
 
   const handleFollow = async () => {
     try {
       setIsLoading(true);
       await postReq("/user/following", { id: currentUser._id });
-      dispatch(addFollowing(currentUser._id));
       setCurrentUser((prev) => {
         prev.followersCount += 1;
+        prev.isFollowed = true;
         return prev;
       });
     } catch (error) {
@@ -73,9 +65,9 @@ const UserProfileLayout = () => {
     try {
       setIsLoading(true);
       await deleteReq("/user/following", { id: currentUser._id });
-      dispatch(removeFollowing(currentUser._id));
       setCurrentUser((prev) => {
         prev.followersCount -= 1;
+        prev.isFollowed = false;
         return prev;
       });
     } catch (error) {
@@ -93,11 +85,17 @@ const UserProfileLayout = () => {
   return (
     <>
       <section className="">
-        <div className="sticky z-20 top-0 py-2 bg-background flex flex-col px-5 border-b border-div_border">
-          <p className="text-xl font-semibold tracking-wider">
-            {currentUser.name}
-          </p>
-          <p className="text-grey text-sm">{currentUser.postCount} posts</p>
+        <div className="sticky z-20 top-0 py-2 bg-background flex items-center gap-5 px-5 border-b border-div_border">
+          <button className="left_arrow" onClick={() => navigate(-1)}>
+            <ReactIcons.leftArrow className="text-xl" />
+          </button>
+
+          <div>
+            <p className="text-xl font-semibold tracking-wider">
+              {currentUser.name}
+            </p>
+            <p className="text-grey text-sm">{info}</p>
+          </div>
         </div>
 
         <div className="w-full border-b border-border">
@@ -115,10 +113,10 @@ const UserProfileLayout = () => {
               <button className="w-max my-5 px-5 py-2 border border-border rounded-full self-end">
                 Edit
               </button>
-            ) : isFollowed ? (
+            ) : currentUser.isFollowed ? (
               <button
                 disabled={isLoading}
-                className="w-max my-5 px-5 py-2 border border-border rounded-full self-end"
+                className="w-max my-5 self-end following"
                 onClick={handleCancelFollow}
               >
                 {isLoading ? <Loading /> : "Following"}
@@ -126,7 +124,7 @@ const UserProfileLayout = () => {
             ) : (
               <button
                 disabled={isLoading}
-                className="w-max my-5 px-5 py-2 border border-border rounded-full self-end bg-foreground text-background"
+                className="w-max my-5 self-end follow"
                 onClick={handleFollow}
               >
                 {isLoading ? <Loading /> : "Follow"}
@@ -142,6 +140,11 @@ const UserProfileLayout = () => {
             <div className="flex items-center gap-4 text-sm my-5">
               <Link
                 to={`/${username}/following`}
+                onMouseEnter={async () =>
+                  await queryClient.prefetchQuery(
+                    followingQuery(currentUser._id)
+                  )
+                }
                 className="hover:border-b border-div_border h-5"
               >
                 {currentUser.followingCount}{" "}
@@ -149,6 +152,11 @@ const UserProfileLayout = () => {
               </Link>
               <Link
                 to={`/${username}/follower`}
+                onMouseEnter={async () =>
+                  await queryClient.prefetchQuery(
+                    followersQuery(currentUser._id)
+                  )
+                }
                 className="hover:border-b border-div_border h-5"
               >
                 {currentUser.followersCount}{" "}

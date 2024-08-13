@@ -1,24 +1,22 @@
-import ReactIcons from "@/assets/icons";
 import EditAndCancel from "@/components/EditAndCancel";
 import MediaAndSubmit from "@/components/MediaAndSubmit";
-import useLoginCheck from "@/hooks/useLoginCheck";
-import Loading from "@/lib/Loading";
 import Toastify, { ToastContainer } from "@/lib/Toastify";
 import uploadToAWS from "@/lib/uploadToAWS";
+import { type User } from "@/types";
 import { postReq } from "@/utils/api/api";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
-type SelectedFile = {
-  type: string;
+type Props = {
+  postId: string;
+  actualUser: User;
 };
 
-const CreatePost = () => {
-  const fileRef = useRef<HTMLInputElement | undefined>(null);
-  const [selectedFile, setSelectedFile] = useState<SelectedFile | null>(null);
-  const { data: user } = useLoginCheck();
-  const { showErrorMessage, showAlertMessage } = Toastify();
+const CreateReply = ({ actualUser, postId }: Props) => {
+  const [isFocus, setIsFocus] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const { showErrorMessage, showAlertMessage } = Toastify();
 
   const { register, getValues, reset } = useForm({
     defaultValues: {
@@ -30,24 +28,20 @@ const CreatePost = () => {
     setSelectedFile(file);
   };
 
-  const handleCreatePost = async () => {
+  const handleCreateReply = async () => {
     try {
       const message = getValues().message;
       if (!message && !selectedFile) {
         showAlertMessage({ message: "Please write a message or add media" });
         return;
       }
-
       setIsLoading(true);
 
       let media;
-
       if (selectedFile) {
         media = await uploadToAWS(selectedFile);
       }
-
-      await postReq("/post", { message, media });
-
+      await postReq("/reply", { postId, message, media });
       reset();
       setSelectedFile(null);
     } catch (error) {
@@ -62,22 +56,24 @@ const CreatePost = () => {
 
   return (
     <>
-      <div className="border-b border-div_border w-full p-5 pb-0 flex gap-5">
-        <div className="w-9 md:w-10">
+      <div className="px-5 py-3 border-b border-div_border flex gap-2">
+        <div className="w-10">
           <img
-            src={user.photo}
-            alt={user.name}
-            className="w-full rounded-full"
+            src={actualUser.photo}
+            alt={actualUser.name}
+            className="w-full object-cover rounded-full"
           />
         </div>
-        <div className="w-full space-y-3">
-          <textarea
-            {...register("message")}
-            placeholder="What is happening?!"
-            className="bg-inherit w-full resize-none overflow-hidden"
-            maxLength={200}
-            rows={4}
-          />
+        <div className="flex-1">
+          <div className="mt-2">
+            <textarea
+              {...register("message")}
+              placeholder="Post Your Reply"
+              className="text-lg w-full resize-none"
+              onFocus={() => setIsFocus(true)}
+              rows={isFocus ? 4 : 1}
+            />
+          </div>
           {selectedFile && (
             <div className="w-full relative rounded-xl">
               {selectedFile.type.startsWith("image/") ? (
@@ -98,23 +94,22 @@ const CreatePost = () => {
               <EditAndCancel selectedFile={selectFile} />
             </div>
           )}
-
-          <div className="sticky bottom-0 space-y-3 bg-background py-2">
-            <p className="text-sky_blue border-b border-sky_blue pb-2">
-              Everyone can reply
-            </p>
-            <MediaAndSubmit
-              isLoading={isLoading}
-              handleCreate={handleCreatePost}
-              selectedFile={selectFile}
-              title={"Post"}
-            />
-          </div>
+          {isFocus && (
+            <div className="py-4">
+              <MediaAndSubmit
+                title={"Reply"}
+                isLoading={isLoading}
+                selectedFile={selectFile}
+                handleCreate={handleCreateReply}
+              />
+            </div>
+          )}
         </div>
+        {!isFocus && <button className="post_btn self-start">Reply</button>}
       </div>
       <ToastContainer />
     </>
   );
 };
 
-export default CreatePost;
+export default CreateReply;

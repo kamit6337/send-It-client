@@ -1,12 +1,16 @@
 import { getReq } from "@/utils/api/api";
 import { useQuery } from "@tanstack/react-query";
 
-const useUserLikedPosts = (page = 1) => {
-  const query = useQuery({
+const userLikePostsQuery = (page = 1) => {
+  return {
     queryKey: ["user liked posts", page],
     queryFn: () => getReq("/post/like", { page }),
-    staleTime: Infinity,
-  });
+    staleTime: 10 * 1000,
+  };
+};
+
+const useUserLikedPosts = (page = 1) => {
+  const query = useQuery(userLikePostsQuery(page));
 
   return query;
 };

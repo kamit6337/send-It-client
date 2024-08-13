@@ -2,9 +2,10 @@ import Post from "@/components/Post";
 import useUserPosts from "@/hooks/useUserPosts";
 import Loading from "@/lib/Loading";
 import { useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useOutletContext, useParams } from "react-router-dom";
 
 const UserPosts = () => {
+  const { username } = useParams();
   const { user } = useOutletContext();
   const { isLoading, error, data } = useUserPosts(user._id);
   const [posts, setPosts] = useState([]);
@@ -20,6 +21,13 @@ const UserPosts = () => {
       setPosts((prev) => [...data.data, ...prev]);
     }
   }, [data, page]);
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "instant",
+    });
+  }, [username]);
 
   if (isLoading) {
     return <Loading hScreen={false} small={false} />;

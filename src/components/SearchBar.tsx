@@ -23,7 +23,6 @@ const SearchBar = () => {
     debounce(async (value) => {
       try {
         const response = await getReq("/user/search", { search: value });
-        console.log("response", response);
         setSearchedUsers(response.data);
       } catch (error) {
         showErrorMessage({
@@ -92,7 +91,7 @@ const SearchBar = () => {
                   <Link
                     to={`/${username}`}
                     key={_id}
-                    className="p-3 flex gap-3 w-full hover:bg-sidebar_link_hover"
+                    className="p-3 flex gap-3 w-full hover:bg-sidebar_link_hover border-b border-div_border"
                     onClick={handleCancel}
                   >
                     <div className="w-10">
@@ -104,7 +103,7 @@ const SearchBar = () => {
                     </div>
                     <div>
                       <p>{name}</p>
-                      <p>@{username}</p>
+                      <p className="username">@{username}</p>
                     </div>
                   </Link>
                 );

@@ -24,8 +24,10 @@ import { IoIosHeartEmpty, IoMdHeart } from "react-icons/io";
 import { BiMessageRounded } from "react-icons/bi";
 import { RiBarChartFill } from "react-icons/ri";
 import { IoPersonSharp } from "react-icons/io5";
+import { IoArrowBack } from "react-icons/io5";
 
 const ReactIcons = {
+  leftArrow : IoArrowBack,
   share: MdOutlineFileUpload,
   bookMarkOutline: BsBookmark,
   bookmarkSolid: BsFillBookmarkFill,

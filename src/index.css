@@ -123,4 +123,28 @@
   .auth_submit_btn {
     @apply w-full py-3 rounded-full text-sky_blue border border-foreground hover:bg-auth_btn_hover;
   }
+
+  .username {
+    @apply text-sm text-grey;
+  }
+
+  .following {
+    @apply px-5 py-2 border border-border rounded-full hover:border-red-500 hover:text-red-500;
+  }
+
+  .following_actual_user {
+    @apply px-5 py-2 border border-border rounded-full cursor-default;
+  }
+
+  .follow {
+    @apply px-5 py-2 border border-border rounded-full bg-foreground text-background hover:bg-slate-800;
+  }
+
+  .left_arrow {
+    @apply p-3 rounded-full hover:bg-sidebar_link_hover;
+  }
+
+  .post_btn {
+    @apply px-3 py-2 rounded-full bg-sky_blue text-white;
+  }
 }
