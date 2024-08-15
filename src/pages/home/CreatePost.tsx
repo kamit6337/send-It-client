@@ -1,21 +1,18 @@
-import ReactIcons from "@/assets/icons";
 import EditAndCancel from "@/components/EditAndCancel";
 import MediaAndSubmit from "@/components/MediaAndSubmit";
 import useLoginCheck from "@/hooks/useLoginCheck";
-import Loading from "@/lib/Loading";
 import Toastify, { ToastContainer } from "@/lib/Toastify";
 import uploadToAWS from "@/lib/uploadToAWS";
+import uploadVideoAndThumbnail from "@/lib/uploadVideoAndThumbnail";
 import { postReq } from "@/utils/api/api";
-import { useRef, useState } from "react";
+import findVideoDuration from "@/utils/findVideoDuration";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
-type SelectedFile = {
-  type: string;
-};
+type SelectedFile = File | null; // Define type for selectedFile
 
 const CreatePost = () => {
-  const fileRef = useRef<HTMLInputElement | undefined>(null);
-  const [selectedFile, setSelectedFile] = useState<SelectedFile | null>(null);
+  const [selectedFile, setSelectedFile] = useState<SelectedFile>(null);
   const { data: user } = useLoginCheck();
   const { showErrorMessage, showAlertMessage } = Toastify();
   const [isLoading, setIsLoading] = useState(false);
@@ -26,7 +23,7 @@ const CreatePost = () => {
     },
   });
 
-  const selectFile = (file) => {
+  const selectFile = (file: SelectedFile) => {
     setSelectedFile(file);
   };
 
@@ -37,16 +34,26 @@ const CreatePost = () => {
         showAlertMessage({ message: "Please write a message or add media" });
         return;
       }
-
       setIsLoading(true);
 
       let media;
+      let duration;
+      let thumbnail;
 
       if (selectedFile) {
-        media = await uploadToAWS(selectedFile);
+        if (selectedFile.type.startsWith("video/")) {
+          duration = await findVideoDuration(selectedFile);
+          const { mediaUrl, thumbnailUrl } = await uploadVideoAndThumbnail(
+            selectedFile
+          );
+          media = mediaUrl;
+          thumbnail = thumbnailUrl;
+        } else {
+          media = await uploadToAWS(selectedFile);
+        }
       }
 
-      await postReq("/post", { message, media });
+      await postReq("/post", { message, media, duration, thumbnail });
 
       reset();
       setSelectedFile(null);
@@ -87,7 +94,11 @@ const CreatePost = () => {
                   alt="Selected Image"
                 />
               ) : (
-                <video className="w-full rounded-xl" controls>
+                <video
+                  key={selectedFile.name} // Use file name as the key to force re-render
+                  className="w-full rounded-xl"
+                  controls
+                >
                   <source
                     src={URL.createObjectURL(selectedFile)}
                     type={selectedFile.type}

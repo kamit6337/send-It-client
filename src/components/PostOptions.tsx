@@ -1,17 +1,12 @@
-import {
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-} from "./ui/dropdown-menu";
+import { DropdownMenuContent, DropdownMenuItem } from "./ui/dropdown-menu";
 
-const PostOptions = () => {
+const PostOptions = ({ handleDelete }: { handleDelete: () => void }) => {
   return (
-    <DropdownMenuContent align="end">
-      <DropdownMenuLabel>My Account</DropdownMenuLabel>
-      <DropdownMenuSeparator />
-      <DropdownMenuItem>Edit</DropdownMenuItem>
-      <DropdownMenuItem>Delete</DropdownMenuItem>
+    <DropdownMenuContent align="end" className="prevent-navigation w-60">
+      <DropdownMenuItem className="flex justify-center">Edit</DropdownMenuItem>
+      <DropdownMenuItem onClick={handleDelete} className="flex justify-center">
+        Delete
+      </DropdownMenuItem>
     </DropdownMenuContent>
   );
 };

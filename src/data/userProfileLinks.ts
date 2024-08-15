@@ -1,4 +1,6 @@
-const userProfileLinks = (username: string | undefined, actualUser) => {
+import { User } from "@/types";
+
+const userProfileLinks = (username: string | undefined, actualUser: User) => {
   if (username !== actualUser.username) {
     const userLinks = [
       {
@@ -37,7 +39,7 @@ const userProfileLinks = (username: string | undefined, actualUser) => {
     },
     {
       name: "Saved",
-      href: `/${username}/saved`,
+      href: `/${username}/save`,
     },
   ];
 

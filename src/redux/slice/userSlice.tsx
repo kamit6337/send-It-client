@@ -1,13 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import generateUniqueIDArray from "@/utils/javascript/generateUniqueIDArray";
+import { Post } from "@/types";
 
-const initialState = {
+type InitialState = {
+  followingPosts: Post[];
+};
+
+const initialState: InitialState = {
   followingPosts: [],
-  addLikes: [],
-  removeLikes: [],
-  addFollowings: [],
-  removeFollowings: [],
 };
 
 const userSlice = createSlice({
@@ -28,39 +29,10 @@ const userSlice = createSlice({
       ]);
       return state;
     },
-
-    addLike: (state, { payload }) => {
-      const postId = payload;
-
-      state.addLikes = [...new Set([postId, ...state.addLikes])];
-      state.removeLikes = state.removeLikes.filter((id) => id !== postId);
-      return state;
-    },
-    removeLike: (state, { payload }) => {
-      const postId = payload.data;
-
-      state.removeLikes = [...new Set([postId, ...state.removeLikes])];
-      state.addLikes = state.addLikes.filter((id) => id !== postId);
-      return state;
-    },
-    addFollowing: (state, { payload }) => {
-      const userId = payload;
-
-      state.addFollowings = [...new Set([userId, ...state.addFollowings])];
-      state.removeFollowings = state.removeFollowings.filter(
-        (id) => id !== userId
+    removeSingleFollowingPost: (state, { payload }) => {
+      state.followingPosts = state.followingPosts.filter(
+        (obj) => obj._id !== payload
       );
-
-      return state;
-    },
-    removeFollowing: (state, { payload }) => {
-      const userId = payload;
-
-      state.removeFollowings = [
-        ...new Set([userId, ...state.removeFollowings]),
-      ];
-      state.addFollowings = state.addFollowings.filter((id) => id !== userId);
-
       return state;
     },
   },
@@ -69,10 +41,7 @@ const userSlice = createSlice({
 export const {
   addFollowingPosts,
   addSingleFollowingPost,
-  addLike,
-  removeLike,
-  addFollowing,
-  removeFollowing,
+  removeSingleFollowingPost,
 } = userSlice.actions;
 
 export const userReducer = userSlice.reducer;

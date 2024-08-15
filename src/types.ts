@@ -11,8 +11,12 @@ export type Post = {
   replyCount: number;
   likeCount: number;
   viewCount: number;
+  saveCount: number;
   createdAt: string;
   updatedAt: string;
+  isLiked: boolean;
+  isSaved: boolean;
+  isFollow: boolean;
 };
 
 export type User = {
@@ -39,4 +43,22 @@ export type Reply = {
   post: string;
   user: User;
   replyPost: Post;
+};
+
+export type ReplyFull = {
+  _id: string;
+  post: Post;
+  replyPost: Post;
+};
+
+export type Like = {
+  _id: string;
+  post: string;
+  user: string;
+};
+
+export type Save = {
+  _id: string;
+  post: string;
+  user: string;
 };

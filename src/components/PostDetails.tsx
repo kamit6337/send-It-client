@@ -8,19 +8,26 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Loading from "@/lib/Loading";
 import Toastify, { ToastContainer } from "@/lib/Toastify";
+import { Post, User } from "@/types";
 import { deleteReq, postReq } from "@/utils/api/api";
 import actualDateAndTime from "@/utils/javascript/actualDateAndTime";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-const PostDetails = ({ post, actualUser }) => {
+type Props = {
+  post: Post;
+  actualUser: User;
+  userReply?: boolean;
+};
+
+const PostDetails = ({ post, actualUser, userReply = false }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [currentUser, setCurrentUser] = useState(post);
   const { showErrorMessage } = Toastify();
+  const [isFollow, setIsFollow] = useState(post.isFollow);
 
   useEffect(() => {
     if (post) {
-      setCurrentUser(post);
+      setIsFollow(post.isFollow);
     }
   }, [post]);
 
@@ -32,8 +39,9 @@ const PostDetails = ({ post, actualUser }) => {
     createdAt,
     likeCount,
     isLiked,
-    isFollow,
-  } = currentUser;
+    isSaved,
+    saveCount = 0,
+  } = post;
 
   const isItActualUser = username === actualUser.username;
 
@@ -41,11 +49,7 @@ const PostDetails = ({ post, actualUser }) => {
     try {
       setIsLoading(true);
       await postReq("/user/following", { id: _id });
-      setCurrentUser((prev) => {
-        prev.followersCount += 1;
-        prev.isFollowed = true;
-        return prev;
-      });
+      setIsFollow(true);
     } catch (error) {
       showErrorMessage({
         message:
@@ -60,11 +64,7 @@ const PostDetails = ({ post, actualUser }) => {
     try {
       setIsLoading(true);
       await deleteReq("/user/following", { id: _id });
-      setCurrentUser((prev) => {
-        prev.followersCount -= 1;
-        prev.isFollowed = false;
-        return prev;
-      });
+      setIsFollow(false);
     } catch (error) {
       showErrorMessage({
         message:
@@ -77,7 +77,7 @@ const PostDetails = ({ post, actualUser }) => {
 
   return (
     <>
-      <div className="flex justify-between items-center py-2">
+      <div className="flex justify-between items-center py-2 px-5">
         <div className="flex gap-3">
           <div className="w-9 md:w-10 prevent-navigation">
             <Link to={`/${username}`}>
@@ -124,12 +124,26 @@ const PostDetails = ({ post, actualUser }) => {
           </button>
         )}
       </div>
-      <ShowPostMessage message={message} media={media} />
-      <div className="py-2 border-b border-div_border ">
+
+      <div className="px-5">
+        <ShowPostMessage message={message} media={media} />
+      </div>
+
+      <div
+        className={`${
+          userReply ? "" : "border-b border-div_border"
+        }  py-2 px-5`}
+      >
         <p className="text-grey">{actualDateAndTime(createdAt)}</p>
       </div>
-      <div className="py-1 border-b border-div_border">
-        <LikeAndComment postId={postId} like={isLiked} likeCount={likeCount} />
+      <div className="py-1 border-b border-div_border px-5">
+        <LikeAndComment
+          postId={postId}
+          like={isLiked}
+          likeCount={likeCount}
+          save={isSaved}
+          saveCount={saveCount}
+        />
       </div>
       <ToastContainer />
     </>

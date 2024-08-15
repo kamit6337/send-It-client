@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 const userLikePostsQuery = (page = 1) => {
   return {
     queryKey: ["user liked posts", page],
-    queryFn: () => getReq("/post/like", { page }),
+    queryFn: () => getReq("/like/post", { page }),
     staleTime: 10 * 1000,
   };
 };

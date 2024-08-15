@@ -3,7 +3,7 @@ import Loading from "@/lib/Loading";
 import { useNavigate, useParams } from "react-router-dom";
 import PostReplies from "./PostReplies";
 import ReactIcons from "@/assets/icons";
-import PostDetails from "./PostDetails";
+import PostDetails from "../../components/PostDetails";
 import useLoginCheck from "@/hooks/useLoginCheck";
 
 const SinglePost = () => {
@@ -40,7 +40,7 @@ const SinglePost = () => {
         <p className="text-xl font-semibold tracking-wider">Post</p>
       </div>
 
-      <div className="px-5 py-5">
+      <div className="pt-3">
         <PostDetails post={post} actualUser={actualUser} />
       </div>
       <PostReplies id={id} actualUser={actualUser} />

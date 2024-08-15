@@ -16,22 +16,55 @@ export const onNewPost = (callback) => {
   socket.on("newPost", callback);
 };
 
-// Post socket handlers
+export const offNewPost = (callback) => {
+  socket.off("newPost", callback);
+};
+
+export const onDeletePost = (callback) => {
+  socket.on("deletePost", callback);
+};
+
+export const offDeletePost = (callback) => {
+  socket.off("deletePost", callback);
+};
+
+// Reply socket handlers
 export const onNewReply = (callback) => {
   socket.on("newReply", callback);
 };
 
-export const emitCreatePost = (post) => {
-  socket.emit("createPost", post);
-};
-
-// Like socket handlers
+//Like socket handlers
 export const onNewLike = (callback) => {
   socket.on("newLike", callback);
 };
 
-export const emitLikePost = (likeData) => {
-  socket.emit("likePost", likeData);
+export const offNewLike = (callback) => {
+  socket.off("newLike", callback);
+};
+
+export const onRemoveLike = (callback) => {
+  socket.on("removeLike", callback);
+};
+
+export const offRemoveLike = (callback) => {
+  socket.off("removeLike", callback);
+};
+
+//Save socket handlers
+export const onNewSave = (callback) => {
+  socket.on("newSave", callback);
+};
+
+export const offNewSave = (callback) => {
+  socket.off("newSave", callback);
+};
+
+export const onRemoveSave = (callback) => {
+  socket.on("removeSave", callback);
+};
+
+export const offRemoveSave = (callback) => {
+  socket.off("removeSave", callback);
 };
 
 // Comment socket handlers

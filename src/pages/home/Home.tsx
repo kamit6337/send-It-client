@@ -4,15 +4,23 @@ import CreatePost from "./CreatePost";
 import usePosts from "@/hooks/usePosts";
 import Loading from "@/lib/Loading";
 import { useEffect, useState } from "react";
-import { isConnected, onNewPost } from "@/lib/socketIO";
+import {
+  isConnected,
+  offDeletePost,
+  offNewPost,
+  onDeletePost,
+  onNewPost,
+} from "@/lib/socketIO";
 import { useOutletContext } from "react-router-dom";
 import { getReq } from "@/utils/api/api";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addFollowingPosts,
   addSingleFollowingPost,
+  removeSingleFollowingPost,
   userInitialState,
 } from "@/redux/slice/userSlice";
+import { type Post as PostType } from "@/types";
 
 const Home = () => {
   const { followingPosts } = useSelector(userInitialState);
@@ -24,7 +32,7 @@ const Home = () => {
   useEffect(() => {
     isConnected();
 
-    onNewPost(async (post) => {
+    const handlePost = async (post: PostType) => {
       const { user } = post;
 
       if (user._id === actualUser._id) {
@@ -42,7 +50,23 @@ const Home = () => {
       } catch (error) {
         console.log("error in getting post", error);
       }
-    });
+    };
+
+    onNewPost(handlePost);
+
+    return () => {
+      offNewPost(handlePost);
+    };
+  }, [dispatch, actualUser._id]);
+
+  useEffect(() => {
+    const handleDeletePost = (id: string) => {
+      dispatch(removeSingleFollowingPost(id));
+    };
+    onDeletePost(handleDeletePost);
+    return () => {
+      offDeletePost(handleDeletePost);
+    };
   }, []);
 
   useEffect(() => {

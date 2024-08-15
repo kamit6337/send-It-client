@@ -1,11 +1,10 @@
 import ReactIcons from "@/assets/icons";
-import Post from "@/components/Post";
 import useReplyPost from "@/hooks/useReplyPost";
 import Loading from "@/lib/Loading";
 import { useNavigate, useParams } from "react-router-dom";
-import PostDetails from "../post/PostDetails";
 import useLoginCheck from "@/hooks/useLoginCheck";
 import PostReplies from "../post/PostReplies";
+import ReplyPost from "@/components/ReplyPost";
 
 const SingleReply = () => {
   const { id } = useParams();
@@ -40,10 +39,7 @@ const SingleReply = () => {
         <p className="text-xl font-semibold tracking-wider">Post</p>
       </div>
 
-      <Post post={post} showLine={true} />
-      <div className="px-5">
-        <PostDetails post={replyPost} actualUser={actualUser} />
-      </div>
+      <ReplyPost actualUser={actualUser} post={post} replyPost={replyPost} />
       <PostReplies actualUser={actualUser} id={id} />
       <div className="h-96" />
     </div>

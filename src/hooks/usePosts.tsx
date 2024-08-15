@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 export const userFollowingPosts = (page = 1) => {
   return {
     queryKey: ["posts", page],
-    queryFn: () => getReq("/post/following", { page }),
+    queryFn: () => getReq("/following/post", { page }),
     staleTime: false,
   };
 };

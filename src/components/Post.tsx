@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import formatRelativeDate from "@/utils/javascript/formatRelativeDate";
 import Toastify, { ToastContainer } from "@/lib/Toastify";
-import { getReq } from "@/utils/api/api";
+import { deleteReq, getReq } from "@/utils/api/api";
 import {
   Link,
   useLocation,
@@ -21,20 +21,23 @@ import ShowPostMessage from "./ShowPostMessage";
 
 const Post = ({
   post,
-  defaultLike = false,
   isReply = false,
   showLine = false,
+  defaultLike = false,
+  defaultSave = false,
 }: {
   post: Post;
-  defaultLike?: boolean;
   isReply?: boolean;
   showLine?: boolean;
+  defaultLike?: boolean;
+  defaultSave?: boolean;
 }) => {
   const navigate = useNavigate();
   const { actualUser }: { actualUser: User } = useOutletContext();
   const { showErrorMessage } = Toastify();
   const { pathname } = useLocation();
   const [isLiked, setIsLiked] = useState(defaultLike);
+  const [isSaved, setIsSaved] = useState(defaultSave);
 
   const { ref, inView } = useInView({
     threshold: 0.1, // Trigger when 50% of the element is in view
@@ -48,21 +51,21 @@ const Post = ({
     message,
     media,
     likeCount,
+    saveCount = 0,
     createdAt,
   } = post;
 
   useEffect(() => {
-    if (inView && !defaultLike && !isLiked) {
+    if (inView && !isLiked) {
       (async () => {
         try {
-          const response = await getReq("/user/like", { id: _id });
+          const like = await getReq("/like", { id: _id });
 
-          if (!response?.data) {
+          if (!like) {
             setIsLiked(false);
-            return;
+          } else {
+            setIsLiked(true);
           }
-
-          setIsLiked(true);
         } catch (error) {
           showErrorMessage({
             message:
@@ -71,7 +74,28 @@ const Post = ({
         }
       })();
     }
-  }, [inView, showErrorMessage, _id, defaultLike]);
+  }, [inView, showErrorMessage, _id, isLiked]);
+
+  useEffect(() => {
+    if (inView && !isSaved) {
+      (async () => {
+        try {
+          const save = await getReq("/save", { id: _id });
+
+          if (!save) {
+            setIsSaved(false);
+          } else {
+            setIsSaved(true);
+          }
+        } catch (error) {
+          showErrorMessage({
+            message:
+              error instanceof Error ? error.message : "Something went wrong",
+          });
+        }
+      })();
+    }
+  }, [inView, showErrorMessage, _id, isSaved]);
 
   const handleScroll = () => {
     if (pathname.startsWith(`/${username}`)) {
@@ -82,15 +106,23 @@ const Post = ({
     }
   };
 
+  const handleDelete = async () => {
+    try {
+      await deleteReq("/post", { id: _id });
+    } catch (error) {
+      showErrorMessage({
+        message: error instanceof Error ? error.message : "",
+      });
+    }
+  };
+
   const handleNavigate = (target: EventTarget) => {
     if (!target.closest(".prevent-navigation")) {
       if (!isReply) {
         navigate(`/posts/${_id}`);
         return;
       }
-
       navigate(`/reply/${_id}`);
-
       return;
     }
   };
@@ -104,7 +136,7 @@ const Post = ({
           showLine ? "" : "border-b border-div_border"
         }  cursor-pointer  w-full px-5 pt-3 flex gap-5 hover:bg-gray-100`}
       >
-        <div className="flex flex-col items-center gap-3">
+        <div className="flex flex-col items-center gap-1">
           <div className="w-9 md:w-10 prevent-navigation">
             <Link to={`/${username}`} onClick={handleScroll}>
               <img
@@ -118,7 +150,7 @@ const Post = ({
           {showLine && <div className="h-full w-[2px] bg-div_border" />}
         </div>
         <div className="flex-1 flex flex-col gap-2">
-          <div className="flex justify-between items-center">
+          <div className="w-full flex justify-between items-center">
             <div className="prevent-navigation flex items-center gap-2">
               <p className="font-semibold text-user_name text-sm hover:underline underline-offset-4">
                 <Link to={`/${username}`} onClick={handleScroll}>
@@ -143,16 +175,20 @@ const Post = ({
                     <ReactIcons.threeDot />
                   </button>
                 </DropdownMenuTrigger>
-                <PostOptions />
+                <PostOptions handleDelete={handleDelete} />
               </DropdownMenu>
             )}
           </div>
           <ShowPostMessage media={media} message={message} />
-
-          <LikeAndComment postId={_id} like={isLiked} likeCount={likeCount} />
+          <LikeAndComment
+            postId={_id}
+            like={isLiked}
+            likeCount={likeCount}
+            save={isSaved}
+            saveCount={saveCount}
+          />
         </div>
       </div>
-
       <ToastContainer />
     </>
   );

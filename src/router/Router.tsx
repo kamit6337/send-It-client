@@ -13,7 +13,9 @@ import Home from "@/pages/home/Home";
 import SinglePost from "@/pages/post/SinglePost";
 import SingleReply from "@/pages/reply/SingleReply";
 import Likes from "@/pages/user/Likes";
+import Media from "@/pages/user/Media";
 import Replies from "@/pages/user/Replies";
+import SavePosts from "@/pages/user/SavePosts";
 import UserPosts from "@/pages/user/UserPosts";
 import { Route, Routes } from "react-router-dom";
 
@@ -41,6 +43,8 @@ const Router = () => {
             <Route index element={<UserPosts />} />
             <Route path="likes" element={<Likes />} />
             <Route path="replies" element={<Replies />} />
+            <Route path="media" element={<Media />} />
+            <Route path="save" element={<SavePosts />} />
           </Route>
 
           {/* NOTE: USER FOLLWING AND FOLLOWER */}
