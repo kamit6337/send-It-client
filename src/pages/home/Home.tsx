@@ -67,7 +67,7 @@ const Home = () => {
     return () => {
       offDeletePost(handleDeletePost);
     };
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     if (data) {

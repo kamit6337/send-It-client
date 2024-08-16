@@ -8,6 +8,8 @@ export type Post = {
   _id: string;
   message: string;
   media: string;
+  thumbnail: string;
+  duration: number;
   replyCount: number;
   likeCount: number;
   viewCount: number;

@@ -5,7 +5,7 @@ const userPostsQuery = (id: string, page = 1) => {
   return {
     queryKey: ["user posts", id, page],
     queryFn: () => getReq("/user/post", { page, id }),
-    staleTime: 10 * 1000,
+    staleTime: Infinity,
     enabled: !!id,
   };
 };

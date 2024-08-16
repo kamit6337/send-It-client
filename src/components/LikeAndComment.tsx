@@ -14,6 +14,13 @@ import { Like, Save } from "@/types";
 import { deleteReq, postReq } from "@/utils/api/api";
 import generateUniqueIDArray from "@/utils/javascript/generateUniqueIDArray";
 import { useEffect, useState } from "react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
+import environment from "@/utils/environment";
 
 type Props = {
   postId: string;
@@ -36,7 +43,7 @@ const LikeAndComment = ({
   const [decreaseLike, setDecreaseLike] = useState<Like[]>([]);
   const [increaseSave, setIncreaseSave] = useState<Save[]>([]);
   const [decreaseSave, setDecreaseSave] = useState<Save[]>([]);
-  const { showErrorMessage } = Toastify();
+  const { showErrorMessage, showSuccessMessage } = Toastify();
 
   useEffect(() => {
     setIsLiked(like);
@@ -143,6 +150,24 @@ const LikeAndComment = ({
     }
   };
 
+  const handleCopyLink = () => {
+    const link = `${environment.CLIENT_URL}/posts/${postId}`;
+
+    navigator.clipboard
+      .writeText(link)
+      .then(() => {
+        showSuccessMessage({
+          message: "Copied to Clipboard",
+        });
+      })
+      .catch((error) => {
+        showErrorMessage({
+          message: "Unable to copy link to clipboard",
+        });
+        console.error("Error copying text: ", error);
+      });
+  };
+
   return (
     <>
       <div className="w-full flex justify-between items-center text-grey">
@@ -197,9 +222,21 @@ const LikeAndComment = ({
           </p>
         </div>
 
-        <button>
-          <ReactIcons.share />
-        </button>
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <button className="text-grey prevent-navigation">
+              <ReactIcons.share />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="prevent-navigation w-40">
+            <DropdownMenuItem
+              className="flex justify-center"
+              onClick={handleCopyLink}
+            >
+              Copy Link
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
       <ToastContainer />
     </>

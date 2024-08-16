@@ -7,9 +7,11 @@ import useUserProfile from "@/hooks/useUserProfile";
 import Loading from "@/lib/Loading";
 import Toastify, { ToastContainer } from "@/lib/Toastify";
 import { queryClient } from "@/main";
+import { userInitialState } from "@/redux/slice/userSlice";
 import { User } from "@/types";
 import { deleteReq, postReq } from "@/utils/api/api";
 import { useEffect, useMemo, useState } from "react";
+import { useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { NavLink, Outlet } from "react-router-dom";
 import { useParams } from "react-router-dom";
@@ -23,6 +25,7 @@ const UserProfileLayout = () => {
   const { data: actualUser } = useLoginCheck();
   const [currentUser, setCurrentUser] = useState<User>(data.data);
   const { pathname } = useLocation();
+  const { userPostsCount, likePostsCount } = useSelector(userInitialState);
 
   useEffect(() => {
     setCurrentUser(data.data);
@@ -34,13 +37,13 @@ const UserProfileLayout = () => {
 
   const info = useMemo(() => {
     if (pathname === `/${currentUser.username}`) {
-      return `${currentUser.postCount} posts`;
+      return `${userPostsCount} posts`;
     }
     if (pathname === `/${currentUser.username}/likes`) {
-      return `${currentUser.likeCount} likes`;
+      return `${likePostsCount} likes`;
     }
     return "";
-  }, [pathname, currentUser]);
+  }, [pathname, currentUser, userPostsCount, likePostsCount]);
 
   const handleFollow = async () => {
     try {
@@ -97,7 +100,6 @@ const UserProfileLayout = () => {
             <p className="text-grey text-sm">{info}</p>
           </div>
         </div>
-
         <div className="w-full border-b border-border">
           <div className="h-60 w-full bg-gray-100 relative"></div>
           <div className="w-full relative">

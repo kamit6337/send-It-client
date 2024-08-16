@@ -5,10 +5,16 @@ import { Post } from "@/types";
 
 type InitialState = {
   followingPosts: Post[];
+  userPostsCount: number;
+  likePostsCount: number;
+  savedPostCount: number;
 };
 
 const initialState: InitialState = {
   followingPosts: [],
+  userPostsCount: 0,
+  likePostsCount: 0,
+  savedPostCount: 0,
 };
 
 const userSlice = createSlice({
@@ -35,6 +41,18 @@ const userSlice = createSlice({
       );
       return state;
     },
+    addUserPostsCount: (state, { payload }) => {
+      state.userPostsCount = payload;
+      return state;
+    },
+    addUserLikePostsCount: (state, { payload }) => {
+      state.likePostsCount = payload;
+      return state;
+    },
+    addUserSavedPostsCount: (state, { payload }) => {
+      state.savedPostCount = payload;
+      return state;
+    },
   },
 });
 
@@ -42,6 +60,9 @@ export const {
   addFollowingPosts,
   addSingleFollowingPost,
   removeSingleFollowingPost,
+  addUserPostsCount,
+  addUserLikePostsCount,
+  addUserSavedPostsCount,
 } = userSlice.actions;
 
 export const userReducer = userSlice.reducer;
