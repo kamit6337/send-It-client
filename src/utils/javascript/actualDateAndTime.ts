@@ -1,7 +1,6 @@
 const actualDateAndTime = (dateString: string) => {
   const date = new Date(dateString);
 
-  const year = date.getFullYear();
   const dayMonth = date.toLocaleDateString("en-US", {
     day: "numeric",
     month: "short",

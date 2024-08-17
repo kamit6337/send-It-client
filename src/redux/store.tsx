@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { userReducer } from "./slice/userSlice";
+import { toggleReducer } from "./slice/toggleSlice";
 
 export const store = configureStore({
   reducer: {
     user: userReducer,
+    toggle: toggleReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

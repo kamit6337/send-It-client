@@ -4,6 +4,7 @@ const Loading = ({
   width = small ? "20px" : "40px",
   height = small ? "20px" : "40px",
   borderWidth = small ? "2px" : "3px",
+  darkLoader = false,
 }) => {
   return (
     <div
@@ -15,7 +16,7 @@ const Loading = ({
         style={{
           width,
           height,
-          borderColor: "var(--foreground)",
+          borderColor: darkLoader ? "var(--background)" : "var(--foreground)",
           borderWidth: borderWidth,
           borderRightColor: "transparent",
           borderBottomColor: "transparent",

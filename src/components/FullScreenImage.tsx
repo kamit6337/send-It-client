@@ -2,8 +2,8 @@ import { DialogContent } from "./ui/dialog";
 
 const FullScreenImage = ({ src }: { src: string }) => {
   return (
-    <DialogContent className="w-max">
-      <div className="h-screen w-max">
+    <DialogContent className="prevent-navigation flex justify-center">
+      <div className="h-screen top-0 ">
         <img src={src} className="h-full object-cover prevent-navigation" />
       </div>
     </DialogContent>

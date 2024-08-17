@@ -47,7 +47,7 @@ const MediaAndSubmit = ({
   };
 
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between border-t border-sky_blue pt-2">
       <p className="cursor-pointer" onClick={openFile}>
         <ReactIcons.media className="text-sky_blue" />
       </p>
@@ -58,13 +58,16 @@ const MediaAndSubmit = ({
         onChange={handleFileChange}
         className="hidden"
       />
-      <button
-        disabled={isLoading}
-        className="py-[6px] px-4 rounded-full bg-sky_blue text-white"
-        onClick={handleCreate}
-      >
-        {isLoading ? <Loading hScreen={false} small={true} /> : title}
-      </button>
+      <div className="flex gap-3">
+        <div className="partial_border"></div>
+        <button
+          disabled={isLoading}
+          className="py-[6px] px-4 rounded-full bg-sky_blue text-white"
+          onClick={handleCreate}
+        >
+          {isLoading ? <Loading hScreen={false} small={true} /> : title}
+        </button>
+      </div>
     </div>
   );
 };

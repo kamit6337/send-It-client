@@ -12,9 +12,9 @@ import { useForm } from "react-hook-form";
 type SelectedFile = File | null; // Define type for selectedFile
 
 const CreatePost = () => {
-  const [selectedFile, setSelectedFile] = useState<SelectedFile>(null);
   const { data: user } = useLoginCheck();
   const { showErrorMessage, showAlertMessage } = Toastify();
+  const [selectedFile, setSelectedFile] = useState<SelectedFile>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const { register, getValues, reset } = useForm({
@@ -111,9 +111,6 @@ const CreatePost = () => {
           )}
 
           <div className="sticky bottom-0 space-y-3 bg-background py-2">
-            <p className="text-sky_blue border-b border-sky_blue pb-2">
-              Everyone can reply
-            </p>
             <MediaAndSubmit
               isLoading={isLoading}
               handleCreate={handleCreatePost}

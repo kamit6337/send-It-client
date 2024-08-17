@@ -11,12 +11,16 @@ import {
 import Toastify, { ToastContainer } from "@/lib/Toastify";
 import { getAuthReq } from "@/utils/api/authApi";
 import useLoginCheck from "@/hooks/useLoginCheck";
+import CreateNewPost from "./CreateNewPost";
+import { Dialog, DialogClose, DialogContent, DialogTrigger } from "./ui/dialog";
+import { useRef } from "react";
 
 const SideNavbar = () => {
   const { pathname } = useLocation();
   const { showErrorMessage } = Toastify();
   const navigate = useNavigate();
   const { data: user } = useLoginCheck();
+  const closeRef = useRef(null);
 
   const handleLogout = async () => {
     try {
@@ -31,6 +35,10 @@ const SideNavbar = () => {
             : "Something went wrong. Please try later",
       });
     }
+  };
+
+  const handleClose = () => {
+    closeRef.current?.click();
   };
 
   return (
@@ -76,12 +84,22 @@ const SideNavbar = () => {
           );
         })}
 
-        <div className="hidden bg-sky_blue text-white rounded-full mr-10 md:flex justify-center py-3 font-semibold tracking-widest cursor-pointer hover:bg-sky-600">
-          Post
-        </div>
-        <div className="w-max md:hidden bg-sky_blue  text-white rounded-full flex justify-center p-4 font-semibold tracking-wider cursor-pointer hover:bg-sky-600">
-          <ReactIcons.plus />
-        </div>
+        <Dialog>
+          <DialogTrigger>
+            <div className="hidden bg-sky_blue text-white rounded-full mr-10 md:flex justify-center py-3 font-semibold tracking-widest cursor-pointer hover:bg-sky-600">
+              Post
+            </div>
+            <div className="w-max md:hidden bg-sky_blue  text-white rounded-full flex justify-center p-4 font-semibold tracking-wider cursor-pointer hover:bg-sky-600">
+              <ReactIcons.plus />
+            </div>
+          </DialogTrigger>
+          <DialogContent className="top-[10%] translate-y-0  max-h-[500px] overflow-auto">
+            <CreateNewPost user={user} handleClose={handleClose} />
+            <DialogClose ref={closeRef} asChild className="hidden">
+              <button>close</button>
+            </DialogClose>
+          </DialogContent>
+        </Dialog>
 
         <DropdownMenu>
           <DropdownMenuTrigger className="w-full md:pr-4 mt-8">

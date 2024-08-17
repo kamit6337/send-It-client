@@ -22,7 +22,7 @@ const SearchBar = () => {
   const debouncedSearch = useCallback(
     debounce(async (value) => {
       try {
-        const response = await getReq("/user/search", { search: value });
+        const response = await getReq("/search", { search: value });
         setSearchedUsers(response.data);
       } catch (error) {
         showErrorMessage({

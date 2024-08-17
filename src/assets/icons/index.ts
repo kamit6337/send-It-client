@@ -23,11 +23,16 @@ import { LuDot } from "react-icons/lu";
 import { IoIosHeartEmpty, IoMdHeart } from "react-icons/io";
 import { BiMessageRounded } from "react-icons/bi";
 import { RiBarChartFill } from "react-icons/ri";
-import { IoPersonSharp } from "react-icons/io5";
+import { IoPersonSharp, IoLocationOutline } from "react-icons/io5";
 import { IoArrowBack } from "react-icons/io5";
+import { SlCalender } from "react-icons/sl";
+import { CiGlobe } from "react-icons/ci";
 
 const ReactIcons = {
-  leftArrow : IoArrowBack,
+  globe : CiGlobe,
+  calender: SlCalender,
+  location: IoLocationOutline,
+  leftArrow: IoArrowBack,
   share: MdOutlineFileUpload,
   bookMarkOutline: BsBookmark,
   bookmarkSolid: BsFillBookmarkFill,

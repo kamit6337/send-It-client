@@ -10,10 +10,10 @@ import {
   onRemoveSave,
 } from "@/lib/socketIO";
 import Toastify, { ToastContainer } from "@/lib/Toastify";
-import { Like, Save } from "@/types";
+import { Like, Post, Save, User } from "@/types";
 import { deleteReq, postReq } from "@/utils/api/api";
 import generateUniqueIDArray from "@/utils/javascript/generateUniqueIDArray";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,8 +21,12 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import environment from "@/utils/environment";
+import { Dialog, DialogClose, DialogContent, DialogTrigger } from "./ui/dialog";
+import CreatePostReply from "./CreatePostReply";
 
 type Props = {
+  post: Post;
+  user: User;
   postId: string;
   like: boolean;
   likeCount: number;
@@ -31,12 +35,15 @@ type Props = {
 };
 
 const LikeAndComment = ({
+  post,
+  user,
   postId,
   like,
   likeCount,
   save,
   saveCount,
 }: Props) => {
+  const closeRef = useRef(null);
   const [isLiked, setIsLiked] = useState(like);
   const [isSaved, setIsSaved] = useState(save);
   const [increaseLike, setIncreaseLike] = useState<Like[]>([]);
@@ -168,15 +175,33 @@ const LikeAndComment = ({
       });
   };
 
+  const handleClose = () => {
+    closeRef.current?.click();
+  };
+
   return (
     <>
       <div className="w-full flex justify-between items-center text-grey">
-        <button>
-          <ReactIcons.reply />
-        </button>
+        <Dialog>
+          <DialogTrigger>
+            <button className="p-2">
+              <ReactIcons.reply />
+            </button>
+          </DialogTrigger>
+          <DialogContent className="top-[3%] translate-y-0 max-h-[500px] overflow-y-auto">
+            <CreatePostReply
+              post={post}
+              user={user}
+              handleClose={handleClose}
+            />
+            <DialogClose ref={closeRef} asChild className="hidden">
+              <button>close</button>
+            </DialogClose>
+          </DialogContent>
+        </Dialog>
 
         {/* NOTE: LIKE */}
-        <div className="prevent-navigation flex items-center gap-1">
+        <div className=" flex items-center gap-1">
           {isLiked ? (
             <button
               className="text-red-500 p-2 rounded-full"
@@ -201,7 +226,7 @@ const LikeAndComment = ({
         </button>
 
         {/* NOTE: BOOKMARK */}
-        <div className="prevent-navigation flex items-center gap-1">
+        <div className=" flex items-center gap-1">
           {isSaved ? (
             <button
               className="text-blue-500 p-2 rounded-full"
@@ -224,11 +249,11 @@ const LikeAndComment = ({
 
         <DropdownMenu>
           <DropdownMenuTrigger>
-            <button className="text-grey prevent-navigation">
+            <button className="text-grey ">
               <ReactIcons.share />
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="prevent-navigation w-40">
+          <DropdownMenuContent align="end" className=" w-40">
             <DropdownMenuItem
               className="flex justify-center"
               onClick={handleCopyLink}

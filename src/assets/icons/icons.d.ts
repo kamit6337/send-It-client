@@ -2,6 +2,9 @@ declare module "@/assets/icons" {
   import { IconType } from "react-icons";
 
   const ReactIcons: {
+    globe: IconType;
+    calender: IconType;
+    location: IconType;
     leftArrow: IconType;
     search: IconType;
     cart: IconType;

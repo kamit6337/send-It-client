@@ -117,14 +117,14 @@ const Post = ({
   };
 
   const handleNavigate = (target: EventTarget) => {
-    if (!target.closest(".prevent-navigation")) {
-      if (!isReply) {
-        navigate(`/posts/${_id}`);
-        return;
-      }
-      navigate(`/reply/${_id}`);
+    // if (!target.closest(".prevent-navigation")) {
+    if (!isReply) {
+      navigate(`/posts/${_id}`);
       return;
     }
+    navigate(`/reply/${_id}`);
+    //   return;
+    // }
   };
 
   return (
@@ -137,7 +137,7 @@ const Post = ({
         }  cursor-pointer  w-full px-5 pt-3 flex gap-5 hover:bg-gray-100`}
       >
         <div className="flex flex-col items-center gap-1">
-          <div className="w-9 md:w-10 prevent-navigation">
+          <div className="w-9 md:w-10" onClick={(e) => e.stopPropagation()}>
             <Link to={`/${username}`} onClick={handleScroll}>
               <img
                 src={photo}
@@ -150,8 +150,11 @@ const Post = ({
           {showLine && <div className="h-full w-[2px] bg-div_border" />}
         </div>
         <div className="flex-1 flex flex-col gap-2">
-          <div className="w-full flex justify-between items-center">
-            <div className="prevent-navigation flex items-center gap-2">
+          <div
+            className="w-full flex justify-between items-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center gap-2">
               <p className="font-semibold text-user_name text-sm hover:underline underline-offset-4">
                 <Link to={`/${username}`} onClick={handleScroll}>
                   {name}
@@ -169,24 +172,30 @@ const Post = ({
             </div>
 
             {username === actualUser.username && (
-              <DropdownMenu>
-                <DropdownMenuTrigger>
-                  <button className="text-grey prevent-navigation">
-                    <ReactIcons.threeDot />
-                  </button>
-                </DropdownMenuTrigger>
-                <PostOptions handleDelete={handleDelete} />
-              </DropdownMenu>
+              <div onClick={(e) => e.stopPropagation()}>
+                <DropdownMenu>
+                  <DropdownMenuTrigger>
+                    <button className="text-grey px-3">
+                      <ReactIcons.threeDot />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <PostOptions handleDelete={handleDelete} />
+                </DropdownMenu>
+              </div>
             )}
           </div>
           <ShowPostMessage media={media} message={message} />
-          <LikeAndComment
-            postId={_id}
-            like={isLiked}
-            likeCount={likeCount}
-            save={isSaved}
-            saveCount={saveCount}
-          />
+          <div onClick={(e) => e.stopPropagation()}>
+            <LikeAndComment
+              post={post}
+              user={actualUser}
+              postId={_id}
+              like={isLiked}
+              likeCount={likeCount}
+              save={isSaved}
+              saveCount={saveCount}
+            />
+          </div>
         </div>
       </div>
       <ToastContainer />

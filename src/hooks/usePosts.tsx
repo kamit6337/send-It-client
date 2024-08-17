@@ -5,7 +5,7 @@ export const userFollowingPosts = (page = 1) => {
   return {
     queryKey: ["posts", page],
     queryFn: () => getReq("/following/post", { page }),
-    staleTime: false,
+    staleTime: 10 * 1000, // 10 seconds
   };
 };
 

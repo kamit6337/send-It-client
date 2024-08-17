@@ -104,16 +104,24 @@
     @apply mt-10 w-full flex justify-center items-center bg-primary text-primary-foreground hover:bg-primary/90 rounded-md text-sm font-medium h-10 cursor-pointer;
   }
 
-  .input {
-    @apply bg-inherit text-sm w-full h-full py-3 px-5 rounded-full;
-  }
-
   .otp_input {
     @apply flex h-[48px] w-[46px] items-center justify-center rounded-md px-4 text-lg bg-search_bg;
   }
 
   .input_div {
     @apply bg-auth_input rounded-full border border-foreground focus-within:border-sky_blue;
+  }
+
+  .input {
+    @apply bg-inherit text-sm w-full h-full py-3 px-5 rounded-full;
+  }
+
+  .input_div_profile {
+    @apply bg-auth_input border rounded border-foreground focus-within:border-sky_blue;
+  }
+
+  .input_profile {
+    @apply bg-inherit text-sm w-full rounded h-full py-3 px-5;
   }
 
   .input_error {
