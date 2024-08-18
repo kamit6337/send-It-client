@@ -20,11 +20,11 @@ const PostReplies = ({ id, actualUser }: Props) => {
   useEffect(() => {
     onNewReply((response: Reply) => {
       const { post } = response;
-
-      console.log("response reply", response);
-
       if (post === id) {
-        setReplies((prev) => [response, ...prev]);
+        setReplies((prev) => {
+          const filter = generateUniqueIDArray([response, ...prev]);
+          return filter;
+        });
       }
     });
   }, [id]);

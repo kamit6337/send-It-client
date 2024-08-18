@@ -7,6 +7,9 @@ type Props = {
   selectedFile: (File: File) => void;
   handleCreate: () => void;
   title: string;
+  maxLength: number;
+  messageLength: number;
+  isFocused?: boolean;
 };
 
 const MediaAndSubmit = ({
@@ -14,6 +17,9 @@ const MediaAndSubmit = ({
   selectedFile,
   handleCreate,
   title,
+  messageLength,
+  maxLength,
+  isFocused = false,
 }: Props) => {
   const fileRef = useRef<HTMLInputElement | undefined>(null);
 
@@ -58,11 +64,17 @@ const MediaAndSubmit = ({
         onChange={handleFileChange}
         className="hidden"
       />
-      <div className="flex gap-3">
-        <div className="partial_border"></div>
+      <div className="flex items-center gap-3">
+        {isFocused && (
+          <div className="text-xs text-sky_blue p-2 border border-sky_blue rounded-full">
+            {maxLength - messageLength}
+          </div>
+        )}
         <button
           disabled={isLoading}
-          className="py-[6px] px-4 rounded-full bg-sky_blue text-white"
+          className={`${
+            isFocused ? "bg-sky_blue" : "bg-sky-300"
+          }  py-[6px] px-4 rounded-full  text-white`}
           onClick={handleCreate}
         >
           {isLoading ? <Loading hScreen={false} small={true} /> : title}

@@ -184,19 +184,26 @@ const UserProfileLayout = () => {
                 <p className="text-grey text-sm">@{currentUser.username}</p>
               </div>
               <p>{currentUser.bio}</p>
-              <div className="flex flex-wrap gap-5">
-                <div className="flex items-center gap-1">
-                  <p>
-                    <ReactIcons.location />
-                  </p>
-                  <p>{currentUser.location}</p>
-                </div>
-                <div className="flex items-center gap-1">
-                  <p>
-                    <ReactIcons.globe />
-                  </p>
-                  <p>{currentUser.website}</p>
-                </div>
+
+              <div className="flex flex-wrap gap-5 text-sm text-grey">
+                {currentUser.location && (
+                  <div className="flex items-center gap-1">
+                    <p>
+                      <ReactIcons.location />
+                    </p>
+                    <p>{currentUser.location}</p>
+                  </div>
+                )}
+                {currentUser.website && (
+                  <div className="flex items-center gap-1">
+                    <p>
+                      <ReactIcons.globe />
+                    </p>
+                    <a href={currentUser.website} target="_blank">
+                      {currentUser.website}
+                    </a>
+                  </div>
+                )}
                 <div className="flex items-center gap-1">
                   <p>
                     <ReactIcons.calender />

@@ -13,6 +13,7 @@ import { deleteReq, postReq } from "@/utils/api/api";
 import actualDateAndTime from "@/utils/javascript/actualDateAndTime";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { Dialog } from "./ui/dialog";
 
 type Props = {
   post: Post;
@@ -41,6 +42,7 @@ const PostDetails = ({ post, actualUser, userReply = false }: Props) => {
     isLiked,
     isSaved,
     saveCount = 0,
+    replyCount,
   } = post;
 
   const isItActualUser = username === actualUser.username;
@@ -77,7 +79,7 @@ const PostDetails = ({ post, actualUser, userReply = false }: Props) => {
 
   return (
     <>
-      <div className="flex justify-between items-center py-2 px-5">
+      <div className="w-full flex justify-between items-center py-2 px-5">
         <div className="flex gap-3">
           <div className="w-9 md:w-10 prevent-navigation">
             <Link to={`/${username}`}>
@@ -97,32 +99,36 @@ const PostDetails = ({ post, actualUser, userReply = false }: Props) => {
           </div>
         </div>
 
-        {isItActualUser ? (
-          <DropdownMenu>
-            <DropdownMenuTrigger>
-              <button className="text-grey">
-                <ReactIcons.threeDot />
-              </button>
-            </DropdownMenuTrigger>
-            <PostOptions />
-          </DropdownMenu>
-        ) : isFollow ? (
-          <button
-            disabled={isLoading}
-            className="w-max self-end following"
-            onClick={handleCancelFollow}
-          >
-            {isLoading ? <Loading /> : "Following"}
-          </button>
-        ) : (
-          <button
-            disabled={isLoading}
-            className="w-max my-5 self-end follow"
-            onClick={handleFollow}
-          >
-            {isLoading ? <Loading /> : "Follow"}
-          </button>
-        )}
+        <div>
+          {isItActualUser ? (
+            <Dialog>
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                  <button className="text-grey">
+                    <ReactIcons.threeDot />
+                  </button>
+                </DropdownMenuTrigger>
+                <PostOptions post={post} />
+              </DropdownMenu>
+            </Dialog>
+          ) : isFollow ? (
+            <button
+              disabled={isLoading}
+              className="w-max self-end following"
+              onClick={handleCancelFollow}
+            >
+              {isLoading ? <Loading /> : "Following"}
+            </button>
+          ) : (
+            <button
+              disabled={isLoading}
+              className="w-max my-5 self-end follow"
+              onClick={handleFollow}
+            >
+              {isLoading ? <Loading /> : "Follow"}
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="px-5">
@@ -143,6 +149,9 @@ const PostDetails = ({ post, actualUser, userReply = false }: Props) => {
           likeCount={likeCount}
           save={isSaved}
           saveCount={saveCount}
+          replyCount={replyCount}
+          post={post}
+          user={actualUser}
         />
       </div>
       <ToastContainer />

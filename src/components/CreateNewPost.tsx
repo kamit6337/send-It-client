@@ -26,14 +26,17 @@ const CreateNewPost = ({
   const [selectedFile, setSelectedFile] = useState<SelectedFile>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { photo, name } = user;
+  const [isFocused, setIsFocused] = useState(true);
 
-  const maxLength = 300;
+  const maxLength = 200;
 
-  const { register, getValues, reset } = useForm({
+  const { register, getValues, reset, watch } = useForm({
     defaultValues: {
       message: "",
     },
   });
+
+  const messageLength = watch("message").length;
 
   const selectFile = (file: SelectedFile) => {
     setSelectedFile(file);
@@ -103,13 +106,14 @@ const CreateNewPost = ({
         <textarea
           {...register("message")}
           placeholder="What is happening?!"
-          className="bg-inherit w-full resize-none overflow-hidden px-3"
+          className="bg-inherit w-full resize-none px-3"
           maxLength={maxLength}
-          rows={4}
+          onFocus={() => setIsFocused(true)}
+          rows={isFocused ? 4 : 1}
         />
       </div>
       {selectedFile && (
-        <div className="w-full relative rounded-xl my-3">
+        <div className="w-full relative rounded-xl my-3 border border-border">
           {selectedFile.type.startsWith("image/") ? (
             <img
               src={URL.createObjectURL(selectedFile)}
@@ -137,6 +141,9 @@ const CreateNewPost = ({
         handleCreate={handleCreatePost}
         selectedFile={selectFile}
         title={isOfReply ? "Reply" : "Post"}
+        messageLength={messageLength}
+        maxLength={maxLength}
+        isFocused={isFocused}
       />
     </div>
   );

@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import formatRelativeDate from "@/utils/javascript/formatRelativeDate";
 import Toastify, { ToastContainer } from "@/lib/Toastify";
-import { deleteReq, getReq } from "@/utils/api/api";
+import { getReq } from "@/utils/api/api";
 import {
   Link,
   useLocation,
@@ -18,6 +18,7 @@ import { useEffect, useState } from "react";
 import LikeAndComment from "./LikeAndComment";
 import { type Post, User } from "@/types";
 import ShowPostMessage from "./ShowPostMessage";
+import { Dialog } from "./ui/dialog";
 
 const Post = ({
   post,
@@ -51,6 +52,7 @@ const Post = ({
     message,
     media,
     likeCount,
+    replyCount,
     saveCount = 0,
     createdAt,
   } = post;
@@ -102,16 +104,6 @@ const Post = ({
       window.scrollTo({
         top: 0,
         behavior: "smooth",
-      });
-    }
-  };
-
-  const handleDelete = async () => {
-    try {
-      await deleteReq("/post", { id: _id });
-    } catch (error) {
-      showErrorMessage({
-        message: error instanceof Error ? error.message : "",
       });
     }
   };
@@ -173,14 +165,16 @@ const Post = ({
 
             {username === actualUser.username && (
               <div onClick={(e) => e.stopPropagation()}>
-                <DropdownMenu>
-                  <DropdownMenuTrigger>
-                    <button className="text-grey px-3">
-                      <ReactIcons.threeDot />
-                    </button>
-                  </DropdownMenuTrigger>
-                  <PostOptions handleDelete={handleDelete} />
-                </DropdownMenu>
+                <Dialog>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger>
+                      <button className="text-grey px-3">
+                        <ReactIcons.threeDot />
+                      </button>
+                    </DropdownMenuTrigger>
+                    <PostOptions post={post} isReply={isReply} />
+                  </DropdownMenu>
+                </Dialog>
               </div>
             )}
           </div>
@@ -194,6 +188,7 @@ const Post = ({
               likeCount={likeCount}
               save={isSaved}
               saveCount={saveCount}
+              replyCount={replyCount}
             />
           </div>
         </div>

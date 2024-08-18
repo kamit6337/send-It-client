@@ -13,14 +13,10 @@ type Props = {
 const CreatePostReply = ({ post, user, handleClose }: Props) => {
   const {
     _id: postId,
-    user: { _id, name, username, photo },
+    user: { name, username, photo },
     message,
     media,
     createdAt,
-    likeCount,
-    isLiked,
-    isSaved,
-    saveCount = 0,
   } = post;
 
   return (
@@ -40,9 +36,7 @@ const CreatePostReply = ({ post, user, handleClose }: Props) => {
         <div className="flex-1 flex flex-col gap-2">
           <div className="w-full flex justify-between items-center">
             <div className="flex items-center gap-2">
-              <p className="font-semibold text-user_name text-sm hover:underline underline-offset-4">
-                {name}
-              </p>
+              <p className="font-semibold text-user_name text-sm">{name}</p>
               <div className="flex items-center">
                 <p className="text-grey text-sm">@{username}</p>
                 <p className="text-grey">

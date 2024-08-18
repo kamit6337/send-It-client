@@ -13,6 +13,10 @@ const generateUniqueIDArray = (arr: any[], check = "_id") => {
     return false; // Exclude this object from the result array
   });
 
+  newArr.sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
+
   return newArr;
 };
 

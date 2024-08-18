@@ -38,7 +38,6 @@ const SingleReply = () => {
         </button>
         <p className="text-xl font-semibold tracking-wider">Post</p>
       </div>
-
       <ReplyPost actualUser={actualUser} post={post} replyPost={replyPost} />
       <PostReplies actualUser={actualUser} id={id} />
       <div className="h-96" />

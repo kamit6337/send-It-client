@@ -32,6 +32,7 @@ type Props = {
   likeCount: number;
   save: boolean;
   saveCount: number;
+  replyCount: number;
 };
 
 const LikeAndComment = ({
@@ -42,6 +43,7 @@ const LikeAndComment = ({
   likeCount,
   save,
   saveCount,
+  replyCount,
 }: Props) => {
   const closeRef = useRef(null);
   const [isLiked, setIsLiked] = useState(like);
@@ -182,11 +184,15 @@ const LikeAndComment = ({
   return (
     <>
       <div className="w-full flex justify-between items-center text-grey">
+        {/* NOTE: REPLY */}
         <Dialog>
           <DialogTrigger>
-            <button className="p-2">
-              <ReactIcons.reply />
-            </button>
+            <div className="flex items-center">
+              <button className="hover:text-sky-500 hover:bg-sky-200 p-2 rounded-full">
+                <ReactIcons.reply />
+              </button>
+              <p className="-ml-1 text-sm">{replyCount}</p>
+            </div>
           </DialogTrigger>
           <DialogContent className="top-[3%] translate-y-0 max-h-[500px] overflow-y-auto">
             <CreatePostReply
@@ -217,7 +223,7 @@ const LikeAndComment = ({
               <ReactIcons.heartOutline />
             </button>
           )}
-          <p className="text-sm -ml-2">
+          <p className="-ml-2 text-sm">
             {likeCount + increaseLike.length - decreaseLike.length}
           </p>
         </div>
@@ -247,6 +253,7 @@ const LikeAndComment = ({
           </p>
         </div>
 
+        {/* NOTE: SHARE */}
         <DropdownMenu>
           <DropdownMenuTrigger>
             <button className="text-grey ">

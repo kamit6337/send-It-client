@@ -16,8 +16,11 @@ const CreatePost = () => {
   const { showErrorMessage, showAlertMessage } = Toastify();
   const [selectedFile, setSelectedFile] = useState<SelectedFile>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
 
-  const { register, getValues, reset } = useForm({
+  const maxLength = 200;
+
+  const { register, getValues, reset, watch } = useForm({
     defaultValues: {
       message: "",
     },
@@ -26,6 +29,8 @@ const CreatePost = () => {
   const selectFile = (file: SelectedFile) => {
     setSelectedFile(file);
   };
+
+  const messageLength = watch("message").length;
 
   const handleCreatePost = async () => {
     try {
@@ -82,8 +87,10 @@ const CreatePost = () => {
             {...register("message")}
             placeholder="What is happening?!"
             className="bg-inherit w-full resize-none overflow-hidden"
-            maxLength={200}
-            rows={4}
+            maxLength={maxLength}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+            rows={isFocused ? 4 : 1}
           />
           {selectedFile && (
             <div className="w-full relative rounded-xl">
@@ -115,7 +122,10 @@ const CreatePost = () => {
               isLoading={isLoading}
               handleCreate={handleCreatePost}
               selectedFile={selectFile}
+              messageLength={messageLength}
+              maxLength={maxLength}
               title={"Post"}
+              isFocused={isFocused}
             />
           </div>
         </div>
