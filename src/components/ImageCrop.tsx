@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import AvatarEditor from "react-avatar-editor";
 
 // Function to convert data URL to File

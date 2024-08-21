@@ -2,6 +2,12 @@ declare module "@/assets/icons" {
   import { IconType } from "react-icons";
 
   const ReactIcons: {
+    doubleArrowDown: IconType;
+    doubleArrowUp: IconType;
+    arrowDown: IconType;
+    send: IconType;
+    setting: IconType;
+    messagePlus: IconType;
     globe: IconType;
     calender: IconType;
     location: IconType;

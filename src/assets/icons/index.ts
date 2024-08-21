@@ -10,7 +10,6 @@ import { PiShoppingCartSimpleThin } from "react-icons/pi";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { GoHome, GoHomeFill } from "react-icons/go";
 import { IoMdNotificationsOutline, IoMdNotifications } from "react-icons/io";
-import { FaMessage, FaRegMessage } from "react-icons/fa6";
 import { IoPeopleOutline, IoPeopleSharp } from "react-icons/io5";
 import { BsPerson, BsBookmark, BsFillBookmarkFill } from "react-icons/bs";
 import { FaXTwitter, FaPlus } from "react-icons/fa6";
@@ -18,6 +17,8 @@ import {
   MdOutlineCancel,
   MdPermMedia,
   MdOutlineFileUpload,
+  MdOutlineKeyboardDoubleArrowUp,
+  MdOutlineKeyboardDoubleArrowDown,
 } from "react-icons/md";
 import { LuDot } from "react-icons/lu";
 import { IoIosHeartEmpty, IoMdHeart } from "react-icons/io";
@@ -26,10 +27,21 @@ import { RiBarChartFill } from "react-icons/ri";
 import { IoPersonSharp, IoLocationOutline } from "react-icons/io5";
 import { IoArrowBack } from "react-icons/io5";
 import { SlCalender } from "react-icons/sl";
-import { CiGlobe } from "react-icons/ci";
+import { CiGlobe, CiMail } from "react-icons/ci";
+import { IoMdMail } from "react-icons/io";
+import { TbMailPlus } from "react-icons/tb";
+import { RiSettings4Line } from "react-icons/ri";
+import { BiSend } from "react-icons/bi";
+import { IoArrowDownSharp } from "react-icons/io5";
 
 const ReactIcons = {
-  globe : CiGlobe,
+  doubleArrowDown: MdOutlineKeyboardDoubleArrowDown,
+  doubleArrowUp: MdOutlineKeyboardDoubleArrowUp,
+  arrowDown: IoArrowDownSharp,
+  send: BiSend,
+  setting: RiSettings4Line,
+  messagePlus: TbMailPlus,
+  globe: CiGlobe,
   calender: SlCalender,
   location: IoLocationOutline,
   leftArrow: IoArrowBack,
@@ -52,8 +64,8 @@ const ReactIcons = {
   homeSolid: GoHomeFill,
   notificationOutline: IoMdNotificationsOutline,
   notificationSolid: IoMdNotifications,
-  messageOutline: FaRegMessage,
-  messageSolid: FaMessage,
+  messageOutline: CiMail,
+  messageSolid: IoMdMail,
   communityOutline: IoPeopleOutline,
   communitySolid: IoPeopleSharp,
   profileOutline: BsPerson,

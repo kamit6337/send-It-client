@@ -1,4 +1,4 @@
-const generateVideoThumbnail = (videoFile, width = 180, height = 250) => {
+const generateVideoThumbnail = (videoFile: File, width = 180, height = 250) => {
   return new Promise((resolve, reject) => {
     const videoUrl = URL.createObjectURL(videoFile);
     const video = document.createElement("video");
@@ -15,6 +15,11 @@ const generateVideoThumbnail = (videoFile, width = 180, height = 250) => {
       canvas.height = height;
       const context = canvas.getContext("2d");
 
+      if (!context) {
+        reject(new Error("Failed to get canvas context"));
+        return;
+      }
+
       context.drawImage(video, 0, 0, width, height);
 
       // // Convert canvas to data URL
@@ -22,9 +27,10 @@ const generateVideoThumbnail = (videoFile, width = 180, height = 250) => {
       // resolve(dataUrl);
 
       // Convert canvas to Blob
-      canvas.toBlob((blob) => {
+      canvas.toBlob((blob: Blob | null) => {
         if (blob) {
-          resolve(blob);
+          const typedBlob = new Blob([blob], { type: "image/png" });
+          resolve(typedBlob);
         } else {
           reject(new Error("Failed to create Blob from canvas"));
         }

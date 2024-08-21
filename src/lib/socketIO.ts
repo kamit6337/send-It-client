@@ -1,3 +1,4 @@
+import { Chat, Like, Post, Reply, Room, Save } from "@/types";
 import environment from "@/utils/environment";
 import { io } from "socket.io-client";
 
@@ -6,72 +7,94 @@ const socket = io(environment.SERVER_URL, {
 });
 
 export const isConnected = () => {
-  socket.emit("isConnected", "i am from client", (response) => {
+  socket.emit("isConnected", "i am from client", (response: string) => {
     console.log(response); // ojIckSD2jqNzOqIrAGzL
   });
 };
 
+// Join rooms
+export const joinRooms = (rooms: string[]) => {
+  socket.emit("joinRooms", rooms);
+};
+
 // Post socket handlers
-export const onNewPost = (callback) => {
+export const onNewPost = (callback: (value: Post) => void) => {
   socket.on("newPost", callback);
 };
 
-export const offNewPost = (callback) => {
+export const offNewPost = (callback: (value: Post) => void) => {
   socket.off("newPost", callback);
 };
 
-export const onDeletePost = (callback) => {
+export const onDeletePost = (callback: (value: string) => void) => {
   socket.on("deletePost", callback);
 };
 
-export const offDeletePost = (callback) => {
+export const offDeletePost = (callback: (value: string) => void) => {
   socket.off("deletePost", callback);
 };
 
 // Reply socket handlers
-export const onNewReply = (callback) => {
+export const onNewReply = (callback: (value: Reply) => void) => {
   socket.on("newReply", callback);
 };
 
 //Like socket handlers
-export const onNewLike = (callback) => {
+export const onNewLike = (callback: (value: Like) => void) => {
   socket.on("newLike", callback);
 };
 
-export const offNewLike = (callback) => {
+export const offNewLike = (callback: (value: Like) => void) => {
   socket.off("newLike", callback);
 };
 
-export const onRemoveLike = (callback) => {
+export const onRemoveLike = (callback: (value: string) => void) => {
   socket.on("removeLike", callback);
 };
 
-export const offRemoveLike = (callback) => {
+export const offRemoveLike = (callback: (value: string) => void) => {
   socket.off("removeLike", callback);
 };
 
 //Save socket handlers
-export const onNewSave = (callback) => {
+export const onNewSave = (callback: (value: Save) => void) => {
   socket.on("newSave", callback);
 };
 
-export const offNewSave = (callback) => {
+export const offNewSave = (callback: (value: Save) => void) => {
   socket.off("newSave", callback);
 };
 
-export const onRemoveSave = (callback) => {
+export const onRemoveSave = (callback: (value: string) => void) => {
   socket.on("removeSave", callback);
 };
 
-export const offRemoveSave = (callback) => {
+export const offRemoveSave = (callback: (value: string) => void) => {
   socket.off("removeSave", callback);
 };
 
-// Comment socket handlers
-export const onNewComment = (callback) => {
-  socket.on("newComment", callback);
+//Room socket handlers
+export const onNewRoom = (callback: (value: Room) => void) => {
+  socket.on("newRoom", callback);
 };
 
-export const emitCreateComment = (commentData) => {
-  socket.emit("createComment", commentData);
+export const offNewRoom = (callback: (value: Room) => void) => {
+  socket.off("newRoom", callback);
+};
+
+export const onDeleteRoom = (callback: (value: string) => void) => {
+  socket.on("deleteRoom", callback);
+};
+
+export const offDeleteRoom = (callback: (value: string) => void) => {
+  socket.off("deleteRoom", callback);
+};
+
+//Chat socket handlers
+export const onNewChat = (callback: (value: Chat) => void) => {
+  socket.on("newChat", callback);
+};
+
+export const offNewChat = (callback: (value: Chat) => void) => {
+  socket.off("newChat", callback);
 };

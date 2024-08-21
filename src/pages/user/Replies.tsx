@@ -3,10 +3,9 @@ import useLoginCheck from "@/hooks/useLoginCheck";
 import useUserReplies from "@/hooks/useUserReplies";
 import Loading from "@/lib/Loading";
 import { ReplyFull, User } from "@/types";
-import { useOutletContext, useParams } from "react-router-dom";
+import { useOutletContext } from "react-router-dom";
 
 const Replies = () => {
-  const { username } = useParams();
   const { data: actualUser } = useLoginCheck();
 
   const { user }: { user: User } = useOutletContext();

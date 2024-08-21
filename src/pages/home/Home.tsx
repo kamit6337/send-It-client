@@ -20,14 +20,14 @@ import {
   removeSingleFollowingPost,
   userInitialState,
 } from "@/redux/slice/userSlice";
-import { type Post as PostType } from "@/types";
+import { OutletContext, type Post as PostType } from "@/types";
 
 const Home = () => {
   const { followingPosts } = useSelector(userInitialState);
   const dispatch = useDispatch();
   const [page, setPage] = useState(1);
   const { isLoading, error, data } = usePosts();
-  const { actualUser } = useOutletContext();
+  const { actualUser } = useOutletContext<OutletContext>();
 
   useEffect(() => {
     isConnected();

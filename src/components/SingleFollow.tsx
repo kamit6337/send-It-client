@@ -1,15 +1,19 @@
-import useFollowers from "@/hooks/useFollowers";
-import useFollowing from "@/hooks/useFollowing";
 import useLoginCheck from "@/hooks/useLoginCheck";
-import useUserProfile, { userProfileQuery } from "@/hooks/useUserProfile";
+import { userProfileQuery } from "@/hooks/useUserProfile";
 import Loading from "@/lib/Loading";
 import Toastify, { ToastContainer } from "@/lib/Toastify";
 import { queryClient } from "@/main";
+import { Follower } from "@/types";
 import { deleteReq, postReq } from "@/utils/api/api";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-const SingleFollow = ({ follow, isFollower = false, refetch }) => {
+type Props = {
+  follow: Follower;
+  isFollower?: boolean;
+};
+
+const SingleFollow = ({ follow, isFollower = false }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const { showErrorMessage } = Toastify();
   const { isActualUserFollow, follower, user } = follow;
@@ -21,12 +25,6 @@ const SingleFollow = ({ follow, isFollower = false, refetch }) => {
   const name = isFollower ? follower.name : user.name;
   const photo = isFollower ? follower.photo : user.photo;
   const isItActualUser = actualUser._id === _id;
-
-  const { refetch: actualUserRefetch } = useUserProfile(actualUser.username);
-  const { refetch: actualUserFollowingRefetch } = useFollowing(actualUser._id);
-
-  const { refetch: clickUserRefetch } = useUserProfile(username);
-  const { refetch: clickUserFollowingRefetch } = useFollowers(_id);
 
   useEffect(() => {
     setIsFollowed(isActualUserFollow);

@@ -1,5 +1,4 @@
 import { ModeToggle } from "./ModeToggle";
-import Profile from "./Profile";
 
 const Header = () => {
   return (

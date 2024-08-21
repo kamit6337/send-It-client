@@ -1,5 +1,5 @@
 import ReactIcons from "@/assets/icons";
-import useLoginCheck from "@/hooks/useLoginCheck";
+import { OutletContext } from "@/types";
 import { Link, useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { Outlet, useOutletContext, useParams } from "react-router-dom";
@@ -7,11 +7,8 @@ import { Outlet, useOutletContext, useParams } from "react-router-dom";
 const FollowerLayout = () => {
   const navigate = useNavigate();
   const { username } = useParams();
-  const { user } = useOutletContext();
+  const { user } = useOutletContext<OutletContext>();
   const { pathname } = useLocation();
-  const { data: actualUser } = useLoginCheck();
-
-  const isItActualUser = actualUser._id === user._id;
 
   const isFollowing = pathname === `/${username}/following`;
   const isFollower = pathname === `/${username}/follower`;

@@ -6,7 +6,7 @@ import uploadToAWS from "@/lib/uploadToAWS";
 import uploadVideoAndThumbnail from "@/lib/uploadVideoAndThumbnail";
 import { postReq } from "@/utils/api/api";
 import findVideoDuration from "@/utils/findVideoDuration";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 
 type SelectedFile = File | null; // Define type for selectedFile
@@ -17,6 +17,7 @@ const CreatePost = () => {
   const [selectedFile, setSelectedFile] = useState<SelectedFile>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const maxLength = 200;
 
@@ -32,6 +33,23 @@ const CreatePost = () => {
 
   const messageLength = watch("message").length;
 
+  useEffect(() => {
+    const handleClick = (event: MouseEvent) => {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
+        setIsFocused(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClick);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClick);
+    };
+  }, []);
+
   const handleCreatePost = async () => {
     try {
       const message = getValues().message;
@@ -41,13 +59,15 @@ const CreatePost = () => {
       }
       setIsLoading(true);
 
-      let media;
-      let duration;
-      let thumbnail;
+      let media = "";
+      let duration = 0;
+      let thumbnail = "";
 
       if (selectedFile) {
         if (selectedFile.type.startsWith("video/")) {
-          duration = await findVideoDuration(selectedFile);
+          duration = (await findVideoDuration(selectedFile)) as number;
+          duration = Math.floor(duration);
+
           const { mediaUrl, thumbnailUrl } = await uploadVideoAndThumbnail(
             selectedFile
           );
@@ -82,14 +102,14 @@ const CreatePost = () => {
             className="w-full rounded-full"
           />
         </div>
-        <div className="w-full space-y-3">
+        <div className="w-full space-y-3" ref={containerRef}>
           <textarea
             {...register("message")}
             placeholder="What is happening?!"
             className="bg-inherit w-full resize-none overflow-hidden"
             maxLength={maxLength}
             onFocus={() => setIsFocused(true)}
-            onBlur={() => setIsFocused(false)}
+            // onBlur={() => setIsFocused(false)}
             rows={isFocused ? 4 : 1}
           />
           {selectedFile && (

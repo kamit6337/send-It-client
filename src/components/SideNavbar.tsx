@@ -20,7 +20,7 @@ const SideNavbar = () => {
   const { showErrorMessage } = Toastify();
   const navigate = useNavigate();
   const { data: user } = useLoginCheck();
-  const closeRef = useRef(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
 
   const handleLogout = async () => {
     try {
@@ -43,7 +43,7 @@ const SideNavbar = () => {
 
   return (
     <>
-      <nav className="md:pl-10 px-2 flex flex-col h-full justify-between items-center md:items-stretch">
+      <nav className="py-2 flex flex-col h-full justify-between items-center md:items-stretch md:px-2">
         <NavLink
           to={`/`}
           className="p-3 md:px-4 md:py-2 w-max rounded-full hover:bg-sidebar_link_hover"
@@ -59,7 +59,7 @@ const SideNavbar = () => {
             query,
           } = obj;
 
-          let to = href;
+          let to: string = href;
 
           if (to === "/profile") {
             to = user.username;
@@ -74,11 +74,13 @@ const SideNavbar = () => {
                 isActive ? "font-semibold w-max" : "font-medium w-max"
               }
             >
-              <div className="p-3 rounded-full flex items-center gap-3 hover:bg-sidebar_link_hover">
-                <p className="text-2xl md:text-3xl ">
+              <div className="lg:p-3 p-2 rounded-full flex items-center gap-1 lg:gap-3 hover:bg-sidebar_link_hover">
+                <p className="text-2xl lg:text-3xl ">
                   {pathname === href ? <SolidIcon /> : <OutlineIcon />}
                 </p>
-                <p className="text-[20px] hidden md:block">{name}</p>
+                <p className="lg:text-[20px] text-base hidden md:block">
+                  {name}
+                </p>
               </div>
             </NavLink>
           );
@@ -86,7 +88,7 @@ const SideNavbar = () => {
 
         <Dialog>
           <DialogTrigger>
-            <div className="hidden bg-sky_blue text-white rounded-full mr-10 md:flex justify-center py-3 font-semibold tracking-widest cursor-pointer hover:bg-sky-600">
+            <div className="hidden bg-sky_blue text-white rounded-full md:flex justify-center py-3 font-semibold tracking-widest cursor-pointer hover:bg-sky-600">
               Post
             </div>
             <div className="w-max md:hidden bg-sky_blue  text-white rounded-full flex justify-center p-4 font-semibold tracking-wider cursor-pointer hover:bg-sky-600">
@@ -104,7 +106,7 @@ const SideNavbar = () => {
         </Dialog>
 
         <DropdownMenu>
-          <DropdownMenuTrigger className="w-full md:pr-4 mt-8">
+          <DropdownMenuTrigger className="w-full mt-8">
             <Profile />
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-full mb-2 " align="end">

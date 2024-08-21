@@ -1,11 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { userReducer } from "./slice/userSlice";
 import { toggleReducer } from "./slice/toggleSlice";
+import { roomReducer } from "./slice/roomSlice";
 
 export const store = configureStore({
   reducer: {
     user: userReducer,
     toggle: toggleReducer,
+    room: roomReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

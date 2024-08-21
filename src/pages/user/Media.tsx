@@ -1,16 +1,13 @@
 import useUserMedia from "@/hooks/useUserMedia";
 import Loading from "@/lib/Loading";
-import { Post } from "@/types";
+import { OutletContext, Post } from "@/types";
 import { useEffect, useState } from "react";
-import { useOutletContext, useParams } from "react-router-dom";
+import { useOutletContext } from "react-router-dom";
 import { type Post as PostType } from "@/types";
 import { Link } from "react-router-dom";
 
-const imageTypeList = ["png", "jpeg", "jpg"];
-
 const Media = () => {
-  const { username } = useParams();
-  const { user } = useOutletContext();
+  const { user } = useOutletContext<OutletContext>();
   const [posts, setPosts] = useState<PostType[]>([]);
   const [page, setPage] = useState(1);
   const { isLoading, error, data } = useUserMedia(user._id, page);

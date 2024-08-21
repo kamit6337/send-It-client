@@ -1,5 +1,6 @@
 import ReactIcons from "@/assets/icons";
 import EditProfile from "@/components/EditProfile";
+import LeftArrowBtn from "@/components/LeftArrowBtn";
 import {
   Dialog,
   DialogClose,
@@ -110,10 +111,7 @@ const UserProfileLayout = () => {
       <section className="">
         {/* NOTE: HEADER */}
         <div className="sticky z-20 top-0 py-2 bg-background flex items-center gap-5 px-5 border-b border-div_border">
-          <button className="left_arrow" onClick={() => navigate(-1)}>
-            <ReactIcons.leftArrow className="text-xl" />
-          </button>
-
+          <LeftArrowBtn />
           <div>
             <p className="font-semibold tracking-wider">{currentUser.name}</p>
             <p className="text-grey text-sm">{info}</p>

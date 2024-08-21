@@ -14,24 +14,31 @@ type Props = {
   user: User;
 };
 
-const EditProfile = ({ handleClose, user, handleScroll }: Props) => {
-  const bg_image_ref = useRef(null);
-  const profile_image_ref = useRef(null);
-  const { showErrorMessage } = Toastify();
+type FormData = {
+  name: string;
+  bio: string;
+  locatio?: string;
+  website: string;
+};
 
+type SelectedFile = File | null;
+
+const EditProfile = ({ handleClose, user, handleScroll }: Props) => {
+  const bg_image_ref = useRef<HTMLInputElement>(null);
+  const profile_image_ref = useRef<HTMLInputElement>(null);
+  const { showErrorMessage } = Toastify();
   const { photo, name, bg_photo, bio, location, website } = user;
 
-  const [bgImageSelected, setBgImageSelected] = useState<File | null>(null);
-  const [profileImageSelected, setProfileImageSelected] = useState<File | null>(
-    null
-  );
-  const [profileImageCrop, setProfileImageCrop] = useState(null);
+  const [bgImageSelected, setBgImageSelected] = useState<SelectedFile>(null);
+  const [profileImageSelected, setProfileImageSelected] =
+    useState<SelectedFile>(null);
+  const [profileImageCrop, setProfileImageCrop] = useState<SelectedFile>(null);
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm({
+  } = useForm<FormData>({
     defaultValues: {
       name,
       bio,
@@ -40,7 +47,7 @@ const EditProfile = ({ handleClose, user, handleScroll }: Props) => {
     },
   });
 
-  const onSubmit = async (data) => {
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
     try {
       const response = await uploadUserProfile(
         profileImageSelected,
@@ -64,7 +71,7 @@ const EditProfile = ({ handleClose, user, handleScroll }: Props) => {
     }
   };
 
-  const handleOnCrop = (croppedFile) => {
+  const handleOnCrop = (croppedFile: File) => {
     setProfileImageSelected(croppedFile);
     setProfileImageCrop(null);
     handleScroll(false);
@@ -110,7 +117,7 @@ const EditProfile = ({ handleClose, user, handleScroll }: Props) => {
                 type="file"
                 accept="image/*"
                 onChange={(e) => {
-                  const file = e.target.files[0];
+                  const file = e.target.files?.[0];
                   if (!file) return;
                   setBgImageSelected(file);
                 }}
@@ -148,7 +155,7 @@ const EditProfile = ({ handleClose, user, handleScroll }: Props) => {
                 type="file"
                 accept="image/*"
                 onChange={(e) => {
-                  const file = e.target.files[0];
+                  const file = e.target.files?.[0];
                   if (!file) return;
                   setProfileImageCrop(file);
                   handleScroll(true);

@@ -1,16 +1,17 @@
 import ReactIcons from "@/assets/icons";
 import Toastify, { ToastContainer } from "@/lib/Toastify";
-import { getReq } from "@/utils/api/api";
+import { getReq, postReq } from "@/utils/api/api";
 import debounce from "@/utils/javascript/debounce";
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { DialogClose } from "./ui/dialog";
 
-const SearchBar = () => {
+const SelectMessageUser = () => {
+  const closeRef = useRef<HTMLButtonElement>(null);
   const [isFocused, setIsFocused] = useState(false);
-  const [showCancel, setShowCancel] = useState(false);
   const { showErrorMessage } = Toastify();
   const [searchedUsers, setSearchedUsers] = useState([]);
+  const [showCancel, setShowCancel] = useState(false);
 
   const { register, reset } = useForm({
     defaultValues: {
@@ -36,7 +37,7 @@ const SearchBar = () => {
     []
   );
 
-  const handleChange = (value) => {
+  const handleChange = (value: string) => {
     if (!value || value === "") {
       setShowCancel(false);
       setSearchedUsers([]);
@@ -44,8 +45,23 @@ const SearchBar = () => {
     }
 
     setShowCancel(true);
-
     debouncedSearch(value);
+  };
+
+  const handleCreateRoom = async (id: string) => {
+    try {
+      const response = await postReq("/room", { id });
+
+      console.log("new room response", response);
+      closeRef.current?.click();
+    } catch (error) {
+      showErrorMessage({
+        message:
+          error instanceof Error
+            ? error?.message
+            : "Something went wrong. Please try later",
+      });
+    }
   };
 
   const handleCancel = () => {
@@ -57,8 +73,9 @@ const SearchBar = () => {
 
   return (
     <>
-      <div className="px-5">
-        <div className="relative">
+      <section>
+        <div className="p-5 space-y-5">
+          <p>New Message</p>
           <div className="bg-search_bg flex items-center p-3 input_div">
             <p>
               <ReactIcons.search
@@ -81,44 +98,40 @@ const SearchBar = () => {
               </p>
             )}
           </div>
-
-          <div className="absolute z-10 bg-background w-full shadow-md shadow-gray-500 rounded-md max-h-96 overflow-y-auto">
-            {searchedUsers.length > 0 &&
-              searchedUsers.map((obj) => {
-                const { _id, name, username, photo } = obj;
-
-                return (
-                  <Link
-                    to={`/${username}`}
-                    key={_id}
-                    className="p-3 flex gap-3 w-full hover:bg-sidebar_link_hover border-b border-div_border"
-                    onClick={handleCancel}
-                  >
-                    <div className="w-10">
-                      <img
-                        src={photo}
-                        alt={name}
-                        className="rounded-full w-full"
-                      />
-                    </div>
-                    <div>
-                      <p>{name}</p>
-                      <p className="username">@{username}</p>
-                    </div>
-                  </Link>
-                );
-              })}
-          </div>
         </div>
+        <div className="border-t border-div_border">
+          {searchedUsers.length > 0 &&
+            searchedUsers.map((obj) => {
+              const { _id, name, username, photo } = obj;
 
-        <div>
-          <p>ndbjkbdskvjsdn</p>
-          <p>ndbjkbdskvjsdnmsflfsmlkgmfsk</p>
+              return (
+                <button
+                  key={_id}
+                  className="p-3 flex gap-3 w-full hover:bg-sidebar_link_hover border-b border-div_border"
+                  onClick={() => handleCreateRoom(_id)}
+                >
+                  <div className="w-10">
+                    <img
+                      src={photo}
+                      alt={name}
+                      className="rounded-full w-full"
+                    />
+                  </div>
+                  <div className="flex flex-col items-start">
+                    <p>{name}</p>
+                    <p className="username">@{username}</p>
+                  </div>
+                </button>
+              );
+            })}
         </div>
-      </div>
+      </section>
+      <DialogClose ref={closeRef} asChild className="hidden">
+        <button>close</button>
+      </DialogClose>
       <ToastContainer />
     </>
   );
 };
 
-export default SearchBar;
+export default SelectMessageUser;

@@ -1,3 +1,37 @@
+export type Params = {
+  id: string;
+  username: string;
+};
+
+export type Follower = {
+  _id: string;
+  follower: User;
+  user: User;
+  isActualUserFollow: boolean;
+};
+
+export type OutletContext = {
+  actualUser: User;
+  user: User;
+};
+
+export type Room = {
+  _id: string;
+  users: User[];
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type Chat = {
+  _id: string;
+  room: string;
+  sender: string;
+  message: string;
+  media: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
 export type Post = {
   user: {
     _id: string;

@@ -36,15 +36,6 @@ const ShowPostMessage = ({ message, media }: Props) => {
           <img src={media} className="h-full object-cover rounded-xl" />
         </div>
       ) : (
-        // <Dialog>
-        //   <DialogTrigger className="prevent-navigation rounded-xl h-[500px] border border-div_border ">
-        //     <img
-        //       src={media}
-        //       className="h-full object-cover rounded-xl prevent-navigation"
-        //     />
-        //   </DialogTrigger>
-        //   <FullScreenImage src={media} />
-        // </Dialog>
         ""
       )}
 

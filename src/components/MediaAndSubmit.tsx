@@ -1,6 +1,6 @@
 import ReactIcons from "@/assets/icons";
 import Loading from "@/lib/Loading";
-import { useRef } from "react";
+import { ChangeEvent, useRef } from "react";
 
 type Props = {
   isLoading: boolean;
@@ -21,10 +21,10 @@ const MediaAndSubmit = ({
   maxLength,
   isFocused = false,
 }: Props) => {
-  const fileRef = useRef<HTMLInputElement | undefined>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
 
-  const handleFileChange = async (e) => {
-    const file = e.target.files[0];
+  const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
 
     if (!file) return;
 
@@ -72,9 +72,7 @@ const MediaAndSubmit = ({
         )}
         <button
           disabled={isLoading}
-          className={`${
-            isFocused ? "bg-sky_blue" : "bg-sky-300"
-          }  py-[6px] px-4 rounded-full  text-white`}
+          className={`bg-sky_blue py-[6px] px-4 rounded-full  text-white`}
           onClick={handleCreate}
         >
           {isLoading ? <Loading hScreen={false} small={true} /> : title}

@@ -1,11 +1,15 @@
 import ReactIcons from "@/assets/icons";
-import { useRef } from "react";
+import { ChangeEvent, useRef } from "react";
 
-const EditAndCancel = ({ selectedFile }) => {
-  const fileRef = useRef<HTMLInputElement | undefined>(null);
+type Props = {
+  selectedFile: (value: File | null) => void;
+};
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
+const EditAndCancel = ({ selectedFile }: Props) => {
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
 
     if (!file) return;
 

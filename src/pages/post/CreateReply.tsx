@@ -14,17 +14,21 @@ type Props = {
 
 const CreateReply = ({ actualUser, postId }: Props) => {
   const [isFocus, setIsFocus] = useState(false);
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { showErrorMessage, showAlertMessage } = Toastify();
 
-  const { register, getValues, reset } = useForm({
+  const maxLength = 200;
+
+  const { register, getValues, reset, watch } = useForm({
     defaultValues: {
       message: "",
     },
   });
 
-  const selectFile = (file) => {
+  const messageLength = watch("message").length;
+
+  const selectFile = (file: File | null) => {
     setSelectedFile(file);
   };
 
@@ -72,6 +76,7 @@ const CreateReply = ({ actualUser, postId }: Props) => {
               className="text-lg w-full resize-none"
               onFocus={() => setIsFocus(true)}
               rows={isFocus ? 4 : 1}
+              maxLength={maxLength}
             />
           </div>
           {selectedFile && (
@@ -101,6 +106,8 @@ const CreateReply = ({ actualUser, postId }: Props) => {
                 isLoading={isLoading}
                 selectedFile={selectFile}
                 handleCreate={handleCreateReply}
+                maxLength={maxLength}
+                messageLength={messageLength}
               />
             </div>
           )}

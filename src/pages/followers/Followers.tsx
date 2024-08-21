@@ -1,12 +1,12 @@
 import SingleFollow from "@/components/SingleFollow";
 import useFollowers from "@/hooks/useFollowers";
 import Loading from "@/lib/Loading";
-import { useOutletContext, useParams } from "react-router-dom";
+import { Follower, OutletContext } from "@/types";
+import { useOutletContext } from "react-router-dom";
 
 const Followers = () => {
-  const { user } = useOutletContext();
-  const { username } = useParams();
-  const { isLoading, error, data, refetch } = useFollowers(user._id);
+  const { user } = useOutletContext<OutletContext>();
+  const { isLoading, error, data } = useFollowers(user._id);
 
   if (isLoading) {
     return <Loading hScreen={false} small={false} />;
@@ -32,13 +32,12 @@ const Followers = () => {
 
   return (
     <>
-      {followers.map((follower) => {
+      {followers.map((follower: Follower) => {
         return (
           <SingleFollow
             key={follower._id}
             follow={follower}
             isFollower={true}
-            refetch={refetch}
           />
         );
       })}

@@ -3,7 +3,7 @@ import useUserPosts from "@/hooks/useUserPosts";
 import Loading from "@/lib/Loading";
 import { offDeletePost, onDeletePost } from "@/lib/socketIO";
 import { addUserPostsCount } from "@/redux/slice/userSlice";
-import { type Post as PostType } from "@/types";
+import { OutletContext, type Post as PostType } from "@/types";
 import generateUniqueIDArray from "@/utils/javascript/generateUniqueIDArray";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -12,7 +12,7 @@ import { useOutletContext, useParams } from "react-router-dom";
 const UserPosts = () => {
   const dispatch = useDispatch();
   const { username } = useParams();
-  const { user } = useOutletContext();
+  const { user } = useOutletContext<OutletContext>();
   const [page, setPage] = useState(1);
   const [posts, setPosts] = useState<PostType[]>([]);
   const { isLoading, error, data } = useUserPosts(user._id, page);

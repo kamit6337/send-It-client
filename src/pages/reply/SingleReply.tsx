@@ -5,9 +5,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import useLoginCheck from "@/hooks/useLoginCheck";
 import PostReplies from "../post/PostReplies";
 import ReplyPost from "@/components/ReplyPost";
+import { Params } from "@/types";
 
 const SingleReply = () => {
-  const { id } = useParams();
+  const { id } = useParams() as Params;
   const navigate = useNavigate();
   const { data: actualUser } = useLoginCheck();
   const { isLoading, error, data } = useReplyPost(id);

@@ -19,6 +19,7 @@ import LikeAndComment from "./LikeAndComment";
 import { type Post, User } from "@/types";
 import ShowPostMessage from "./ShowPostMessage";
 import { Dialog } from "./ui/dialog";
+import HoveredUserInfo from "./HoveredUserInfo";
 
 const Post = ({
   post,
@@ -39,6 +40,8 @@ const Post = ({
   const { pathname } = useLocation();
   const [isLiked, setIsLiked] = useState(defaultLike);
   const [isSaved, setIsSaved] = useState(defaultSave);
+  const [showUserInfo, setShowUserInfo] = useState(false);
+  const [showUserInfoOnImg, setShowUserInfoOnImg] = useState(false);
 
   const { ref, inView } = useInView({
     threshold: 0.1, // Trigger when 50% of the element is in view
@@ -108,28 +111,31 @@ const Post = ({
     }
   };
 
-  const handleNavigate = (target: EventTarget) => {
-    // if (!target.closest(".prevent-navigation")) {
+  const handleNavigate = () => {
     if (!isReply) {
       navigate(`/posts/${_id}`);
       return;
     }
     navigate(`/reply/${_id}`);
-    //   return;
-    // }
   };
 
   return (
     <>
       <div
-        onClick={(e) => handleNavigate(e.target)}
+        onClick={() => handleNavigate()}
         ref={ref}
         className={`${
           showLine ? "" : "border-b border-div_border"
         }  cursor-pointer  w-full px-5 pt-3 flex gap-5 hover:bg-gray-100`}
       >
-        <div className="flex flex-col items-center gap-1">
-          <div className="w-9 md:w-10" onClick={(e) => e.stopPropagation()}>
+        <div className="flex flex-col items-center gap-1 ">
+          {/* NOTE: USER PROFILE IMAGE */}
+          <div
+            className="w-9 md:w-10 relative"
+            onClick={(e) => e.stopPropagation()}
+            onMouseEnter={() => setShowUserInfoOnImg(true)}
+            onMouseLeave={() => setShowUserInfoOnImg(false)}
+          >
             <Link to={`/${username}`} onClick={handleScroll}>
               <img
                 src={photo}
@@ -138,20 +144,35 @@ const Post = ({
                 loading="lazy"
               />
             </Link>
+            {showUserInfoOnImg && <HoveredUserInfo username={username} />}
           </div>
+
           {showLine && <div className="h-full w-[2px] bg-div_border" />}
         </div>
+
         <div className="flex-1 flex flex-col gap-2">
           <div
             className="w-full flex justify-between items-center"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center gap-2">
-              <p className="font-semibold text-user_name text-sm hover:underline underline-offset-4">
-                <Link to={`/${username}`} onClick={handleScroll}>
+              {/* NOTE: USER NAME */}
+              <div
+                className="relative"
+                onMouseEnter={() => setShowUserInfo(true)}
+                onMouseLeave={() => setShowUserInfo(false)}
+              >
+                <Link
+                  to={`/${username}`}
+                  onClick={handleScroll}
+                  className="font-semibold text-user_name text-sm hover:underline underline-offset-4"
+                >
                   {name}
                 </Link>
-              </p>
+                {showUserInfo && <HoveredUserInfo username={username} />}
+              </div>
+
+              {/* NOTE: USER USERNAME, CREATED-AT */}
               <div className="flex items-center">
                 <p className="text-grey text-sm">@{username}</p>
                 <p className="text-grey">
@@ -163,6 +184,7 @@ const Post = ({
               </div>
             </div>
 
+            {/* NOTE: SHOW OPTION IN CASE IT IS USER POST */}
             {username === actualUser.username && (
               <div onClick={(e) => e.stopPropagation()}>
                 <Dialog>
@@ -178,7 +200,11 @@ const Post = ({
               </div>
             )}
           </div>
+
+          {/* NOTE: POST MESSAGE */}
           <ShowPostMessage media={media} message={message} />
+
+          {/* NOTE: POST MESSAGE LIKE, COMMENT, REPLY */}
           <div onClick={(e) => e.stopPropagation()}>
             <LikeAndComment
               post={post}

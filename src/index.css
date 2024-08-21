@@ -109,7 +109,7 @@
   }
 
   .input_div {
-    @apply bg-auth_input rounded-full border border-foreground focus-within:border-sky_blue;
+    @apply focus-within:bg-auth_input bg-gray-100 rounded-full  border-sky_blue focus-within:border;
   }
 
   .input {

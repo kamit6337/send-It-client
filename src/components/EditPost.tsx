@@ -37,7 +37,7 @@ const EditPost = ({ post, handleClose, isReply }: Props) => {
 
   const {
     _id,
-    user: { username, name, photo },
+    user: { name, photo },
     message,
     media,
     duration = 0,
@@ -167,13 +167,14 @@ const EditPost = ({ post, handleClose, isReply }: Props) => {
             />
           )}
 
-        {selectedFile?.type?.startsWith("image/") && (
-          <img
-            src={URL.createObjectURL(selectedFile)}
-            className="w-full object-cover rounded-xl"
-            alt="Selected Image"
-          />
-        )}
+        {typeof selectedFile !== "string" &&
+          selectedFile?.type?.startsWith("image/") && (
+            <img
+              src={URL.createObjectURL(selectedFile)}
+              className="w-full object-cover rounded-xl"
+              alt="Selected Image"
+            />
+          )}
 
         {typeof selectedFile === "string" && selectedFile.endsWith(".mp4") && (
           <video className="w-full rounded-xl" controls>
@@ -182,19 +183,20 @@ const EditPost = ({ post, handleClose, isReply }: Props) => {
           </video>
         )}
 
-        {selectedFile?.type?.startsWith("video/") && (
-          <video
-            key={selectedFile?.name} // Use file name as the key to force re-render
-            className="w-full rounded-xl"
-            controls
-          >
-            <source
-              src={URL.createObjectURL(selectedFile)}
-              type={selectedFile?.type}
-            />
-            Your browser does not support the video tag.
-          </video>
-        )}
+        {typeof selectedFile !== "string" &&
+          selectedFile?.type?.startsWith("video/") && (
+            <video
+              key={selectedFile?.name} // Use file name as the key to force re-render
+              className="w-full rounded-xl"
+              controls
+            >
+              <source
+                src={URL.createObjectURL(selectedFile)}
+                type={selectedFile?.type}
+              />
+              Your browser does not support the video tag.
+            </video>
+          )}
 
         {!!selectedFile && <EditAndCancel selectedFile={selectFile} />}
       </div>
