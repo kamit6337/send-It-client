@@ -5,7 +5,7 @@ const userMediaQuery = (id: string, page = 1) => {
   return {
     queryKey: ["user media", id, page],
     queryFn: () => getReq("/media", { id, page }),
-    staleTime: 10 * 1000,
+    staleTime: Infinity,
     enabled: !!id,
   };
 };

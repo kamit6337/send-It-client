@@ -5,103 +5,41 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import formatRelativeDate from "@/utils/javascript/formatRelativeDate";
-import Toastify, { ToastContainer } from "@/lib/Toastify";
-import { getReq } from "@/utils/api/api";
 import {
   Link,
   useLocation,
   useNavigate,
   useOutletContext,
 } from "react-router-dom";
-import { useInView } from "react-intersection-observer";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import LikeAndComment from "./LikeAndComment";
 import { OutletContext, type Post } from "@/types";
 import ShowPostMessage from "./ShowPostMessage";
 import { Dialog } from "./ui/dialog";
 import HoveredUserInfo from "./HoveredUserInfo";
-import usePostDetails from "@/hooks/usePostDetails";
 
 const Post = ({
   post,
   isReply = false,
   showLine = false,
-  defaultLike = false,
-  defaultSave = false,
 }: {
   post: Post;
   isReply?: boolean;
   showLine?: boolean;
-  defaultLike?: boolean;
-  defaultSave?: boolean;
 }) => {
   const navigate = useNavigate();
   const { actualUser } = useOutletContext<OutletContext>();
-  const { showErrorMessage } = Toastify();
   const { pathname } = useLocation();
-  const [isLiked, setIsLiked] = useState(defaultLike);
-  const [isSaved, setIsSaved] = useState(defaultSave);
   const [showUserInfo, setShowUserInfo] = useState(false);
   const [showUserInfoOnImg, setShowUserInfoOnImg] = useState(false);
-
-  const { ref, inView } = useInView({
-    threshold: 0.1, // Trigger when 50% of the element is in view
-    triggerOnce: true, // Only trigger once when it comes into view
-    rootMargin: "200px 0px", // Trigger 100px before the element enters the viewport
-  });
 
   const {
     _id,
     user: { username, name, photo },
     message,
     media,
-    likeCount,
-    replyCount,
-    saveCount = 0,
     createdAt,
   } = post;
-
-  useEffect(() => {
-    if (inView && !isLiked) {
-      (async () => {
-        try {
-          const like = await getReq("/like", { id: _id });
-
-          if (!like) {
-            setIsLiked(false);
-          } else {
-            setIsLiked(true);
-          }
-        } catch (error) {
-          showErrorMessage({
-            message:
-              error instanceof Error ? error.message : "Somethign went wrong",
-          });
-        }
-      })();
-    }
-  }, [inView, showErrorMessage, _id, isLiked]);
-
-  useEffect(() => {
-    if (inView && !isSaved) {
-      (async () => {
-        try {
-          const save = await getReq("/save", { id: _id });
-
-          if (!save) {
-            setIsSaved(false);
-          } else {
-            setIsSaved(true);
-          }
-        } catch (error) {
-          showErrorMessage({
-            message:
-              error instanceof Error ? error.message : "Something went wrong",
-          });
-        }
-      })();
-    }
-  }, [inView, showErrorMessage, _id, isSaved]);
 
   const handleScroll = () => {
     if (pathname.startsWith(`/${username}`)) {
@@ -124,7 +62,6 @@ const Post = ({
     <>
       <div
         onClick={() => handleNavigate()}
-        ref={ref}
         className={`${
           showLine ? "" : "border-b border-div_border"
         }  cursor-pointer  w-full px-5 pt-3 flex gap-5 hover:bg-gray-100`}
@@ -207,20 +144,10 @@ const Post = ({
 
           {/* NOTE: POST MESSAGE LIKE, COMMENT, REPLY */}
           <div onClick={(e) => e.stopPropagation()}>
-            <LikeAndComment
-              post={post}
-              user={actualUser}
-              postId={_id}
-              like={isLiked}
-              likeCount={likeCount}
-              save={isSaved}
-              saveCount={saveCount}
-              replyCount={replyCount}
-            />
+            <LikeAndComment post={post} user={actualUser} />
           </div>
         </div>
       </div>
-      <ToastContainer />
     </>
   );
 };

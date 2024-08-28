@@ -1,10 +1,7 @@
 import { Chat, Like, Post, Reply, Room, Save } from "@/types";
-import environment from "@/utils/environment";
-import { io } from "socket.io-client";
+import getSocket from "./singleSocket";
 
-const socket = io(environment.SERVER_URL, {
-  withCredentials: true,
-});
+const socket = getSocket();
 
 export const isConnected = () => {
   socket.emit("isConnected", "i am from client", (response: string) => {
@@ -48,11 +45,11 @@ export const offNewLike = (callback: (value: Like) => void) => {
   socket.off("newLike", callback);
 };
 
-export const onRemoveLike = (callback: (value: string) => void) => {
+export const onRemoveLike = (callback: (value: Like) => void) => {
   socket.on("removeLike", callback);
 };
 
-export const offRemoveLike = (callback: (value: string) => void) => {
+export const offRemoveLike = (callback: (value: Like) => void) => {
   socket.off("removeLike", callback);
 };
 
@@ -65,11 +62,11 @@ export const offNewSave = (callback: (value: Save) => void) => {
   socket.off("newSave", callback);
 };
 
-export const onRemoveSave = (callback: (value: string) => void) => {
+export const onRemoveSave = (callback: (value: Save) => void) => {
   socket.on("removeSave", callback);
 };
 
-export const offRemoveSave = (callback: (value: string) => void) => {
+export const offRemoveSave = (callback: (value: Save) => void) => {
   socket.off("removeSave", callback);
 };
 

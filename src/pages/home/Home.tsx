@@ -3,88 +3,23 @@ import Post from "../../components/Post";
 import CreatePost from "./CreatePost";
 import usePosts from "@/hooks/usePosts";
 import Loading from "@/lib/Loading";
-import { useEffect, useRef, useState } from "react";
-import {
-  isConnected,
-  offDeletePost,
-  offNewPost,
-  onDeletePost,
-  onNewPost,
-} from "@/lib/socketIO";
+import { useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
-import { getReq } from "@/utils/api/api";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  addFollowingPosts,
-  addSingleFollowingPost,
-  removeSingleFollowingPost,
-  userInitialState,
-} from "@/redux/slice/userSlice";
 import { OutletContext, type Post as PostType } from "@/types";
+import { useInView } from "react-intersection-observer";
+import useNewPostToggle from "@/hooks/generals/useNewPostToggle";
 
 const Home = () => {
-  const { followingPosts } = useSelector(userInitialState);
-  const dispatch = useDispatch();
-  const [page, setPage] = useState(1);
-  const { isLoading, error, data } = usePosts();
+  const { isLoading, error, data, fetchNextPage } = usePosts();
   const { actualUser } = useOutletContext<OutletContext>();
-  const hasNewPostListener = useRef(false);
+  const { ref, inView } = useInView();
+  useNewPostToggle(actualUser);
 
   useEffect(() => {
-    isConnected();
-
-    const handlePost = async (post: PostType) => {
-      const { user } = post;
-
-      console.log(post);
-
-      if (user._id === actualUser._id) {
-        dispatch(addSingleFollowingPost(post));
-        return;
-      }
-
-      try {
-        const response = await getReq("/user/following/check", {
-          id: user._id,
-        });
-
-        if (!response?.data) return;
-        dispatch(addSingleFollowingPost(post));
-      } catch (error) {
-        console.log("error in getting post", error);
-      }
-    };
-
-    // if (!hasNewPostListener.current) {
-    onNewPost(handlePost);
-    //   hasNewPostListener.current = true;
-    // }
-
-    return () => {
-      offNewPost(handlePost);
-      // hasNewPostListener.current = false;
-    };
-  }, [dispatch, actualUser._id]);
-
-  useEffect(() => {
-    const handleDeletePost = (id: string) => {
-      dispatch(removeSingleFollowingPost(id));
-    };
-    onDeletePost(handleDeletePost);
-    return () => {
-      offDeletePost(handleDeletePost);
-    };
-  }, [dispatch]);
-
-  useEffect(() => {
-    if (data) {
-      if (page === 1) {
-        dispatch(addFollowingPosts(data.data));
-        return;
-      }
-      dispatch(addFollowingPosts(data.data));
+    if (inView) {
+      fetchNextPage();
     }
-  }, [data, page, dispatch]);
+  }, [inView, fetchNextPage]);
 
   if (isLoading) {
     return (
@@ -114,6 +49,8 @@ const Home = () => {
     );
   }
 
+  // return <div>Home</div>;
+
   return (
     <>
       <Helmet>
@@ -122,10 +59,12 @@ const Home = () => {
       </Helmet>
       <div className="">
         <CreatePost />
-        {followingPosts.map((post) => {
-          return <Post post={post} key={post._id} />;
+        {data?.pages?.map((page) => {
+          return page.map((post: PostType) => {
+            return <Post post={post} key={post._id} />;
+          });
         })}
-        <div className="h-96" />
+        <div ref={ref} className="h-96" />
       </div>
     </>
   );

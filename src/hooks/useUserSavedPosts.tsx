@@ -5,7 +5,7 @@ const userSavePostsQuery = (page = 1) => {
   return {
     queryKey: ["user saved posts", page],
     queryFn: () => getReq("/save/post", { page }),
-    staleTime: 10 * 1000,
+    staleTime: Infinity,
   };
 };
 

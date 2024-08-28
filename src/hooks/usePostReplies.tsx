@@ -5,7 +5,7 @@ const postRepliesQuery = (id: string, page = 1) => {
   return {
     queryKey: ["post replies", id, page],
     queryFn: () => getReq("/reply/post", { page, id }),
-    staleTime: 10 * 1000,
+    staleTime: Infinity,
     enabled: !!id,
   };
 };

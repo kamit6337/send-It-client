@@ -5,7 +5,7 @@ export const followingQuery = (id: string, page = 1) => {
   return {
     queryKey: ["user following", id, page],
     queryFn: () => getReq("/following", { id, page }),
-    staleTime: 10 * 1000, //10 seconds,
+    staleTime: Infinity,
     enabled: !!id,
   };
 };

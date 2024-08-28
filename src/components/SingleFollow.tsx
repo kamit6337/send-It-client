@@ -1,8 +1,6 @@
 import useLoginCheck from "@/hooks/useLoginCheck";
-import { userProfileQuery } from "@/hooks/useUserProfile";
 import Loading from "@/lib/Loading";
 import Toastify, { ToastContainer } from "@/lib/Toastify";
-import { queryClient } from "@/main";
 import { Follower } from "@/types";
 import { deleteReq, postReq } from "@/utils/api/api";
 import { useEffect, useState } from "react";
@@ -65,13 +63,7 @@ const SingleFollow = ({ follow, isFollower = false }: Props) => {
   return (
     <>
       <div className="w-full px-10 py-3 flex justify-between items-center hover:bg-sidebar_link_hover border-b border-div_border">
-        <Link
-          to={`/${username}`}
-          onMouseEnter={async () =>
-            await queryClient.prefetchQuery(userProfileQuery(username))
-          }
-          className="flex items-center gap-3"
-        >
+        <Link to={`/${username}`} className="flex items-center gap-3">
           <div className="w-10 md:w-12">
             <img src={photo} alt={name} className="w-full rounded-full" />
           </div>

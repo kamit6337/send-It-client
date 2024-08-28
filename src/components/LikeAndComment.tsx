@@ -1,19 +1,6 @@
 import ReactIcons from "@/assets/icons";
-import {
-  offNewLike,
-  offNewSave,
-  offRemoveLike,
-  offRemoveSave,
-  onNewLike,
-  onNewSave,
-  onRemoveLike,
-  onRemoveSave,
-} from "@/lib/socketIO";
 import Toastify, { ToastContainer } from "@/lib/Toastify";
-import { Like, Post, Save, User } from "@/types";
-import { deleteReq, postReq } from "@/utils/api/api";
-import generateUniqueIDArray from "@/utils/javascript/generateUniqueIDArray";
-import { useEffect, useRef, useState } from "react";
+import { Post, User } from "@/types";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,141 +10,34 @@ import {
 import environment from "@/utils/environment";
 import { Dialog, DialogClose, DialogContent, DialogTrigger } from "./ui/dialog";
 import CreatePostReply from "./CreatePostReply";
+import { useInView } from "react-intersection-observer";
+import usePostDetails from "@/hooks/usePostDetails";
+import usePostLikeToggle from "@/hooks/mutation/Like/usePostLikeToggle";
+import useLikeAndCommentSocket from "@/hooks/generals/useLikeAndCommentSocket";
+import { useRef } from "react";
+import usePostSaveToggle from "@/hooks/mutation/Save/usePostSaveToggle";
 
 type Props = {
   post: Post;
   user: User;
-  postId: string;
-  like: boolean;
-  likeCount: number;
-  save: boolean;
-  saveCount: number;
-  replyCount: number;
 };
 
-const LikeAndComment = ({
-  post,
-  user,
-  postId,
-  like,
-  likeCount,
-  save,
-  saveCount,
-  replyCount,
-}: Props) => {
-  const closeRef = useRef(null);
-  const [isLiked, setIsLiked] = useState(like);
-  const [isSaved, setIsSaved] = useState(save);
-  const [increaseLike, setIncreaseLike] = useState<Like[]>([]);
-  const [decreaseLike, setDecreaseLike] = useState<Like[]>([]);
-  const [increaseSave, setIncreaseSave] = useState<Save[]>([]);
-  const [decreaseSave, setDecreaseSave] = useState<Save[]>([]);
+const LikeAndComment = ({ post, user }: Props) => {
+  const closeRef = useRef<HTMLButtonElement>(null);
   const { showErrorMessage, showSuccessMessage } = Toastify();
 
-  useEffect(() => {
-    setIsLiked(like);
-  }, [like]);
+  const { ref, inView } = useInView({
+    threshold: 0.1, // Trigger when 50% of the element is in view
+    triggerOnce: true, // Only trigger once when it comes into view
+    rootMargin: "500px 0px", // Trigger 100px before the element enters the viewport
+  });
 
-  useEffect(() => {
-    setIsSaved(save);
-  }, [save]);
+  const postId = post._id;
+  useLikeAndCommentSocket(postId);
 
-  useEffect(() => {
-    const handleNewLike = (response: Like) => {
-      if (postId === response.post) {
-        setIncreaseLike((prev) => generateUniqueIDArray([response, ...prev]));
-      }
-    };
-    onNewLike(handleNewLike);
-    return () => {
-      offNewLike(handleNewLike);
-    };
-  }, [postId]);
-
-  useEffect(() => {
-    const handleRemoveLike = (response: Like) => {
-      if (postId === response.post) {
-        setDecreaseLike((prev) => generateUniqueIDArray([response, ...prev]));
-      }
-    };
-    onRemoveLike(handleRemoveLike);
-    return () => {
-      offRemoveLike(handleRemoveLike);
-    };
-  }, [postId]);
-
-  useEffect(() => {
-    const handleNewSave = (response: Save) => {
-      if (postId === response.post) {
-        setIncreaseSave((prev) => generateUniqueIDArray([response, ...prev]));
-      }
-    };
-    onNewSave(handleNewSave);
-    return () => {
-      offNewSave(handleNewSave);
-    };
-  }, [postId]);
-
-  useEffect(() => {
-    const handleRemoveSave = (response: Save) => {
-      if (postId === response.post) {
-        setDecreaseSave((prev) => generateUniqueIDArray([response, ...prev]));
-      }
-    };
-    onRemoveSave(handleRemoveSave);
-
-    return () => {
-      offRemoveSave(handleRemoveSave);
-    };
-  }, [postId]);
-
-  const handleCreateLike = async () => {
-    try {
-      await postReq("/like", { id: postId });
-      setIsLiked(true);
-    } catch (error) {
-      showErrorMessage({
-        message:
-          error instanceof Error ? error.message : "Somethign went wrong",
-      });
-    }
-  };
-
-  const handleCreateSave = async () => {
-    try {
-      await postReq("/save", { id: postId });
-      setIsSaved(true);
-    } catch (error) {
-      showErrorMessage({
-        message:
-          error instanceof Error ? error.message : "Somethign went wrong",
-      });
-    }
-  };
-
-  const handleRemoveLike = async () => {
-    try {
-      await deleteReq("/like", { id: postId });
-      setIsLiked(false);
-    } catch (error) {
-      showErrorMessage({
-        message:
-          error instanceof Error ? error.message : "Somethign went wrong",
-      });
-    }
-  };
-
-  const handleRemoveSave = async () => {
-    try {
-      await deleteReq("/save", { id: postId });
-      setIsSaved(false);
-    } catch (error) {
-      showErrorMessage({
-        message:
-          error instanceof Error ? error.message : "Somethign went wrong",
-      });
-    }
-  };
+  const { data } = usePostDetails(postId, inView);
+  const { mutate: mutateLike } = usePostLikeToggle(postId);
+  const { mutate: mutateSave } = usePostSaveToggle(postId);
 
   const handleCopyLink = () => {
     const link = `${environment.CLIENT_URL}/posts/${postId}`;
@@ -181,9 +61,19 @@ const LikeAndComment = ({
     closeRef.current?.click();
   };
 
+  const likeCount = data?.data?.likeCount || 0;
+  const saveCount = data?.data?.saveCount || 0;
+  const replyCount = data?.data?.replyCount || 0;
+  const isLiked = data?.data?.isLiked;
+  const isSaved = data?.data?.isSaved || 0;
+  // const isReply = data?.data?.isReply || 0;
+
   return (
     <>
-      <div className="w-full flex justify-between items-center text-grey">
+      <div
+        ref={ref}
+        className="w-full flex justify-between items-center text-grey"
+      >
         {/* NOTE: REPLY */}
         <Dialog>
           <DialogTrigger>
@@ -211,21 +101,19 @@ const LikeAndComment = ({
           {isLiked ? (
             <button
               className="text-red-500 p-2 rounded-full"
-              onClick={handleRemoveLike}
+              onClick={() => mutateLike(false)}
             >
               <ReactIcons.heartSolid />
             </button>
           ) : (
             <button
-              onClick={handleCreateLike}
+              onClick={() => mutateLike(true)}
               className="hover:text-red-500 hover:bg-red-200 p-2 rounded-full"
             >
               <ReactIcons.heartOutline />
             </button>
           )}
-          <p className="-ml-2 text-sm">
-            {likeCount + increaseLike.length - decreaseLike.length}
-          </p>
+          <p className="-ml-2 text-sm">{likeCount}</p>
         </div>
         <button>
           <ReactIcons.views />
@@ -235,22 +123,20 @@ const LikeAndComment = ({
         <div className=" flex items-center gap-1">
           {isSaved ? (
             <button
+              onClick={() => mutateSave(false)}
               className="text-blue-500 p-2 rounded-full"
-              onClick={handleRemoveSave}
             >
               <ReactIcons.bookmarkSolid />
             </button>
           ) : (
             <button
-              onClick={handleCreateSave}
+              onClick={() => mutateSave(true)}
               className="hover:text-blue-500 hover:bg-blue-200 p-2 rounded-full"
             >
               <ReactIcons.bookMarkOutline />
             </button>
           )}
-          <p className="text-sm -ml-2">
-            {saveCount + increaseSave.length - decreaseSave.length}
-          </p>
+          <p className="text-sm -ml-2">{saveCount}</p>
         </div>
 
         {/* NOTE: SHARE */}

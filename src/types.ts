@@ -1,3 +1,15 @@
+export type PostDetails = {
+  data: {
+    _id: string;
+    likeCount: number;
+    saveCount: number;
+    replyCount: number;
+    isLiked: boolean;
+    isSaved: boolean;
+    isReply: boolean;
+  };
+};
+
 export type Params = {
   id: string;
   username: string;

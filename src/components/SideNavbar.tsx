@@ -51,13 +51,7 @@ const SideNavbar = () => {
           <ReactIcons.twitterLogo className="text-3xl" />
         </NavLink>
         {navlinks.map((obj, i) => {
-          const {
-            href,
-            name,
-            outline: OutlineIcon,
-            solid: SolidIcon,
-            query,
-          } = obj;
+          const { href, name, outline: OutlineIcon, solid: SolidIcon } = obj;
 
           let to: string = href;
 
@@ -69,7 +63,6 @@ const SideNavbar = () => {
             <NavLink
               to={to}
               key={i}
-              onMouseEnter={async () => await query(user.username)}
               className={({ isActive }) =>
                 isActive ? "font-semibold w-max" : "font-medium w-max"
               }

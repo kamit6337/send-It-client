@@ -5,7 +5,7 @@ const singlePostQuery = (id: string) => {
   return {
     queryKey: ["single posts", id],
     queryFn: () => getReq("/post", { id }),
-    staleTime: 10 * 1000,
+    staleTime: Infinity,
     enabled: !!id,
   };
 };
