@@ -3,7 +3,7 @@ import Post from "../../components/Post";
 import CreatePost from "./CreatePost";
 import usePosts from "@/hooks/usePosts";
 import Loading from "@/lib/Loading";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   isConnected,
   offDeletePost,
@@ -28,12 +28,15 @@ const Home = () => {
   const [page, setPage] = useState(1);
   const { isLoading, error, data } = usePosts();
   const { actualUser } = useOutletContext<OutletContext>();
+  const hasNewPostListener = useRef(false);
 
   useEffect(() => {
     isConnected();
 
     const handlePost = async (post: PostType) => {
       const { user } = post;
+
+      console.log(post);
 
       if (user._id === actualUser._id) {
         dispatch(addSingleFollowingPost(post));
@@ -52,10 +55,14 @@ const Home = () => {
       }
     };
 
+    // if (!hasNewPostListener.current) {
     onNewPost(handlePost);
+    //   hasNewPostListener.current = true;
+    // }
 
     return () => {
       offNewPost(handlePost);
+      // hasNewPostListener.current = false;
     };
   }, [dispatch, actualUser._id]);
 

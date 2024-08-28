@@ -16,10 +16,11 @@ import {
 import { useInView } from "react-intersection-observer";
 import { useEffect, useState } from "react";
 import LikeAndComment from "./LikeAndComment";
-import { type Post, User } from "@/types";
+import { OutletContext, type Post } from "@/types";
 import ShowPostMessage from "./ShowPostMessage";
 import { Dialog } from "./ui/dialog";
 import HoveredUserInfo from "./HoveredUserInfo";
+import usePostDetails from "@/hooks/usePostDetails";
 
 const Post = ({
   post,
@@ -35,7 +36,7 @@ const Post = ({
   defaultSave?: boolean;
 }) => {
   const navigate = useNavigate();
-  const { actualUser }: { actualUser: User } = useOutletContext();
+  const { actualUser } = useOutletContext<OutletContext>();
   const { showErrorMessage } = Toastify();
   const { pathname } = useLocation();
   const [isLiked, setIsLiked] = useState(defaultLike);
