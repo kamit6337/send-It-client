@@ -2,6 +2,7 @@ import SideNavbar from "@/components/SideNavbar";
 import useLoginCheck from "@/hooks/useLoginCheck";
 import useUserRooms from "@/hooks/useUserRooms";
 import Loading from "@/lib/Loading";
+import SocketConnectionProvider from "@/providers/SocketConnectionProvider";
 import { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 
@@ -31,14 +32,16 @@ const RootLayout = () => {
   if (!isSuccess) return;
 
   return (
-    <main className="w-full flex items-start">
-      <div className="sticky top-0 lg:w-80 w-max h-screen border-r border-div_border flex flex-col items-center">
-        <SideNavbar />
-      </div>
-      <div className="flex-1">
-        <Outlet context={{ actualUser }} />
-      </div>
-    </main>
+    <SocketConnectionProvider>
+      <main className="w-full flex items-start">
+        <div className="sticky top-0 lg:w-80 w-max h-screen border-r border-div_border flex flex-col items-center">
+          <SideNavbar />
+        </div>
+        <div className="flex-1">
+          <Outlet context={{ actualUser }} />
+        </div>
+      </main>
+    </SocketConnectionProvider>
   );
 };
 

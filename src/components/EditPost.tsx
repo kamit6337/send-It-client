@@ -8,9 +8,7 @@ import uploadToAWS from "@/lib/uploadToAWS";
 import { patchReq } from "@/utils/api/api";
 import findVideoDuration from "@/utils/findVideoDuration";
 import uploadVideoAndThumbnail from "@/lib/uploadVideoAndThumbnail";
-import { useLocation, useNavigate } from "react-router-dom";
-import useSinglePost from "@/hooks/useSinglePost";
-import useReplyPost from "@/hooks/useReplyPost";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
   post: Post;
@@ -26,14 +24,7 @@ const EditPost = ({ post, handleClose, isReply }: Props) => {
   const { showErrorMessage, showAlertMessage } = Toastify();
   const [isLoading, setIsLoading] = useState(false);
   const [isFocused, setIsFocused] = useState(true);
-  const { pathname } = useLocation();
   const navigate = useNavigate();
-
-  const isInPostsUrl = pathname.startsWith("/posts/");
-  const isInReplyUrl = pathname.startsWith("/reply/");
-  const replyId = isInReplyUrl ? pathname.split("/").at(-1) : "";
-
-  const { refetch: refetchRepltPost } = useReplyPost(replyId);
 
   const {
     _id,
@@ -45,7 +36,6 @@ const EditPost = ({ post, handleClose, isReply }: Props) => {
   } = post;
 
   const [selectedFile, setSelectedFile] = useState<SelectedFile>(media);
-  const { refetch } = useSinglePost(_id);
 
   const maxLength = 200;
 
@@ -75,13 +65,12 @@ const EditPost = ({ post, handleClose, isReply }: Props) => {
         if (selectedFile && typeof selectedFile !== "string") {
           updatedMedia = await uploadToAWS(selectedFile);
         }
-        const response = await patchReq("/reply", {
+
+        await patchReq("/reply", {
           id: _id,
           message,
           media: updatedMedia,
         });
-
-        navigate(`/posts/${response.data}`);
       } else {
         let updatedMedia = media;
         let updatedDuration = duration;
@@ -112,14 +101,6 @@ const EditPost = ({ post, handleClose, isReply }: Props) => {
       handleClose();
       reset();
       setSelectedFile(null);
-
-      if (isInPostsUrl) {
-        refetch();
-      }
-
-      if (isInReplyUrl) {
-        refetchRepltPost();
-      }
     } catch (error) {
       showErrorMessage({
         message:

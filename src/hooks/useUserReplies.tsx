@@ -1,17 +1,21 @@
 import { getReq } from "@/utils/api/api";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 
-const userRepliesQuery = (id: string, page = 1) => {
-  return {
-    queryKey: ["user replies", id, page],
-    queryFn: () => getReq("/reply/user", { id, page }),
+const useUserReplies = (id: string) => {
+  const query = useInfiniteQuery({
+    queryKey: ["user replies", id],
+    queryFn: ({ pageParam }) => getReq("/reply/user", { page: pageParam, id }),
     staleTime: Infinity,
-    enabled: !!id,
-  };
-};
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, _allPages, lastPageParam) => {
+      if (lastPage.length === 0) {
+        return undefined;
+      } else {
+        return lastPageParam + 1;
+      }
+    },
+  });
 
-const useUserReplies = (id: string, page = 1) => {
-  const query = useQuery(userRepliesQuery(id, page));
   return query;
 };
 

@@ -11,12 +11,14 @@ import {
   useNavigate,
   useOutletContext,
 } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import LikeAndComment from "./LikeAndComment";
 import { OutletContext, type Post } from "@/types";
 import ShowPostMessage from "./ShowPostMessage";
 import { Dialog } from "./ui/dialog";
 import HoveredUserInfo from "./HoveredUserInfo";
+import { useDispatch, useSelector } from "react-redux";
+import { addToPost, postState } from "@/redux/slice/postSlice";
 
 const Post = ({
   post,
@@ -27,11 +29,38 @@ const Post = ({
   isReply?: boolean;
   showLine?: boolean;
 }) => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const { actualUser } = useOutletContext<OutletContext>();
   const { pathname } = useLocation();
   const [showUserInfo, setShowUserInfo] = useState(false);
   const [showUserInfoOnImg, setShowUserInfoOnImg] = useState(false);
+  const { updatePost, deletePost } = useSelector(postState);
+
+  useEffect(() => {
+    if (post._id) {
+      dispatch(addToPost(post._id));
+    }
+  }, [post._id, dispatch]);
+
+  const newPost = useMemo(() => {
+    if (updatePost.length === 0) return post;
+    const findPost = updatePost.find((obj) => obj._id === post._id);
+    if (findPost) {
+      return findPost;
+    } else {
+      return post;
+    }
+  }, [post, updatePost]);
+
+  const isDeleted = useMemo(() => {
+    if (deletePost.includes(post._id)) {
+      return true;
+    }
+    return false;
+  }, [deletePost, post._id]);
+
+  if (isDeleted) return;
 
   const {
     _id,
@@ -39,7 +68,7 @@ const Post = ({
     message,
     media,
     createdAt,
-  } = post;
+  } = newPost;
 
   const handleScroll = () => {
     if (pathname.startsWith(`/${username}`)) {
@@ -88,9 +117,9 @@ const Post = ({
           {showLine && <div className="h-full w-[2px] bg-div_border" />}
         </div>
 
-        <div className="flex-1 flex flex-col gap-2">
+        <div className="flex-1 flex flex-col">
           <div
-            className="w-full flex justify-between items-center"
+            className="w-full flex justify-between items-start"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center gap-2">
@@ -127,12 +156,10 @@ const Post = ({
               <div onClick={(e) => e.stopPropagation()}>
                 <Dialog>
                   <DropdownMenu>
-                    <DropdownMenuTrigger>
-                      <button className="text-grey px-3">
-                        <ReactIcons.threeDot />
-                      </button>
+                    <DropdownMenuTrigger className="text-grey p-2 hover:bg-gray-300 hover:rounded-full">
+                      <ReactIcons.threeDot />
                     </DropdownMenuTrigger>
-                    <PostOptions post={post} isReply={isReply} />
+                    <PostOptions post={newPost} isReply={isReply} />
                   </DropdownMenu>
                 </Dialog>
               </div>
@@ -144,7 +171,7 @@ const Post = ({
 
           {/* NOTE: POST MESSAGE LIKE, COMMENT, REPLY */}
           <div onClick={(e) => e.stopPropagation()}>
-            <LikeAndComment post={post} user={actualUser} />
+            <LikeAndComment post={newPost} user={actualUser} />
           </div>
         </div>
       </div>

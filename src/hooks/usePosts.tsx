@@ -1,12 +1,5 @@
 import { getReq } from "@/utils/api/api";
-import { QueryClient, useInfiniteQuery } from "@tanstack/react-query";
-
-export const userFollowingPosts = (queryClient: QueryClient) => {
-  queryClient.prefetchQuery({
-    queryKey: ["following posts"],
-    queryFn: () => getReq("/following/post", { page: 1 }),
-  });
-};
+import { useInfiniteQuery } from "@tanstack/react-query";
 
 const usePosts = () => {
   const query = useInfiniteQuery({
@@ -14,9 +7,11 @@ const usePosts = () => {
     queryFn: ({ pageParam }) => getReq("/following/post", { page: pageParam }),
     staleTime: Infinity,
     initialPageParam: 1,
-    getNextPageParam: (lastPage) => {
+    getNextPageParam: (lastPage, _allPages, lastPageParam) => {
       if (lastPage.length === 0) {
         return undefined;
+      } else {
+        return lastPageParam + 1;
       }
     },
   });

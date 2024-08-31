@@ -5,7 +5,7 @@ const HoveredUserInfo = ({ username }: { username: string }) => {
 
   if (isLoading || error) return null;
 
-  const { name, photo, isFollowed, followingCount, followersCount } = data.data;
+  const { name, photo, isFollowed, followingCount, followersCount } = data;
 
   return (
     <div className="absolute z-20 top-full left-1/2 -translate-x-1/2 w-80 bg-background border border-div_border rounded-xl px-3 py-5">

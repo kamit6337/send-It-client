@@ -5,13 +5,14 @@ import PostReplies from "./PostReplies";
 import ReactIcons from "@/assets/icons";
 import PostDetails from "../../components/PostDetails";
 import useLoginCheck from "@/hooks/useLoginCheck";
+import { Params } from "@/types";
 
 const SinglePost = () => {
   const navigate = useNavigate();
-  const { id } = useParams();
+  const { id } = useParams() as Params;
   const { data: actualUser } = useLoginCheck();
 
-  const { isLoading, error, data } = useSinglePost(id as string);
+  const { isLoading, error, data } = useSinglePost(id);
 
   if (isLoading) {
     return (
@@ -29,7 +30,7 @@ const SinglePost = () => {
     );
   }
 
-  const post = data.data;
+  const post = data;
 
   return (
     <section className="">

@@ -10,18 +10,7 @@ import { useDispatch } from "react-redux";
 const SavePosts = () => {
   const dispatch = useDispatch();
   const [posts, setPosts] = useState<PostType[]>([]);
-  const [page, setPage] = useState(1);
-  const { isLoading, error, data } = useUserSavedPosts(page);
-
-  useEffect(() => {
-    if (data) {
-      if (page === 1) {
-        setPosts(data.data);
-        return;
-      }
-      setPosts((prev) => [...data.data, ...prev]);
-    }
-  }, [data, page]);
+  const { isLoading, error, data } = useUserSavedPosts();
 
   useEffect(() => {
     const handleDeletePost = (id: string) => {
@@ -51,11 +40,12 @@ const SavePosts = () => {
       </div>
     );
   }
-
   return (
     <>
-      {posts.map((post) => {
-        return <Post key={post._id} post={post} defaultSave={true} />;
+      {data?.pages?.map((page) => {
+        return page.map((post: PostType) => {
+          return <Post post={post} key={post._id} />;
+        });
       })}
       <div className="h-96" />
     </>

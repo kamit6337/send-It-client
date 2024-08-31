@@ -13,7 +13,6 @@ import CreatePostReply from "./CreatePostReply";
 import { useInView } from "react-intersection-observer";
 import usePostDetails from "@/hooks/usePostDetails";
 import usePostLikeToggle from "@/hooks/mutation/Like/usePostLikeToggle";
-import useLikeAndCommentSocket from "@/hooks/generals/useLikeAndCommentSocket";
 import { useRef } from "react";
 import usePostSaveToggle from "@/hooks/mutation/Save/usePostSaveToggle";
 
@@ -33,11 +32,12 @@ const LikeAndComment = ({ post, user }: Props) => {
   });
 
   const postId = post._id;
-  useLikeAndCommentSocket(postId);
 
   const { data } = usePostDetails(postId, inView);
-  const { mutate: mutateLike } = usePostLikeToggle(postId);
-  const { mutate: mutateSave } = usePostSaveToggle(postId);
+  const { mutate: mutateLike, isPending: isPendingLikeToggle } =
+    usePostLikeToggle(postId);
+  const { mutate: mutateSave, isPending: isPendingSaveToggle } =
+    usePostSaveToggle(postId);
 
   const handleCopyLink = () => {
     const link = `${environment.CLIENT_URL}/posts/${postId}`;
@@ -100,14 +100,16 @@ const LikeAndComment = ({ post, user }: Props) => {
         <div className=" flex items-center gap-1">
           {isLiked ? (
             <button
+              disabled={isPendingLikeToggle}
               className="text-red-500 p-2 rounded-full"
-              onClick={() => mutateLike(false)}
+              onClick={() => mutateLike({ toggle: false, post })}
             >
               <ReactIcons.heartSolid />
             </button>
           ) : (
             <button
-              onClick={() => mutateLike(true)}
+              disabled={isPendingLikeToggle}
+              onClick={() => mutateLike({ toggle: true, post })}
               className="hover:text-red-500 hover:bg-red-200 p-2 rounded-full"
             >
               <ReactIcons.heartOutline />
@@ -123,14 +125,16 @@ const LikeAndComment = ({ post, user }: Props) => {
         <div className=" flex items-center gap-1">
           {isSaved ? (
             <button
-              onClick={() => mutateSave(false)}
+              disabled={isPendingSaveToggle}
+              onClick={() => mutateSave({ toggle: false, post })}
               className="text-blue-500 p-2 rounded-full"
             >
               <ReactIcons.bookmarkSolid />
             </button>
           ) : (
             <button
-              onClick={() => mutateSave(true)}
+              disabled={isPendingSaveToggle}
+              onClick={() => mutateSave({ toggle: true, post })}
               className="hover:text-blue-500 hover:bg-blue-200 p-2 rounded-full"
             >
               <ReactIcons.bookMarkOutline />

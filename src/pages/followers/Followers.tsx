@@ -1,7 +1,7 @@
 import SingleFollow from "@/components/SingleFollow";
 import useFollowers from "@/hooks/useFollowers";
 import Loading from "@/lib/Loading";
-import { Follower, OutletContext } from "@/types";
+import { OutletContext } from "@/types";
 import { useOutletContext } from "react-router-dom";
 
 const Followers = () => {
@@ -20,9 +20,7 @@ const Followers = () => {
     );
   }
 
-  const followers = data.data;
-
-  if (!followers || followers.length === 0) {
+  if (data?.pages[0].length === 0) {
     return (
       <div className="h-96 flex justify-center items-center">
         <p>You do not follow anyone</p>
@@ -32,14 +30,16 @@ const Followers = () => {
 
   return (
     <>
-      {followers.map((follower: Follower) => {
-        return (
-          <SingleFollow
-            key={follower._id}
-            follow={follower}
-            isFollower={true}
-          />
-        );
+      {data?.pages?.map((page) => {
+        return page.map((following) => {
+          return (
+            <SingleFollow
+              key={following._id}
+              follow={following}
+              isFollower={true}
+            />
+          );
+        });
       })}
     </>
   );

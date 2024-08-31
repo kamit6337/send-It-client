@@ -1,17 +1,21 @@
 import { getReq } from "@/utils/api/api";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 
-export const followersQuery = (id: string, page = 1) => {
-  return {
-    queryKey: ["user followers", id, page],
-    queryFn: () => getReq("/follower", { id, page }),
+const useFollowers = (id: string) => {
+  const query = useInfiniteQuery({
+    queryKey: ["user followers", id],
+    queryFn: ({ pageParam }) => getReq("/follower", { page: pageParam, id }),
     staleTime: Infinity,
-    enabled: !!id,
-  };
-};
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, _allPages, lastPageParam) => {
+      if (lastPage.length === 0) {
+        return undefined;
+      } else {
+        return lastPageParam + 1;
+      }
+    },
+  });
 
-const useFollowers = (id: string, page = 1) => {
-  const query = useQuery(followersQuery(id, page));
   return query;
 };
 

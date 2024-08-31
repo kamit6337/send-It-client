@@ -22,6 +22,7 @@ const ReplyPost = ({
         post={replyPost}
         actualUser={actualUser}
         userReply={userReply}
+        isReply={true}
       />
     </>
   );

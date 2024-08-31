@@ -18,11 +18,9 @@ const UserLayout = () => {
     );
   }
 
-  const user = data.data;
-
   return (
     <>
-      <Outlet context={{ user }} />
+      <Outlet context={{ user: data }} />
     </>
   );
 };

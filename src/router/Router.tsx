@@ -57,7 +57,7 @@ const Router = () => {
             </Route>
 
             {/* NOTE: USER FOLLWING AND FOLLOWER */}
-            <Route path=":username" element={<FollowerLayout />}>
+            <Route path="/:username" element={<FollowerLayout />}>
               <Route path="following" element={<Following />} />
               <Route path="follower" element={<Followers />} />
             </Route>

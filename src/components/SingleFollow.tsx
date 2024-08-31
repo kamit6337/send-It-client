@@ -1,63 +1,39 @@
 import useLoginCheck from "@/hooks/useLoginCheck";
-import Loading from "@/lib/Loading";
-import Toastify, { ToastContainer } from "@/lib/Toastify";
+import { ToastContainer } from "@/lib/Toastify";
+import { followingState } from "@/redux/slice/followingSlice";
 import { Follower } from "@/types";
-import { deleteReq, postReq } from "@/utils/api/api";
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import UserFollowAndUnfollow from "./UserFollowAndUnfollow";
 
 type Props = {
   follow: Follower;
-  isFollower?: boolean;
+  isFollower: boolean;
 };
 
-const SingleFollow = ({ follow, isFollower = false }: Props) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const { showErrorMessage } = Toastify();
+const SingleFollow = ({ follow, isFollower }: Props) => {
   const { isActualUserFollow, follower, user } = follow;
-  const [isFollowed, setIsFollowed] = useState(isActualUserFollow);
+  const { followings } = useSelector(followingState);
   const { data: actualUser } = useLoginCheck();
 
   const _id = isFollower ? follower._id : user._id;
   const username = isFollower ? follower.username : user.username;
   const name = isFollower ? follower.name : user.name;
   const photo = isFollower ? follower.photo : user.photo;
-  const isItActualUser = actualUser._id === _id;
 
-  useEffect(() => {
-    setIsFollowed(isActualUserFollow);
-  }, [isActualUserFollow]);
+  const isFollowed = useMemo(() => {
+    if (followings.length === 0) return isActualUserFollow;
+    const findFollowing = followings.find((obj) => obj._id === _id);
+    if (!findFollowing) return isActualUserFollow;
+    return findFollowing.isActualUserFollow;
+  }, [followings, isActualUserFollow, _id]);
 
-  const handleFollow = async () => {
-    try {
-      if (isItActualUser) return;
-      setIsLoading(true);
-      await postReq("/user/following", { id: _id });
-      setIsFollowed(true);
-    } catch (error) {
-      showErrorMessage({
-        message:
-          error instanceof Error ? error.message : "Something went wrong",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleCancelFollow = async () => {
-    try {
-      if (isItActualUser) return;
-      setIsLoading(true);
-      await deleteReq("/user/following", { id: _id });
-      setIsFollowed(false);
-    } catch (error) {
-      showErrorMessage({
-        message:
-          error instanceof Error ? error.message : "Something went wrong",
-      });
-    } finally {
-      setIsLoading(false);
-    }
+  const userObj = {
+    _id,
+    name,
+    username,
+    photo,
   };
 
   return (
@@ -72,23 +48,12 @@ const SingleFollow = ({ follow, isFollower = false }: Props) => {
             <p className="username">@{username}</p>
           </div>
         </Link>
-        {isFollowed ? (
-          <button
-            disabled={isLoading}
-            className={isItActualUser ? "following_actual_user" : "following"}
-            onClick={handleCancelFollow}
-          >
-            {isLoading ? <Loading hScreen={false} small={true} /> : "Following"}
-          </button>
-        ) : (
-          <button
-            disabled={isLoading}
-            className="follow"
-            onClick={handleFollow}
-          >
-            {isLoading ? <Loading hScreen={false} small={true} /> : "Follow"}
-          </button>
-        )}
+        <UserFollowAndUnfollow
+          actualUser={actualUser}
+          currentUser={userObj}
+          isFollowed={isFollowed}
+          showEdit={false}
+        />
       </div>
       <ToastContainer />
     </>

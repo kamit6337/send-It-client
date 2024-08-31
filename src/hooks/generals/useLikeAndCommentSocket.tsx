@@ -12,14 +12,19 @@ import { Like, PostDetails, Save } from "@/types";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 
-const useLikeAndCommentSocket = (postId: string) => {
+const useLikeAndCommentSocket = () => {
   const queryClient = useQueryClient();
 
   useEffect(() => {
     const handleNewLike = (response: Like) => {
-      if (postId === response.post) {
+      const checkStatus = queryClient.getQueryState([
+        "post details",
+        response.post,
+      ]);
+
+      if (checkStatus) {
         queryClient.setQueryData(
-          ["post details", postId],
+          ["post details", response.post],
           (old: PostDetails) => {
             old.data.likeCount = old.data.likeCount + 1;
             return old;
@@ -29,9 +34,14 @@ const useLikeAndCommentSocket = (postId: string) => {
     };
 
     const handleRemoveLike = (response: Like) => {
-      if (postId === response.post) {
+      const checkStatus = queryClient.getQueryState([
+        "post details",
+        response.post,
+      ]);
+
+      if (checkStatus) {
         queryClient.setQueryData(
-          ["post details", postId],
+          ["post details", response.post],
           (old: PostDetails) => {
             old.data.likeCount = old.data.likeCount - 1;
             return old;
@@ -41,9 +51,17 @@ const useLikeAndCommentSocket = (postId: string) => {
     };
 
     const handleNewSave = (response: Save) => {
-      if (postId === response.post) {
+      const checkStatus = queryClient.getQueryState([
+        "post details",
+        response.post,
+      ]);
+
+      console.log("response add", response);
+      console.log("response add checkStatus", checkStatus);
+
+      if (checkStatus) {
         queryClient.setQueryData(
-          ["post details", postId],
+          ["post details", response.post],
           (old: PostDetails) => {
             old.data.saveCount = old.data.saveCount + 1;
             return old;
@@ -53,9 +71,16 @@ const useLikeAndCommentSocket = (postId: string) => {
     };
 
     const handleRemoveSave = (response: Save) => {
-      if (postId === response.post) {
+      const checkStatus = queryClient.getQueryState([
+        "post details",
+        response.post,
+      ]);
+      console.log("response remove", response);
+      console.log("response remove checkStatus", checkStatus);
+
+      if (checkStatus) {
         queryClient.setQueryData(
-          ["post details", postId],
+          ["post details", response.post],
           (old: PostDetails) => {
             old.data.saveCount = old.data.saveCount - 1;
             return old;
@@ -74,7 +99,7 @@ const useLikeAndCommentSocket = (postId: string) => {
       offNewSave(handleNewSave);
       offRemoveSave(handleRemoveSave);
     };
-  }, [postId, queryClient]);
+  }, [queryClient]);
 
   return;
 };

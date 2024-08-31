@@ -4,7 +4,7 @@ import { DialogClose, DialogContent, DialogTrigger } from "./ui/dialog";
 import { DropdownMenuContent, DropdownMenuItem } from "./ui/dropdown-menu";
 import Toastify, { ToastContainer } from "@/lib/Toastify";
 import { deleteReq } from "@/utils/api/api";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 type Props = {
   post: Post;
@@ -14,6 +14,10 @@ type Props = {
 const PostOptions = ({ post, isReply = false }: Props) => {
   const closeRef = useRef(null);
   const { showErrorMessage } = Toastify();
+
+  // State to manage whether Edit and Delete dialogs are open
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const handleDelete = async () => {
     try {

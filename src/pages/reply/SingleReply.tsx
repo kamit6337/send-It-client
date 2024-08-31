@@ -29,7 +29,7 @@ const SingleReply = () => {
     );
   }
 
-  const { post, replyPost } = data.data;
+  const { post, replyPost } = data;
 
   return (
     <div>

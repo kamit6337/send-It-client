@@ -4,16 +4,13 @@ import CreatePost from "./CreatePost";
 import usePosts from "@/hooks/usePosts";
 import Loading from "@/lib/Loading";
 import { useEffect } from "react";
-import { useOutletContext } from "react-router-dom";
-import { OutletContext, type Post as PostType } from "@/types";
+import { type Post as PostType } from "@/types";
 import { useInView } from "react-intersection-observer";
-import useNewPostToggle from "@/hooks/generals/useNewPostToggle";
+import ShowLatestPosts from "./ShowLatestPosts";
 
 const Home = () => {
   const { isLoading, error, data, fetchNextPage } = usePosts();
-  const { actualUser } = useOutletContext<OutletContext>();
   const { ref, inView } = useInView();
-  useNewPostToggle(actualUser);
 
   useEffect(() => {
     if (inView) {
@@ -49,8 +46,6 @@ const Home = () => {
     );
   }
 
-  // return <div>Home</div>;
-
   return (
     <>
       <Helmet>
@@ -59,6 +54,8 @@ const Home = () => {
       </Helmet>
       <div className="">
         <CreatePost />
+        <ShowLatestPosts />
+
         {data?.pages?.map((page) => {
           return page.map((post: PostType) => {
             return <Post post={post} key={post._id} />;

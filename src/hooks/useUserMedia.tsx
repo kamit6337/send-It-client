@@ -1,17 +1,20 @@
 import { getReq } from "@/utils/api/api";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 
-const userMediaQuery = (id: string, page = 1) => {
-  return {
-    queryKey: ["user media", id, page],
-    queryFn: () => getReq("/media", { id, page }),
+const useUserMedia = (id: string) => {
+  const query = useInfiniteQuery({
+    queryKey: ["user media", id],
+    queryFn: ({ pageParam }) => getReq("/media", { page: pageParam, id }),
     staleTime: Infinity,
-    enabled: !!id,
-  };
-};
-
-const useUserMedia = (id: string, page = 1) => {
-  const query = useQuery(userMediaQuery(id, page));
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, _allPages, lastPageParam) => {
+      if (lastPage.length === 0) {
+        return undefined;
+      } else {
+        return lastPageParam + 1;
+      }
+    },
+  });
 
   return query;
 };

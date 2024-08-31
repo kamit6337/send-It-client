@@ -1,3 +1,7 @@
+export type PostSocket = {
+  pages: Post[][];
+};
+
 export type PostDetails = {
   data: {
     _id: string;
@@ -89,7 +93,6 @@ export type User = {
 export type Reply = {
   _id: string;
   post: string;
-  user: User;
   replyPost: Post;
 };
 

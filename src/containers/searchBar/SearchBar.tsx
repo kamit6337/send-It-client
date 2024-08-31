@@ -29,7 +29,7 @@ const SearchBar = () => {
     debounce(async (value) => {
       try {
         const response = await getReq("/search", { search: value });
-        setSearchedUsers(response.data);
+        setSearchedUsers(response);
       } catch (error) {
         showErrorMessage({
           message:

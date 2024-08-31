@@ -1,16 +1,20 @@
 import { getReq } from "@/utils/api/api";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 
-const userLikePostsQuery = (page = 1) => {
-  return {
-    queryKey: ["user liked posts", page],
-    queryFn: () => getReq("/like/post", { page }),
+const useUserLikedPosts = () => {
+  const query = useInfiniteQuery({
+    queryKey: ["user liked posts"],
+    queryFn: ({ pageParam }) => getReq("/like/post", { page: pageParam }),
     staleTime: Infinity,
-  };
-};
-
-const useUserLikedPosts = (page = 1) => {
-  const query = useQuery(userLikePostsQuery(page));
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, _allPages, lastPageParam) => {
+      if (!lastPage || lastPage.length === 0) {
+        return undefined;
+      } else {
+        return lastPageParam + 1;
+      }
+    },
+  });
 
   return query;
 };

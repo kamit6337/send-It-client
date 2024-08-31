@@ -1,11 +1,8 @@
 import usePostReplies from "@/hooks/usePostReplies";
 import Loading from "@/lib/Loading";
-import generateUniqueIDArray from "@/utils/javascript/generateUniqueIDArray";
-import { useEffect, useState } from "react";
 import CreateReply from "./CreateReply";
-import { onNewReply } from "@/lib/socketIO";
 import Post from "@/components/Post";
-import { type Reply, User } from "@/types";
+import { User, Reply } from "@/types";
 
 type Props = {
   id: string;
@@ -13,30 +10,7 @@ type Props = {
 };
 
 const PostReplies = ({ id, actualUser }: Props) => {
-  const [page, setPage] = useState(1);
-  const [replies, setReplies] = useState<Reply[]>([]);
-  const { isLoading, error, data } = usePostReplies(id as string, page);
-
-  useEffect(() => {
-    onNewReply((response: Reply) => {
-      const { post } = response;
-      if (post === id) {
-        setReplies((prev) => {
-          const filter = generateUniqueIDArray([response, ...prev]);
-          return filter;
-        });
-      }
-    });
-  }, [id]);
-
-  useEffect(() => {
-    if (data) {
-      setReplies((prev) => {
-        const generateUnique = generateUniqueIDArray([...data.data, ...prev]);
-        return generateUnique;
-      });
-    }
-  }, [data]);
+  const { isLoading, error, data } = usePostReplies(id as string);
 
   if (isLoading) {
     return (
@@ -57,8 +31,11 @@ const PostReplies = ({ id, actualUser }: Props) => {
   return (
     <div>
       <CreateReply actualUser={actualUser} postId={id} />
-      {replies.map((reply) => {
-        return <Post key={reply._id} post={reply.replyPost} isReply={true} />;
+      {data?.pages?.map((page) => {
+        return page.map((reply: Reply) => {
+          const { replyPost } = reply;
+          return <Post post={replyPost} key={replyPost._id} isReply={true} />;
+        });
       })}
     </div>
   );

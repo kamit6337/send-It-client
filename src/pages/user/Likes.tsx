@@ -1,45 +1,32 @@
 import Post from "@/components/Post";
 import useUserLikedPosts from "@/hooks/useUserLikedPosts";
 import Loading from "@/lib/Loading";
-import { offDeletePost, onDeletePost } from "@/lib/socketIO";
 import { addUserLikePostsCount } from "@/redux/slice/userSlice";
 import { type Post as PostType } from "@/types";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useInView } from "react-intersection-observer";
 import { useDispatch } from "react-redux";
 
 const Likes = () => {
   const dispatch = useDispatch();
-  const [posts, setPosts] = useState<PostType[]>([]);
-  const [page, setPage] = useState(1);
-  const { isLoading, error, data } = useUserLikedPosts(page);
+  const { isLoading, error, data, fetchNextPage } = useUserLikedPosts();
+
+  const { ref, inView } = useInView();
+
+  useEffect(() => {
+    if (inView) {
+      fetchNextPage();
+    }
+  }, [inView, fetchNextPage]);
 
   useEffect(() => {
     if (data) {
-      if (page === 1) {
-        setPosts(data.data);
-
-        return;
-      }
-      setPosts((prev) => [...data.data, ...prev]);
+      const totalPosts = data.pages.reduce((prev, current) => {
+        return prev + current.length;
+      }, 0);
+      dispatch(addUserLikePostsCount(totalPosts));
     }
-  }, [data, page]);
-
-  useEffect(() => {
-    const handleDeletePost = (id: string) => {
-      setPosts((prev) => {
-        const filter = prev.filter((obj) => obj._id !== id);
-        return filter;
-      });
-    };
-    onDeletePost(handleDeletePost);
-    return () => {
-      offDeletePost(handleDeletePost);
-    };
-  }, []);
-
-  useEffect(() => {
-    dispatch(addUserLikePostsCount(posts.length));
-  }, [posts.length, dispatch]);
+  }, [data, dispatch]);
 
   if (isLoading) {
     return <Loading hScreen={false} small={false} />;
@@ -55,10 +42,12 @@ const Likes = () => {
 
   return (
     <>
-      {posts.map((post) => {
-        return <Post key={post._id} post={post} defaultLike={true} />;
+      {data?.pages?.map((page) => {
+        return page.map((post: PostType) => {
+          return <Post post={post} key={post._id} />;
+        });
       })}
-      <div className="h-96" />
+      <div ref={ref} className="h-96" />
     </>
   );
 };

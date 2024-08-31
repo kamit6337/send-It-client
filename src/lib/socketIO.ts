@@ -1,4 +1,4 @@
-import { Chat, Like, Post, Reply, Room, Save } from "@/types";
+import { Chat, Like, Post, Reply, ReplyFull, Room, Save } from "@/types";
 import getSocket from "./singleSocket";
 
 const socket = getSocket();
@@ -14,6 +14,23 @@ export const joinRooms = (rooms: string[]) => {
   socket.emit("joinRooms", rooms);
 };
 
+// NOTE: FOLLOWING SOCKET HANDLERS
+export const onNewFollower = (callback: (value) => void) => {
+  socket.on("newFollowing", callback);
+};
+
+export const offNewFollower = (callback: (value) => void) => {
+  socket.off("newFollowing", callback);
+};
+
+export const onRemoveFollower = (callback: (value) => void) => {
+  socket.on("removeFollowing", callback);
+};
+
+export const offRemoveFollower = (callback: (value) => void) => {
+  socket.off("removeFollowing", callback);
+};
+
 // Post socket handlers
 export const onNewPost = (callback: (value: Post) => void) => {
   socket.on("newPost", callback);
@@ -21,6 +38,14 @@ export const onNewPost = (callback: (value: Post) => void) => {
 
 export const offNewPost = (callback: (value: Post) => void) => {
   socket.off("newPost", callback);
+};
+
+export const onUpdatePost = (callback: (value: Post) => void) => {
+  socket.on("updatePost", callback);
+};
+
+export const offUpdatePost = (callback: (value: Post) => void) => {
+  socket.off("updatePost", callback);
 };
 
 export const onDeletePost = (callback: (value: string) => void) => {
@@ -34,6 +59,18 @@ export const offDeletePost = (callback: (value: string) => void) => {
 // Reply socket handlers
 export const onNewReply = (callback: (value: Reply) => void) => {
   socket.on("newReply", callback);
+};
+
+export const offNewReply = (callback: (value: Reply) => void) => {
+  socket.off("newReply", callback);
+};
+
+export const onUpdateReply = (callback: (value: Reply) => void) => {
+  socket.on("updateReply", callback);
+};
+
+export const offUpdateReply = (callback: (value: Reply) => void) => {
+  socket.off("updateReply", callback);
 };
 
 //Like socket handlers

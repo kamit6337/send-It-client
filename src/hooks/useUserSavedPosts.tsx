@@ -1,16 +1,20 @@
 import { getReq } from "@/utils/api/api";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 
-const userSavePostsQuery = (page = 1) => {
-  return {
-    queryKey: ["user saved posts", page],
-    queryFn: () => getReq("/save/post", { page }),
+const useUserSavedPosts = () => {
+  const query = useInfiniteQuery({
+    queryKey: ["user saved posts"],
+    queryFn: ({ pageParam }) => getReq("/save/post", { page: pageParam }),
     staleTime: Infinity,
-  };
-};
-
-const useUserSavedPosts = (page = 1) => {
-  const query = useQuery(userSavePostsQuery(page));
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, _allPages, lastPageParam) => {
+      if (!lastPage || lastPage.length === 0) {
+        return undefined;
+      } else {
+        return lastPageParam + 1;
+      }
+    },
+  });
 
   return query;
 };
