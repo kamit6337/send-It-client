@@ -2,6 +2,9 @@ import axios from "axios";
 import environment from "../environment";
 import catchAsyncError from "@/lib/catchAsyncError";
 
+console.log("environment.SERVER_URL", environment.SERVER_URL);
+console.log("environment.CLIENT_URL", environment.CLIENT_URL);
+
 const BASE_URL = environment.SERVER_URL + "/auth";
 
 export const getAuthReq = catchAsyncError(
