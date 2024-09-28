@@ -19,6 +19,7 @@ import { Dialog } from "./ui/dialog";
 import HoveredUserInfo from "./HoveredUserInfo";
 import { useDispatch, useSelector } from "react-redux";
 import { addToPost, postState } from "@/redux/slice/postSlice";
+import useIncreaseView from "@/hooks/mutation/View/useIncreaseView";
 
 const Post = ({
   post,
@@ -36,6 +37,8 @@ const Post = ({
   const [showUserInfo, setShowUserInfo] = useState(false);
   const [showUserInfoOnImg, setShowUserInfoOnImg] = useState(false);
   const { updatePost, deletePost } = useSelector(postState);
+
+  const { mutate } = useIncreaseView(post._id);
 
   useEffect(() => {
     if (post._id) {
@@ -80,6 +83,7 @@ const Post = ({
   };
 
   const handleNavigate = () => {
+    mutate(_id);
     if (!isReply) {
       navigate(`/posts/${_id}`);
       return;
@@ -159,7 +163,11 @@ const Post = ({
                     <DropdownMenuTrigger className="text-grey p-2 hover:bg-gray-300 hover:rounded-full">
                       <ReactIcons.threeDot />
                     </DropdownMenuTrigger>
-                    <PostOptions post={newPost} isReply={isReply} />
+                    <PostOptions
+                      post={newPost}
+                      isReply={isReply}
+                      actualUser={actualUser}
+                    />
                   </DropdownMenu>
                 </Dialog>
               </div>

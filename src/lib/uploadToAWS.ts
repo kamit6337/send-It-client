@@ -13,6 +13,8 @@ const uploadToAWS = catchAsyncError(
       fileType: selectedFile.type,
     });
 
+    console.log("response from server", response);
+
     const { url, fileKey, fileType } = response;
 
     // Upload file to S3 using pre-signed URL

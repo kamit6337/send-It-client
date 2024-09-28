@@ -34,7 +34,7 @@ const Chats = () => {
   return (
     <div className="h-screen relative">
       {/* NOTE: HEADER */}
-      <div className="h-14 w-full text-xl font-semibold tracking-wider sticky top-0 z-10 border-b border-div_border bg-background flex items-center gap-2">
+      <div className="h-14 w-full text-xl font-semibold tracking-wider sticky top-0 z-10 border-b border-div_border bg-background flex items-center gap-2 px-3">
         <LeftArrowBtn handleClick={handleClick} />
         <p>{member?.name}</p>
       </div>

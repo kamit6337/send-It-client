@@ -23,6 +23,18 @@ const useNewReplyPost = () => {
           return { ...old, pages: newPages };
         });
       }
+
+      const checkPostDetailState = queryClient.getQueryState([
+        "post details",
+        obj.post,
+      ]);
+
+      if (checkPostDetailState) {
+        queryClient.setQueryData(["post details", obj.post], (old) => {
+          old.replyCount = old.replyCount + 1;
+          return old;
+        });
+      }
     };
 
     const handleUpdateReply = (obj: Reply) => {

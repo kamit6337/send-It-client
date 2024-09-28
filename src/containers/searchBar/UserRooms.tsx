@@ -12,16 +12,18 @@ const UserRooms = ({ showMessageArea, handleCloseMessage }) => {
       >
         <p>Messages</p>
         <div className="flex text-xl">
-          <Dialog>
-            <DialogTrigger className="">
-              <button className="p-2 rounded-full hover:bg-sidebar_link_hover">
-                <ReactIcons.messagePlus />
-              </button>
-            </DialogTrigger>
-            <DialogContent className="top-[5%] translate-y-0 h-[500px] overflow-y-auto p-0">
-              <SelectMessageUser />
-            </DialogContent>
-          </Dialog>
+          <div onClick={(e) => e.stopPropagation()}>
+            <Dialog>
+              <DialogTrigger className="">
+                <button className="p-2 rounded-full hover:bg-sidebar_link_hover">
+                  <ReactIcons.messagePlus />
+                </button>
+              </DialogTrigger>
+              <DialogContent className="top-[5%] translate-y-0 h-[500px] overflow-y-auto p-0">
+                <SelectMessageUser />
+              </DialogContent>
+            </Dialog>
+          </div>
 
           <button className="p-2 rounded-full hover:bg-sidebar_link_hover">
             {showMessageArea ? (

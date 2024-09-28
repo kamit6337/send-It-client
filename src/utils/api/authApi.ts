@@ -16,7 +16,7 @@ export const getAuthReq = catchAsyncError(
 );
 
 export const postAuthReq = catchAsyncError(
-  async (url: string, body: object) => {
+  async (url: string, body?: object) => {
     const post = await axios.post(`${BASE_URL}${url}`, body, {
       withCredentials: true,
     });

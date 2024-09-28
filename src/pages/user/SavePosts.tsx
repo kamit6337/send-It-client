@@ -1,36 +1,29 @@
 import Post from "@/components/Post";
 import useUserSavedPosts from "@/hooks/useUserSavedPosts";
 import Loading from "@/lib/Loading";
-import { offDeletePost, onDeletePost } from "@/lib/socketIO";
-import { addUserSavedPostsCount } from "@/redux/slice/userSlice";
 import { type Post as PostType } from "@/types";
-import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { Helmet } from "react-helmet";
+import { useInView } from "react-intersection-observer";
 
 const SavePosts = () => {
-  const dispatch = useDispatch();
-  const [posts, setPosts] = useState<PostType[]>([]);
-  const { isLoading, error, data } = useUserSavedPosts();
+  const { isLoading, error, data, isFetching, fetchNextPage } =
+    useUserSavedPosts();
+
+  const { ref, inView } = useInView();
 
   useEffect(() => {
-    const handleDeletePost = (id: string) => {
-      setPosts((prev) => {
-        const filter = prev.filter((obj) => obj._id !== id);
-        return filter;
-      });
-    };
-    onDeletePost(handleDeletePost);
-    return () => {
-      offDeletePost(handleDeletePost);
-    };
-  }, []);
-
-  useEffect(() => {
-    dispatch(addUserSavedPostsCount(posts.length));
-  }, [posts.length, dispatch]);
+    if (inView) {
+      !isFetching && fetchNextPage();
+    }
+  }, [inView, fetchNextPage, isFetching]);
 
   if (isLoading) {
-    return <Loading hScreen={false} small={false} />;
+    return (
+      <div className="h-96 w-full">
+        <Loading hScreen={false} small={false} />
+      </div>
+    );
   }
 
   if (error) {
@@ -40,14 +33,38 @@ const SavePosts = () => {
       </div>
     );
   }
+
+  if (data?.pages[0].length === 0) {
+    return (
+      <>
+        <Helmet>
+          <title>User Saved</title>
+          <meta name="discription" content="User Saved page of this project" />
+        </Helmet>
+        <div className="h-96 flex justify-center items-center">
+          You don't have any save post
+        </div>
+      </>
+    );
+  }
+
   return (
     <>
+      <Helmet>
+        <title>User Saved</title>
+        <meta name="discription" content="User Saved page of this project" />
+      </Helmet>
       {data?.pages?.map((page) => {
         return page.map((post: PostType) => {
           return <Post post={post} key={post._id} />;
         });
       })}
-      <div className="h-96" />
+      {isFetching && (
+        <div className="h-96">
+          <Loading hScreen={false} small={false} />
+        </div>
+      )}
+      <div ref={ref} className="h-96" />
     </>
   );
 };

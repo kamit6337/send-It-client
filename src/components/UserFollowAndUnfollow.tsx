@@ -13,6 +13,7 @@ const UserFollowAndUnfollow = ({
 }) => {
   const [hideScroll, setHideScroll] = useState(false);
   const closeRef = useRef<HTMLButtonElement>(null);
+
   const { _id, name, username, photo } = currentUser;
   const isItActualUser = actualUser._id === currentUser._id;
 
@@ -73,7 +74,7 @@ const UserFollowAndUnfollow = ({
     return (
       <button
         disabled={isPendingRemoveFollowing}
-        className="w-max self-end following"
+        className="w-max following"
         onClick={handleCancelFollow}
       >
         {isPendingRemoveFollowing ? <Loading /> : "Following"}
@@ -84,7 +85,7 @@ const UserFollowAndUnfollow = ({
   return (
     <button
       disabled={isPendingNewFollowing}
-      className="w-max  self-end follow"
+      className="w-max follow"
       onClick={handleFollow}
     >
       {isPendingNewFollowing ? <Loading /> : "Follow"}

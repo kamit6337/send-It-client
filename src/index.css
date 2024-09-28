@@ -105,7 +105,7 @@
   }
 
   .otp_input {
-    @apply flex h-[48px] w-[46px] items-center justify-center rounded-md px-4 text-lg bg-search_bg;
+    @apply flex h-[48px] w-[46px] items-center justify-center rounded-md px-4 text-lg bg-div_border;
   }
 
   .input_div {

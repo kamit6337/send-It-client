@@ -3,7 +3,7 @@ import { PostDetails } from "@/types";
 import { deleteReq, postReq } from "@/utils/api/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-const usePostSaveToggle = (postId: string) => {
+const usePostSaveToggle = (actualUser, postId: string) => {
   const queryClient = useQueryClient();
   const { showErrorMessage } = Toastify();
 
@@ -32,12 +32,18 @@ const usePostSaveToggle = (postId: string) => {
         JSON.stringify(queryClient.getQueryData(["user saved posts"]) || [])
       );
 
+      const previousUserProfileData = JSON.parse(
+        JSON.stringify(
+          queryClient.getQueryData(["user profile", actualUser.username]) || []
+        )
+      );
+
       // Optimistically add the new todo to the cache with the temporary postId
       queryClient.setQueryData(["post details", postId], (old: PostDetails) => {
         if (toggle) {
-          old.data.isSaved = true;
+          old.isSaved = true;
         } else {
-          old.data.isSaved = false;
+          old.isSaved = false;
         }
 
         return old;
@@ -62,19 +68,59 @@ const usePostSaveToggle = (postId: string) => {
         }
       }
 
+      const userProfileState = queryClient.getQueryState([
+        "user profile",
+        actualUser.username,
+      ]);
+
+      if (userProfileState) {
+        queryClient.setQueryData(
+          ["user profile", actualUser.username],
+          (old) => {
+            if (toggle) {
+              old.savePosts = old.savePosts + 1;
+            } else {
+              old.savePosts = old.savePosts - 1;
+            }
+
+            return { ...old };
+          }
+        );
+      }
+
       // Return context with previous data and tempId for rollback and replacement
-      return { previousPostDetailsData, previousUserSavedPostsData };
+      return {
+        previousPostDetailsData,
+        previousUserSavedPostsData,
+        previousUserProfileData,
+      };
     },
     onError: (err, newTodo, context) => {
+      const userProfileState = queryClient.getQueryState([
+        "user profile",
+        actualUser.username,
+      ]);
+
+      if (userProfileState) {
+        queryClient.setQueryData(
+          ["user profile", actualUser.username],
+          context?.previousUserProfileData
+        );
+      }
+
       queryClient.setQueryData(
         ["post details", postId],
         context?.previousPostDetailsData
       );
 
-      queryClient.setQueryData(
-        ["user saved posts"],
-        context?.previousUserSavedPostsData
-      );
+      const checkState = queryClient.getQueryState(["user saved posts"]);
+
+      if (checkState) {
+        queryClient.setQueryData(
+          ["user saved posts"],
+          context?.previousUserSavedPostsData
+        );
+      }
 
       showErrorMessage({
         message: err instanceof Error ? err.message : "Something went wrong",

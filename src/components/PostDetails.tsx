@@ -12,7 +12,7 @@ import { Post, User } from "@/types";
 import { deleteReq, postReq } from "@/utils/api/api";
 import actualDateAndTime from "@/utils/javascript/actualDateAndTime";
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Dialog } from "./ui/dialog";
 import { useDispatch, useSelector } from "react-redux";
 import { addToPost, postState } from "@/redux/slice/postSlice";
@@ -30,11 +30,12 @@ const PostDetails = ({
   userReply = false,
   isReply = false,
 }: Props) => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const { showErrorMessage } = Toastify();
   const [isFollow, setIsFollow] = useState(post.isFollow);
-  const { updatePost } = useSelector(postState);
+  const { updatePost, deletePost } = useSelector(postState);
 
   useEffect(() => {
     if (post) {
@@ -60,6 +61,21 @@ const PostDetails = ({
     }
     return post;
   }, [post, updatePost]);
+
+  const isDeleted = useMemo(() => {
+    if (deletePost.includes(post._id)) {
+      return true;
+    }
+    return false;
+  }, [deletePost, post._id]);
+
+  useEffect(() => {
+    if (isDeleted) {
+      navigate(-1);
+    }
+  }, [isDeleted, navigate]);
+
+  if (isDeleted) return;
 
   const {
     user: { _id, name, username, photo },

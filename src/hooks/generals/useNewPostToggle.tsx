@@ -22,7 +22,7 @@ const useNewPostToggle = (actualUser: User) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const handlePost = async (post: Post) => {
+    const handleCreatePost = async (post: Post) => {
       const { user } = post;
 
       if (user._id === actualUser._id) {
@@ -53,11 +53,26 @@ const useNewPostToggle = (actualUser: User) => {
             }
           );
         }
+
+        const userProfileState = queryClient.getQueryState([
+          "user profile",
+          actualUser.username,
+        ]);
+
+        if (userProfileState) {
+          queryClient.setQueryData(
+            ["user profile", actualUser.username],
+            (old) => {
+              return { ...old, userPosts: old.userPosts + 1 };
+            }
+          );
+        }
+
         return;
       }
 
       try {
-        const response = await getReq("/user/following/check", {
+        const response = await getReq("/following/check", {
           id: user._id,
         });
 
@@ -71,7 +86,6 @@ const useNewPostToggle = (actualUser: User) => {
 
     const handleUpdatePost = (obj: Post) => {
       console.log("updated post", obj);
-
       dispatch(addToUpdatePost(obj));
     };
 
@@ -79,12 +93,12 @@ const useNewPostToggle = (actualUser: User) => {
       dispatch(deletePost(id));
     };
 
-    onNewPost(handlePost);
+    onNewPost(handleCreatePost);
     onDeletePost(handleDeletePost);
     onUpdatePost(handleUpdatePost);
 
     return () => {
-      offNewPost(handlePost);
+      offNewPost(handleCreatePost);
       offDeletePost(handleDeletePost);
       offUpdatePost(handleUpdatePost);
     };

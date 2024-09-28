@@ -52,12 +52,9 @@ const CreateNewPost = ({
       setIsLoading(true);
 
       if (isOfReply) {
-        let media;
-        if (selectedFile) {
-          media = await uploadToAWS(selectedFile);
-        }
-
-        await postReq("/reply", { postId, message, media });
+        const media = await uploadToAWS(selectedFile);
+        const obj = { postId, message, media };
+        await postReq("/reply", obj);
       } else {
         let media;
         let duration;

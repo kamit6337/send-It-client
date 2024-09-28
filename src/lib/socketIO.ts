@@ -9,9 +9,31 @@ export const isConnected = () => {
   });
 };
 
+export const keepAliveConnection = () => {
+  socket.emit("keepAlive", { message: "ping" });
+};
+
 // Join rooms
 export const joinRooms = (rooms: string[]) => {
   socket.emit("joinRooms", rooms);
+};
+
+// NOTE: NOTIFICATION SOCKET HANDLERS
+export const onNewNotification = (callback: (value) => void) => {
+  socket.on("newNotification", callback);
+};
+
+export const offNewNotification = (callback: (value) => void) => {
+  socket.off("newNotification", callback);
+};
+
+// NOTE: FOLLOWING SOCKET HANDLERS
+export const onNewView = (callback: (value) => void) => {
+  socket.on("newView", callback);
+};
+
+export const offNewView = (callback: (value) => void) => {
+  socket.off("newView", callback);
 };
 
 // NOTE: FOLLOWING SOCKET HANDLERS

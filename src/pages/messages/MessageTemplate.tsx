@@ -1,13 +1,7 @@
 import LeftArrowBtn from "@/components/LeftArrowBtn";
 import useLoginCheck from "@/hooks/useLoginCheck";
-import { joinRooms, onDeleteRoom, onNewRoom } from "@/lib/socketIO";
-import {
-  addSingleRoom,
-  removeRoom,
-  roomState,
-  setActiveRoom,
-} from "@/redux/slice/roomSlice";
-import { ChangeEvent, useEffect, useState } from "react";
+import { roomState, setActiveRoom } from "@/redux/slice/roomSlice";
+import { ChangeEvent, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Room from "./Room";
@@ -26,31 +20,6 @@ const MessageTemplate = ({ height, willNavigate = true }: Props) => {
   const [search, setSearch] = useState("");
   const [searchedRoom, setSearchedRoom] = useState<RoomType[]>([]);
   const [isFocused, setIsFocused] = useState(false);
-
-  useEffect(() => {
-    onNewRoom((response: RoomType) => {
-      const { users } = response;
-      const findUser = users.find((user) => user._id === actualUser._id);
-      if (!findUser) return;
-
-      dispatch(addSingleRoom(response));
-    });
-  }, [actualUser._id, dispatch]);
-
-  useEffect(() => {
-    onDeleteRoom((id: string) => {
-      console.log("delete response", id);
-
-      dispatch(removeRoom(id));
-    });
-  }, [dispatch]);
-
-  useEffect(() => {
-    if (rooms.length > 0) {
-      const roomsId = rooms.map((room) => room._id);
-      joinRooms(roomsId);
-    }
-  }, [rooms]);
 
   const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -111,36 +80,40 @@ const MessageTemplate = ({ height, willNavigate = true }: Props) => {
           className="overflow-y-auto border-r border-div_border"
           style={{ height: "calc(100% - 64px)" }}
         >
-          {searchedRoom.length > 0
-            ? searchedRoom.map((room) => {
-                return (
-                  <Room
-                    key={room._id}
-                    room={room}
-                    handleNavigate={handleNavigate}
-                  />
-                );
-              })
-            : search
-            ? "No Room find"
-            : ""}
+          {searchedRoom.length > 0 ? (
+            searchedRoom.map((room) => {
+              return (
+                <Room
+                  key={room._id}
+                  room={room}
+                  handleNavigate={handleNavigate}
+                />
+              );
+            })
+          ) : search ? (
+            <p className="p-5 text-sm text-grey">No Room Find</p>
+          ) : (
+            ""
+          )}
         </div>
       ) : (
         <div
           className="overflow-y-auto border-r border-div_border"
           style={{ height: "calc(100% - 64px)" }}
         >
-          {rooms.length > 0
-            ? rooms.map((room) => {
-                return (
-                  <Room
-                    key={room._id}
-                    room={room}
-                    handleNavigate={handleNavigate}
-                  />
-                );
-              })
-            : "No Room Avaliable"}
+          {rooms.length > 0 ? (
+            rooms.map((room) => {
+              return (
+                <Room
+                  key={room._id}
+                  room={room}
+                  handleNavigate={handleNavigate}
+                />
+              );
+            })
+          ) : (
+            <p className="p-5 text-sm text-grey">No Room Avaliable</p>
+          )}
         </div>
       )}
     </main>

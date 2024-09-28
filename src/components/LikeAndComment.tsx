@@ -15,6 +15,7 @@ import usePostDetails from "@/hooks/usePostDetails";
 import usePostLikeToggle from "@/hooks/mutation/Like/usePostLikeToggle";
 import { useRef } from "react";
 import usePostSaveToggle from "@/hooks/mutation/Save/usePostSaveToggle";
+import useLoginCheck from "@/hooks/useLoginCheck";
 
 type Props = {
   post: Post;
@@ -24,6 +25,7 @@ type Props = {
 const LikeAndComment = ({ post, user }: Props) => {
   const closeRef = useRef<HTMLButtonElement>(null);
   const { showErrorMessage, showSuccessMessage } = Toastify();
+  const { data: actualUser } = useLoginCheck();
 
   const { ref, inView } = useInView({
     threshold: 0.1, // Trigger when 50% of the element is in view
@@ -35,9 +37,9 @@ const LikeAndComment = ({ post, user }: Props) => {
 
   const { data } = usePostDetails(postId, inView);
   const { mutate: mutateLike, isPending: isPendingLikeToggle } =
-    usePostLikeToggle(postId);
+    usePostLikeToggle(actualUser, postId, user._id);
   const { mutate: mutateSave, isPending: isPendingSaveToggle } =
-    usePostSaveToggle(postId);
+    usePostSaveToggle(actualUser, postId, user._id);
 
   const handleCopyLink = () => {
     const link = `${environment.CLIENT_URL}/posts/${postId}`;
@@ -61,12 +63,12 @@ const LikeAndComment = ({ post, user }: Props) => {
     closeRef.current?.click();
   };
 
-  const likeCount = data?.data?.likeCount || 0;
-  const saveCount = data?.data?.saveCount || 0;
-  const replyCount = data?.data?.replyCount || 0;
-  const isLiked = data?.data?.isLiked;
-  const isSaved = data?.data?.isSaved || 0;
-  // const isReply = data?.data?.isReply || 0;
+  const likeCount = data?.likeCount || 0;
+  const saveCount = data?.saveCount || 0;
+  const replyCount = data?.replyCount || 0;
+  const viewCount = data?.viewCount || 0;
+  const isLiked = data?.isLiked;
+  const isSaved = data?.isSaved;
 
   return (
     <>
@@ -117,9 +119,15 @@ const LikeAndComment = ({ post, user }: Props) => {
           )}
           <p className="-ml-2 text-sm">{likeCount}</p>
         </div>
-        <button>
-          <ReactIcons.views />
-        </button>
+
+        {/* NOTE: VIEW COUNT */}
+
+        <div className="flex items-center gap-1">
+          <p>
+            <ReactIcons.views />
+          </p>
+          <p className="text-sm">{viewCount}</p>
+        </div>
 
         {/* NOTE: BOOKMARK */}
         <div className=" flex items-center gap-1">

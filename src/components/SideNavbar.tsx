@@ -59,6 +59,9 @@ const SideNavbar = () => {
             to = user.username;
           }
 
+          const singleMessageHref =
+            to === "/messages" && pathname.startsWith("/messages/");
+
           return (
             <NavLink
               to={to}
@@ -69,7 +72,11 @@ const SideNavbar = () => {
             >
               <div className="lg:p-3 p-2 rounded-full flex items-center gap-1 lg:gap-3 hover:bg-sidebar_link_hover">
                 <p className="text-2xl lg:text-3xl ">
-                  {pathname === href ? <SolidIcon /> : <OutlineIcon />}
+                  {pathname === href || singleMessageHref ? (
+                    <SolidIcon />
+                  ) : (
+                    <OutlineIcon />
+                  )}
                 </p>
                 <p className="lg:text-[20px] text-base hidden md:block">
                   {name}

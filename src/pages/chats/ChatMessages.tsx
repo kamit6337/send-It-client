@@ -2,28 +2,17 @@ import ReactIcons from "@/assets/icons";
 import { useForm } from "react-hook-form";
 import Toastify, { ToastContainer } from "@/lib/Toastify";
 import { postReq } from "@/utils/api/api";
-import {
-  ChangeEvent,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { addSingleChat, roomState } from "@/redux/slice/roomSlice";
-import { Link } from "react-router-dom";
+import { ChangeEvent, useLayoutEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
+import { roomState } from "@/redux/slice/roomSlice";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import FullScreenImage from "@/components/FullScreenImage";
 import Loading from "@/lib/Loading";
 import uploadToAWS from "@/lib/uploadToAWS";
-import { joinRooms, offNewChat, onNewChat } from "@/lib/socketIO";
-import useLoginCheck from "@/hooks/useLoginCheck";
-import ChatSingleMessage from "./ChatSingleMessage";
-import { Chat } from "@/types";
+import ChatRoomMessages from "./ChatRoomMessages";
 
 type Props = {
-  id: string | undefined | null;
+  id?: string | undefined | null;
 };
 
 type FormData = {
@@ -31,18 +20,12 @@ type FormData = {
 };
 
 const ChatMessages = ({ id = null }: Props) => {
-  const dispatch = useDispatch();
   const { activeRoom } = useSelector(roomState);
-  const { data: actualUser } = useLoginCheck();
   const { showErrorMessage, showAlertMessage } = Toastify();
-  const { rooms, chats } = useSelector(roomState);
   const fileRef = useRef<HTMLInputElement>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isScrollUp, setIsScrollUp] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null); // Ref to track the end of the chat messages
-  const chatContainerRef = useRef<HTMLDivElement>(null); // Ref to track the end of the chat messages
-
-  console.log("isScrollUp", isScrollUp);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const {
     register,
@@ -55,22 +38,6 @@ const ChatMessages = ({ id = null }: Props) => {
     },
   });
 
-  const member = useMemo(() => {
-    const findRoom = rooms?.find(
-      (room) => room._id === id || room._id === activeRoom
-    );
-    const member = findRoom?.users.find((user) => user._id !== actualUser._id);
-    return member;
-  }, [id, activeRoom, rooms, actualUser._id]);
-
-  const roomChats = useMemo(() => {
-    if (chats.length === 0) return [];
-    const chat = chats.filter(
-      (chat) => chat.room === id || chat.room === activeRoom
-    );
-    return chat;
-  }, [id, activeRoom, chats]);
-
   const scrollToBottom = (behavior: ScrollBehavior = "auto") => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior });
@@ -78,61 +45,7 @@ const ChatMessages = ({ id = null }: Props) => {
   };
 
   useLayoutEffect(() => {
-    // Initial scroll to bottom when component mounts
     scrollToBottom("instant");
-  }, []);
-
-  useLayoutEffect(() => {
-    // Scroll to bottom whenever a new chat is added
-    scrollToBottom("smooth");
-  }, [roomChats]);
-
-  useEffect(() => {
-    const chatContainer = chatContainerRef.current;
-
-    const handleScroll = () => {
-      if (chatContainer) {
-        const { scrollTop, scrollHeight, clientHeight } = chatContainer;
-
-        console.log("scrollTop 776", scrollTop);
-        console.log("scrollHeight 1104", scrollHeight);
-        console.log("clientHeight 328", clientHeight);
-
-        // Calculate the distance from the bottom of the chat window
-        const distanceFromBottom = scrollHeight - (scrollTop + clientHeight);
-
-        // If the user scrolls up more than 200px from the bottom, show the scroll down button
-        setIsScrollUp(distanceFromBottom > 100);
-      }
-    };
-
-    if (chatContainer) {
-      chatContainer.addEventListener("scroll", handleScroll);
-    }
-
-    // Clean up the event listener on component unmount
-    return () => {
-      if (chatContainer) {
-        chatContainer.removeEventListener("scroll", handleScroll);
-      }
-    };
-  }, []);
-
-  useEffect(() => {
-    if (rooms.length > 0) {
-      const roomsId = rooms.map((room) => room._id);
-      joinRooms(roomsId);
-    }
-  }, [rooms]);
-
-  useEffect(() => {
-    const handleChat = (chat: Chat) => {
-      dispatch(addSingleChat(chat));
-    };
-    onNewChat(handleChat);
-    return () => {
-      offNewChat(handleChat);
-    };
   }, []);
 
   const onSubmit = async (data: FormData) => {
@@ -169,62 +82,38 @@ const ChatMessages = ({ id = null }: Props) => {
     }
   };
 
+  const handleScrollUp = (bool) => {
+    setIsScrollUp(bool);
+  };
+
+  const handleScrollToDown = () => {
+    scrollToBottom("instant");
+  };
+
   return (
     <>
       <div className="h-full relative">
-        <div
-          ref={chatContainerRef}
-          className="overflow-y-auto px-3"
-          style={{ height: "calc(100% - 56px)" }}
-        >
-          {/* NOTE: MEMBER INFO */}
-          <Link
-            to={`/${member?.username}`}
-            className="h-60 w-full flex flex-col pt-10 items-center border-b border-div_border hover:bg-gray-50"
-          >
-            <div className="w-10">
-              <img
-                src={member?.photo}
-                alt={member?.name}
-                className="w-full object-cover rounded-full"
-              />
-            </div>
-            <p>{member?.name}</p>
-            <p>@{member?.username}</p>
-            <p>{member?.bio}</p>
-          </Link>
-          {/* NOTE: CHAT MESSAGES */}
-          <div className="flex flex-col gap-10 py-5">
-            {roomChats.length > 0 ? (
-              roomChats.map((chat) => {
-                return (
-                  <ChatSingleMessage
-                    key={chat._id}
-                    chat={chat}
-                    actualUser={actualUser}
-                  />
-                );
-              })
-            ) : (
-              <p>No chat Available</p>
-            )}
-          </div>
-          <div ref={messagesEndRef} />
+        <div style={{ height: "calc(100% - 56px)" }}>
+          <ChatRoomMessages
+            roomId={id || activeRoom}
+            handleScrollUp={handleScrollUp}
+            messagesEndRef={messagesEndRef}
+          />
         </div>
 
         {/* NOTE: MESSAGE SENDING */}
         <div className="h-14 w-full flex items-center bg-background border-t border-div_border absolute bottom-0 z-10 px-2">
-          {/* NOTE: SCROLL TO BOTTOM BUTTON */}
+          {/* NOTE: SCROLL UP */}
           {isScrollUp && (
             <button
-              onClick={() => scrollToBottom("instant")}
+              onClick={handleScrollToDown}
               className="absolute z-10 bottom-full right-0 mr-10 mb-5 text-xl border border-div_border p-2 rounded-full bg-background"
             >
               <ReactIcons.arrowDown />
             </button>
           )}
 
-          {/* NOTE: SLECTED IMAGE FILE */}
+          {/* NOTE: SELECTED IMAGE FILE */}
           {selectedFile && (
             <div className="absolute z-10 bottom-full left-0 text-sm border border-div_border p-2 flex items-center gap-2">
               <Dialog>
@@ -265,6 +154,8 @@ const ChatMessages = ({ id = null }: Props) => {
                 {...register("message")}
                 placeholder="Write something"
                 className="bg-inherit text-sm w-full text-foreground"
+                autoComplete="off"
+                spellCheck="false"
               />
             </div>
             <button type="submit" disabled={isSubmitting}>

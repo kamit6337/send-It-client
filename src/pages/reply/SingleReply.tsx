@@ -4,7 +4,7 @@ import Loading from "@/lib/Loading";
 import { useNavigate, useParams } from "react-router-dom";
 import useLoginCheck from "@/hooks/useLoginCheck";
 import PostReplies from "../post/PostReplies";
-import ReplyPost from "@/components/ReplyPost";
+import ReplyPost from "@/pages/reply/ReplyPost";
 import { Params } from "@/types";
 
 const SingleReply = () => {

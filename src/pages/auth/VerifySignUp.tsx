@@ -13,21 +13,40 @@ const VerifySignUp = () => {
   const [otp, setOtp] = useState<string[]>(new Array(8).fill(""));
   const email = localStorage.getItem("email") || "example@gmail.com";
   const [isLoading, setIsLoading] = useState(false);
-  const { showErrorMessage } = Toastify();
+  const { showErrorMessage, showSuccessMessage } = Toastify();
 
   const handleSubmit = async () => {
     try {
       setIsLoading(true);
       const modifyOtp = otp.join("");
-      await postAuthReq("/signup/verify", { otp: modifyOtp });
+      const response = await postAuthReq("/signup/verify", { otp: modifyOtp });
+      navigate(`/flow?username=${response.data}`);
       localStorage.removeItem("email");
-      navigate("/", { state: { msg: "Successfully Signup" } });
     } catch (error) {
       showErrorMessage({
-        message: "Something went wrong. Please try later",
+        message:
+          error instanceof Error
+            ? error.message
+            : "Something went wrong. Please try later",
       });
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleResendOtp = async () => {
+    try {
+      const response = await postAuthReq("/signup/resendOtp");
+      showSuccessMessage({
+        message: response.message,
+      });
+    } catch (error) {
+      showErrorMessage({
+        message:
+          error instanceof Error
+            ? error.message
+            : "Something went wrong. Please try later",
+      });
     }
   };
 
@@ -43,13 +62,22 @@ const VerifySignUp = () => {
           <p className="font-medium">{email ? modifyEmail(email) : ""}</p>
         </div>
         <OtpInput otp={otp} cb={(value: string[]) => setOtp(value)} />
-        <button
-          disabled={isLoading}
-          onClick={handleSubmit}
-          className="mt-12 auth_submit_btn"
-        >
-          {isLoading ? <Loading /> : "Verify"}
-        </button>
+        <div className="w-full mt-12 flex flex-col gap-2">
+          <button
+            disabled={isLoading}
+            onClick={handleSubmit}
+            className="auth_submit_btn"
+          >
+            {isLoading ? <Loading /> : "Verify"}
+          </button>
+          <button
+            type="button"
+            className="self-end text-sm text-sky_blue mr-2"
+            onClick={handleResendOtp}
+          >
+            Resend OTP
+          </button>
+        </div>
       </Box>
       <ToastContainer />
     </>

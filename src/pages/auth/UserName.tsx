@@ -15,7 +15,7 @@ const schema = z.object({
 
 const UserName = () => {
   const navigate = useNavigate();
-  const { showErrorMessage, showSuccessMessage, showAlertMessage } = Toastify();
+  const { showErrorMessage, showAlertMessage } = Toastify();
   const userName = useSearchParams()[0].get("username") as string;
 
   const {
@@ -50,11 +50,8 @@ const UserName = () => {
         return;
       }
 
-      const response = await patchReq("/user/username", values);
-      showSuccessMessage({ message: response.message });
-      setTimeout(() => {
-        navigate("/");
-      }, 2000);
+      await patchReq("/user/username", values);
+      navigate("/");
     } catch (error) {
       showErrorMessage({
         message:
@@ -89,6 +86,7 @@ const UserName = () => {
                 type="text"
                 placeholder="UserName"
                 className="input"
+                maxLength={20}
               />
             </div>
             {errors.username && (

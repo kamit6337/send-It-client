@@ -58,19 +58,12 @@ const Room = ({ room, handleNavigate }: Props) => {
           key={_id}
           className={`${
             isRoomActive ? "bg-gray-200" : "hover:bg-gray-100"
-          } flex gap-2 p-3 group/item`}
+          } flex items-center gap-2 p-3 group/item`}
           onMouseEnter={() => setShowOption(true)}
           onMouseLeave={handleClose}
-          // onMouseLeave={(e) => {
-          //   // Type assertion to Node
-          //   const relatedTargetNode = e.relatedTarget as Node | null;
-          //   if (!e.currentTarget.contains(relatedTargetNode)) {
-          //     setShowOption(false);
-          //   }
-          // }}
         >
           <div
-            className="w-10 cursor-pointer"
+            className="w-10 shrink-0 cursor-pointer"
             onClick={() => handleNavigate(_id)}
           >
             <img
@@ -79,69 +72,46 @@ const Room = ({ room, handleNavigate }: Props) => {
               className="w-full object-cover rounded-full"
             />
           </div>
-          <div className="flex-1 flex items-center justify-between ">
+          <div className="flex items-center justify-between">
             <div
-              className="flex items-center cursor-pointer"
+              className="flex-1 flex items-center justify-between cursor-pointer"
               onClick={() => handleNavigate(_id)}
             >
-              <div
-                className={`${
-                  showOption && "flex-shrink-0 w-32"
-                } flex overflow-hidden`}
-              >
+              <div className={`flex flex-col max-w-40`}>
                 <p className="truncate">{name}</p>
                 <p className="text-grey truncate">@{username}</p>
               </div>
               <p>
                 <ReactIcons.dot />
               </p>
-              <p className="text-sm text-grey">{dayMonthYear(createdAt)}</p>
+              <p className="text-xs text-grey w-20">
+                {dayMonthYear(createdAt)}
+              </p>
             </div>
+          </div>
 
-            {/* <p className="text-gray-500">{latestChat?.message}</p> */}
-
-            <div
-            // onMouseEnter={() => setShowOption(true)}
-            // onMouseLeave={(e) => {
-            //   // Type assertion to Node
-            //   const relatedTargetNode = e.relatedTarget as Node | null;
-            //   if (!e.currentTarget.contains(relatedTargetNode)) {
-            //     setShowOption(false);
-            //   }
-            // }}
-            >
-              {showOption && (
-                <>
-                  <div
-                    className="relative"
-                    onMouseEnter={() => setShowRoomOptions(true)}
-                  >
-                    <button className="p-2 rounded-full hover:bg-sky-200 hover:text-sky_blue">
-                      <ReactIcons.threeDot />
-                    </button>
-                    {showRoomOptions && (
-                      <DialogTrigger onClick={handleClose}>
-                        <div className="absolute z-10 top-full mt-2 right-0 bg-background border border-div_border rounded-md p-[2px] w-60">
-                          <button className="w-full p-2 rounded-md hover:bg-gray-100 text-red-500">
-                            Delete
-                          </button>
-                        </div>
-                      </DialogTrigger>
-                    )}
-                  </div>
-                </>
-                // <Dialog>
-                //   <DropdownMenu>
-                //     <DropdownMenuTrigger>
-                //       <button className="p-2 rounded-full hover:bg-sky-200 hover:text-sky_blue">
-                //         <ReactIcons.threeDot />
-                //       </button>
-                //     </DropdownMenuTrigger>
-                //     <RoomOptions _id={_id} />
-                //   </DropdownMenu>
-                // </Dialog>
-              )}
-            </div>
+          <div className="w-10 shrink-0">
+            {showOption && (
+              <>
+                <div
+                  className="relative"
+                  onMouseEnter={() => setShowRoomOptions(true)}
+                >
+                  <button className="p-2 rounded-full hover:bg-sky-200 hover:text-sky_blue">
+                    <ReactIcons.threeDot />
+                  </button>
+                  {showRoomOptions && (
+                    <DialogTrigger onClick={handleClose}>
+                      <div className="absolute z-10 top-full mt-2 right-0 bg-background border border-div_border rounded-md p-[2px] w-60">
+                        <button className="w-full p-2 rounded-md hover:bg-gray-100 text-red-500">
+                          Delete
+                        </button>
+                      </div>
+                    </DialogTrigger>
+                  )}
+                </div>
+              </>
+            )}
           </div>
         </main>
         <DialogContent className="w-80 p-0">

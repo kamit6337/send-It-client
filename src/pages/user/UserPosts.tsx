@@ -1,28 +1,32 @@
 import Post from "@/components/Post";
 import useUserPosts from "@/hooks/useUserPosts";
 import Loading from "@/lib/Loading";
-import { addUserPostsCount } from "@/redux/slice/userSlice";
 import { OutletContext, type Post as PostType } from "@/types";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { Helmet } from "react-helmet";
+import { useInView } from "react-intersection-observer";
 import { useOutletContext } from "react-router-dom";
 
 const UserPosts = () => {
-  const dispatch = useDispatch();
   const { user } = useOutletContext<OutletContext>();
-  const { isLoading, error, data } = useUserPosts(user._id);
+  const { isLoading, error, data, isFetching, fetchNextPage } = useUserPosts(
+    user._id
+  );
+
+  const { ref, inView } = useInView();
 
   useEffect(() => {
-    if (data) {
-      const totalPosts = data.pages.reduce((prev, current) => {
-        return prev + current.length;
-      }, 0);
-      dispatch(addUserPostsCount(totalPosts));
+    if (inView) {
+      !isFetching && fetchNextPage();
     }
-  }, [data, dispatch]);
+  }, [inView, fetchNextPage, isFetching]);
 
   if (isLoading) {
-    return <Loading hScreen={false} small={false} />;
+    return (
+      <div className="h-96">
+        <Loading hScreen={false} small={false} />
+      </div>
+    );
   }
 
   if (error) {
@@ -35,20 +39,35 @@ const UserPosts = () => {
 
   if (data?.pages[0].length === 0) {
     return (
-      <div className="h-96 flex justify-center items-center">
-        You don't have any post
-      </div>
+      <>
+        <Helmet>
+          <title>User Posts</title>
+          <meta name="discription" content="User Post page of this project" />
+        </Helmet>
+        <div className="h-96 flex justify-center items-center">
+          You don't have any post
+        </div>
+      </>
     );
   }
 
   return (
     <>
+      <Helmet>
+        <title>User Posts</title>
+        <meta name="discription" content="User Post page of this project" />
+      </Helmet>
       {data?.pages?.map((page) => {
         return page.map((post: PostType) => {
           return <Post post={post} key={post._id} />;
         });
       })}
-      <div className="h-96" />
+      {isFetching && (
+        <div className="h-96">
+          <Loading hScreen={false} small={false} />
+        </div>
+      )}
+      <div ref={ref} className="h-96" />
     </>
   );
 };

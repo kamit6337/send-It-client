@@ -24,7 +24,7 @@ const SelectMessageUser = () => {
     debounce(async (value) => {
       try {
         const response = await getReq("/search", { search: value });
-        setSearchedUsers(response.data);
+        setSearchedUsers(response);
       } catch (error) {
         showErrorMessage({
           message:
@@ -100,7 +100,7 @@ const SelectMessageUser = () => {
           </div>
         </div>
         <div className="border-t border-div_border">
-          {searchedUsers.length > 0 &&
+          {searchedUsers?.length > 0 &&
             searchedUsers.map((obj) => {
               const { _id, name, username, photo } = obj;
 

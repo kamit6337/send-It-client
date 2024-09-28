@@ -33,6 +33,7 @@ import { TbMailPlus } from "react-icons/tb";
 import { RiSettings4Line } from "react-icons/ri";
 import { BiSend } from "react-icons/bi";
 import { IoArrowDownSharp } from "react-icons/io5";
+import { IoPerson } from "react-icons/io5";
 
 const ReactIcons = {
   doubleArrowDown: MdOutlineKeyboardDoubleArrowDown,
@@ -69,7 +70,7 @@ const ReactIcons = {
   communityOutline: IoPeopleOutline,
   communitySolid: IoPeopleSharp,
   profileOutline: BsPerson,
-  profileSolid: IoPersonSharp,
+  profileSolid: IoPerson,
   twitterLogo: FaXTwitter,
   plus: FaPlus,
   cancel: MdOutlineCancel,

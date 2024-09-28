@@ -126,7 +126,7 @@ const SearchBar = () => {
             <p>ndbjkbdskvjsdnmsflfsmlkgmfsk</p>
           </div>
         </div>
-        <div className="self-center fixed bottom-0 w-[350px] border border-div_border rounded-t-xl shadow-xl">
+        <div className="self-center fixed bottom-0 w-[370px] border border-div_border rounded-t-xl shadow-xl">
           {activeRoom ? (
             <Room
               showMessageArea={showMessageArea}

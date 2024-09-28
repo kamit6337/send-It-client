@@ -13,8 +13,6 @@ const useNewFollowing = (actualUser, _id) => {
     mutationKey: ["new following", _id],
     mutationFn: ({ id, username }) => postReq("/following", { id, username }),
     onMutate: async ({ userObj }) => {
-      console.log("run new following once");
-
       await queryClient.cancelQueries({
         queryKey: ["user following", actualUser._id],
       });

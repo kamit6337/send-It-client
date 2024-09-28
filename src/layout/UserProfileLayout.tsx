@@ -4,7 +4,6 @@ import UserFollowAndUnfollow from "@/components/UserFollowAndUnfollow";
 import userProfileLinks from "@/data/userProfileLinks";
 import useLoginCheck from "@/hooks/useLoginCheck";
 import { followingState } from "@/redux/slice/followingSlice";
-import { userInitialState } from "@/redux/slice/userSlice";
 import { OutletContext } from "@/types";
 import getMonthAndYear from "@/utils/javascript/getMonthAndYear";
 import { useMemo } from "react";
@@ -16,7 +15,6 @@ const UserProfileLayout = () => {
   const { user: currentUser } = useOutletContext<OutletContext>();
   const { data: actualUser } = useLoginCheck();
   const { pathname } = useLocation();
-  const { userPostsCount, likePostsCount } = useSelector(userInitialState);
   const { followings } = useSelector(followingState);
 
   const {
@@ -32,6 +30,11 @@ const UserProfileLayout = () => {
     isFollowed: isActualUserFollow,
     location,
     website,
+    userPosts,
+    likePosts,
+    replyPosts,
+    mediaPosts,
+    savePosts,
   } = currentUser;
 
   const isFollowed = useMemo(() => {
@@ -47,13 +50,32 @@ const UserProfileLayout = () => {
 
   const info = useMemo(() => {
     if (pathname === `/${username}`) {
-      return `${userPostsCount} posts`;
+      return `${userPosts} posts`;
     }
     if (pathname === `/${username}/likes`) {
-      return `${likePostsCount} likes`;
+      return `${likePosts} likes`;
     }
+
+    if (pathname === `/${username}/replies`) {
+      return `${replyPosts} replies`;
+    }
+    if (pathname === `/${username}/media`) {
+      return `${mediaPosts} media`;
+    }
+    if (pathname === `/${username}/save`) {
+      return `${savePosts} saves`;
+    }
+
     return "";
-  }, [pathname, username, userPostsCount, likePostsCount]);
+  }, [
+    pathname,
+    username,
+    userPosts,
+    likePosts,
+    replyPosts,
+    mediaPosts,
+    savePosts,
+  ]);
 
   return (
     <>
@@ -70,8 +92,10 @@ const UserProfileLayout = () => {
         <div className="w-full border-b border-border">
           {/* NOTE: BACKGROUND IMAGE */}
 
-          <div className="h-60 w-full bg-gray-100 relative flex justify-center">
-            <img src={bg_photo} className="h-full object-cover" />
+          <div className="h-60 w-full bg-gray-200 relative flex justify-center">
+            {bg_photo && (
+              <img src={bg_photo} className="h-full w-full object-cover" />
+            )}
           </div>
 
           {/* NOTE: PROFILE IMAGE */}
@@ -97,7 +121,7 @@ const UserProfileLayout = () => {
               </div>
               <p>{bio}</p>
 
-              <div className="flex flex-wrap gap-5 text-sm text-grey">
+              <div className="flex flex-wrap gap-y-2 gap-5 text-sm text-grey">
                 {location && (
                   <div className="flex items-center gap-1">
                     <p>

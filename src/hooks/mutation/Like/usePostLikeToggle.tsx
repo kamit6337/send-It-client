@@ -3,7 +3,7 @@ import { PostDetails } from "@/types";
 import { deleteReq, postReq } from "@/utils/api/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-const usePostLikeToggle = (postId: string) => {
+const usePostLikeToggle = (actualUser, postId: string, user) => {
   const queryClient = useQueryClient();
   const { showErrorMessage } = Toastify();
 
@@ -11,7 +11,7 @@ const usePostLikeToggle = (postId: string) => {
     mutationKey: ["toggle post like", postId],
     mutationFn: ({ toggle }: { toggle: boolean }) => {
       if (toggle) {
-        return postReq("/like", { id: postId });
+        return postReq("/like", { id: postId, user });
       } else {
         return deleteReq("/like", { id: postId });
       }
@@ -32,12 +32,18 @@ const usePostLikeToggle = (postId: string) => {
         JSON.stringify(queryClient.getQueryData(["user liked posts"]) || [])
       );
 
+      const previousUserProfileData = JSON.parse(
+        JSON.stringify(
+          queryClient.getQueryData(["user profile", actualUser.username]) || []
+        )
+      );
+
       // Optimistically add the new todo to the cache with the temporary postId
       queryClient.setQueryData(["post details", postId], (old: PostDetails) => {
         if (toggle) {
-          old.data.isLiked = true;
+          old.isLiked = true;
         } else {
-          old.data.isLiked = false;
+          old.isLiked = false;
         }
 
         return old;
@@ -62,19 +68,59 @@ const usePostLikeToggle = (postId: string) => {
         }
       }
 
+      const userProfileState = queryClient.getQueryState([
+        "user profile",
+        actualUser.username,
+      ]);
+
+      if (userProfileState) {
+        queryClient.setQueryData(
+          ["user profile", actualUser.username],
+          (old) => {
+            if (toggle) {
+              old.likePosts = old.likePosts + 1;
+            } else {
+              old.likePosts = old.likePosts - 1;
+            }
+
+            return { ...old };
+          }
+        );
+      }
+
       // Return context with previous data and tempId for rollback and replacement
-      return { previousPostDetailsData, previousUserLikedPostsData };
+      return {
+        previousPostDetailsData,
+        previousUserLikedPostsData,
+        previousUserProfileData,
+      };
     },
     onError: (err, newTodo, context) => {
+      const userProfileState = queryClient.getQueryState([
+        "user profile",
+        actualUser.username,
+      ]);
+
+      if (userProfileState) {
+        queryClient.setQueryData(
+          ["user profile", actualUser.username],
+          context?.previousUserProfileData
+        );
+      }
+
       queryClient.setQueryData(
         ["post details", postId],
         context?.previousPostDetailsData
       );
 
-      queryClient.setQueryData(
-        ["user liked posts"],
-        context?.previousUserLikedPostsData
-      );
+      const checkState = queryClient.getQueryState(["user liked posts"]);
+
+      if (checkState) {
+        queryClient.setQueryData(
+          ["user liked posts"],
+          context?.previousUserLikedPostsData
+        );
+      }
 
       showErrorMessage({
         message: err instanceof Error ? err.message : "Something went wrong",

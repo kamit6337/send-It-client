@@ -2,16 +2,14 @@ export type PostSocket = {
   pages: Post[][];
 };
 
-export type PostDetails = {
-  data: {
-    _id: string;
-    likeCount: number;
-    saveCount: number;
-    replyCount: number;
-    isLiked: boolean;
-    isSaved: boolean;
-    isReply: boolean;
-  };
+export type PostDetail = {
+  _id: string;
+  likeCount: number;
+  saveCount: number;
+  replyCount: number;
+  isLiked: boolean;
+  isSaved: boolean;
+  isReply: boolean;
 };
 
 export type Params = {
@@ -60,14 +58,8 @@ export type Post = {
   media: string;
   thumbnail: string;
   duration: number;
-  replyCount: number;
-  likeCount: number;
-  viewCount: number;
-  saveCount: number;
   createdAt: string;
   updatedAt: string;
-  isLiked: boolean;
-  isSaved: boolean;
   isFollow: boolean;
 };
 
@@ -82,9 +74,11 @@ export type User = {
   website: string;
   createdAt: string;
   updatedAt: string;
-  postCount: number;
-  likeCount: number;
-  replyCount: number;
+  userPosts: number;
+  likePosts: number;
+  replyPosts: number;
+  mediaPosts: number;
+  savePosts: number;
   followersCount: number;
   followingCount: number;
   isFollowed: boolean;

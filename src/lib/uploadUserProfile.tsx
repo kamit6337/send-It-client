@@ -13,7 +13,7 @@ const uploadUserProfile = catchAsyncError(
     }
 
     if (bgImgFile) {
-      obj.bg_photo = await uploadToAWS(profileImgFile, "/profile_bg");
+      obj.bg_photo = await uploadToAWS(bgImgFile, "/profile_bg");
     }
 
     return obj;

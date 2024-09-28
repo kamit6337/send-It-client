@@ -100,7 +100,7 @@ const ChatSingleMessage = ({ chat, actualUser }: Props) => {
             <FullScreenImage src={media} />
           </DialogContent>
         </Dialog>
-        <p className="text-end text-xs mt-1 mr-3">
+        <p className="text-start text-xs mt-1 ml-3">
           {actualDateAndTime(createdAt)}
         </p>
       </div>
@@ -124,7 +124,7 @@ const ChatSingleMessage = ({ chat, actualUser }: Props) => {
           </DialogContent>
         </Dialog>
 
-        <p className="text-end text-xs mt-1 mr-3">
+        <p className="text-start text-xs mt-1 ml-3">
           {actualDateAndTime(createdAt)}
         </p>
       </div>
@@ -137,7 +137,7 @@ const ChatSingleMessage = ({ chat, actualUser }: Props) => {
       <p className="w-full bg-gray-100 text-black rounded-2xl text-sm py-2 px-3">
         {message}
       </p>
-      <p className="text-end text-xs mt-1 mr-3">
+      <p className="text-start text-xs mt-1 ml-3">
         {actualDateAndTime(createdAt)}
       </p>
     </div>

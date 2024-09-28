@@ -10,4 +10,12 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  server: {
+    watch: {
+      usePolling: true, // Use polling, required in some Docker environments
+    },
+    host: true, // Expose to external (required for Docker)
+    port: 5173, // The port that the dev server will run on
+    strictPort: true, // Fails if port is already in use
+  },
 });

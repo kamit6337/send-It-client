@@ -10,11 +10,16 @@ import SignUp from "@/pages/auth/SignUp";
 import UserName from "@/pages/auth/UserName";
 import VerifySignUp from "@/pages/auth/VerifySignUp";
 import Chats from "@/pages/chats/Chats";
+import Communities from "@/pages/communities/Communities";
+import Explore from "@/pages/explore/Explore";
 import Followers from "@/pages/followers/Followers";
 import Following from "@/pages/followers/Following";
 import Home from "@/pages/home/Home";
 import Messages from "@/pages/messages/Messages";
+import More from "@/pages/more/More";
+import Notifications from "@/pages/notifications/Notifications";
 import SinglePost from "@/pages/post/SinglePost";
+import Premium from "@/pages/premium/Premium";
 import SingleReply from "@/pages/reply/SingleReply";
 import Likes from "@/pages/user/Likes";
 import Media from "@/pages/user/Media";
@@ -35,16 +40,27 @@ const Router = () => {
 
       {/* NOTE: ROOTLAYOUT */}
       <Route path="/" element={<RootLayout />}>
-        <Route path="messages" element={<MessagesLayout />}>
+        {/* NOTE: NOT YET MAGE ROUTE */}
+        <Route path="explore" element={<Explore />} />
+        <Route path="communities" element={<Communities />} />
+        <Route path="premium" element={<Premium />} />
+        <Route path="more" element={<More />} />
+
+        {/* NOTE: MESSAGES LAYOUT */}
+        <Route path="/messages" element={<MessagesLayout />}>
           <Route index element={<Messages />} />
           <Route path=":id" element={<Chats />} />
         </Route>
+
+        {/* NOTE: SEARCHBAR LAYOUT */}
         <Route path="/" element={<SearchBarLayout />}>
           <Route index element={<Home />} />
 
           {/* NOTE: USER PROFILE */}
           <Route path="posts/:id" element={<SinglePost />} />
           <Route path="reply/:id" element={<SingleReply />} />
+
+          <Route path="notifications" element={<Notifications />} />
 
           {/* NOTE: USER PROFILE */}
           <Route path="/:username" element={<UserLayout />}>

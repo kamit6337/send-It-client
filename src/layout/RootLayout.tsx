@@ -11,7 +11,7 @@ const RootLayout = () => {
   const { isLoading, error, isSuccess, data: actualUser } = useLoginCheck();
 
   const { isLoading: isLoadingUserRoom, error: isErrorUserRooms } =
-    useUserRooms(isSuccess);
+    useUserRooms(isSuccess, actualUser);
 
   useEffect(() => {
     if (error) {

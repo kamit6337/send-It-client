@@ -9,14 +9,14 @@ import { useInView } from "react-intersection-observer";
 import ShowLatestPosts from "./ShowLatestPosts";
 
 const Home = () => {
-  const { isLoading, error, data, fetchNextPage } = usePosts();
+  const { isLoading, error, data, fetchNextPage, isFetching } = usePosts();
   const { ref, inView } = useInView();
 
   useEffect(() => {
     if (inView) {
-      fetchNextPage();
+      !isFetching && fetchNextPage();
     }
-  }, [inView, fetchNextPage]);
+  }, [inView, fetchNextPage, isFetching]);
 
   if (isLoading) {
     return (
@@ -61,6 +61,11 @@ const Home = () => {
             return <Post post={post} key={post._id} />;
           });
         })}
+        {isFetching && (
+          <div className="h-96">
+            <Loading hScreen={false} small={false} />
+          </div>
+        )}
         <div ref={ref} className="h-96" />
       </div>
     </>

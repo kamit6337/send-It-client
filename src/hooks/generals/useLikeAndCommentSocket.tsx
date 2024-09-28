@@ -1,14 +1,16 @@
 import {
   offNewLike,
   offNewSave,
+  offNewView,
   offRemoveLike,
   offRemoveSave,
   onNewLike,
   onNewSave,
+  onNewView,
   onRemoveLike,
   onRemoveSave,
 } from "@/lib/socketIO";
-import { Like, PostDetails, Save } from "@/types";
+import { Like, PostDetail, Save } from "@/types";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 
@@ -17,6 +19,8 @@ const useLikeAndCommentSocket = () => {
 
   useEffect(() => {
     const handleNewLike = (response: Like) => {
+      console.log("new like response", response);
+
       const checkStatus = queryClient.getQueryState([
         "post details",
         response.post,
@@ -26,7 +30,7 @@ const useLikeAndCommentSocket = () => {
         queryClient.setQueryData(
           ["post details", response.post],
           (old: PostDetails) => {
-            old.data.likeCount = old.data.likeCount + 1;
+            old.likeCount = old.likeCount + 1;
             return old;
           }
         );
@@ -42,8 +46,8 @@ const useLikeAndCommentSocket = () => {
       if (checkStatus) {
         queryClient.setQueryData(
           ["post details", response.post],
-          (old: PostDetails) => {
-            old.data.likeCount = old.data.likeCount - 1;
+          (old: PostDetail) => {
+            old.likeCount = old.likeCount - 1;
             return old;
           }
         );
@@ -62,8 +66,8 @@ const useLikeAndCommentSocket = () => {
       if (checkStatus) {
         queryClient.setQueryData(
           ["post details", response.post],
-          (old: PostDetails) => {
-            old.data.saveCount = old.data.saveCount + 1;
+          (old: PostDetail) => {
+            old.saveCount = old.saveCount + 1;
             return old;
           }
         );
@@ -81,8 +85,25 @@ const useLikeAndCommentSocket = () => {
       if (checkStatus) {
         queryClient.setQueryData(
           ["post details", response.post],
-          (old: PostDetails) => {
-            old.data.saveCount = old.data.saveCount - 1;
+          (old: PostDetail) => {
+            old.saveCount = old.saveCount - 1;
+            return old;
+          }
+        );
+      }
+    };
+
+    const handleNewView = (obj) => {
+      const checkStatus = queryClient.getQueryState([
+        "post details",
+        obj.postId,
+      ]);
+
+      if (checkStatus) {
+        queryClient.setQueryData(
+          ["post details", obj.postId],
+          (old: PostDetail) => {
+            old.viewCount = old.viewCount + 1;
             return old;
           }
         );
@@ -93,11 +114,13 @@ const useLikeAndCommentSocket = () => {
     onRemoveLike(handleRemoveLike);
     onNewSave(handleNewSave);
     onRemoveSave(handleRemoveSave);
+    onNewView(handleNewView);
     return () => {
       offNewLike(handleNewLike);
       offRemoveLike(handleRemoveLike);
       offNewSave(handleNewSave);
       offRemoveSave(handleRemoveSave);
+      offNewView(handleNewView);
     };
   }, [queryClient]);
 

@@ -11,7 +11,7 @@ const navlinks = [
     name: "Explore",
     outline: ReactIcons.search,
     solid: ReactIcons.search,
-    href: "/",
+    href: "/explore",
   },
   {
     name: "Notifications",
@@ -29,13 +29,13 @@ const navlinks = [
     name: "Communities",
     outline: ReactIcons.communityOutline,
     solid: ReactIcons.communitySolid,
-    href: "/",
+    href: "/communities",
   },
   {
     name: "Premium",
     outline: ReactIcons.homeOutline,
     solid: ReactIcons.homeSolid,
-    href: "/",
+    href: "/premium",
   },
   {
     name: "Profile",
@@ -47,7 +47,7 @@ const navlinks = [
     name: "More",
     outline: ReactIcons.threeDot,
     solid: ReactIcons.threeDot,
-    href: "/",
+    href: "/more",
   },
 ];
 
