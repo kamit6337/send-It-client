@@ -4,6 +4,7 @@ import catchAsyncError from "@/lib/catchAsyncError";
 
 console.log("environment.SERVER_URL", environment.SERVER_URL);
 console.log("environment.CLIENT_URL", environment.CLIENT_URL);
+console.log("import.meta", import.meta.env);
 
 const BASE_URL = environment.SERVER_URL + "/auth";
 
