@@ -4,13 +4,13 @@ import ChatSingleMessage from "./ChatSingleMessage";
 import useLoginCheck from "@/hooks/useLoginCheck";
 import { useSelector } from "react-redux";
 import { roomState } from "@/redux/slice/roomSlice";
-import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useInView } from "react-intersection-observer";
 import debounce from "@/utils/javascript/debounce";
 
 const ChatRoomMessages = ({ roomId, handleScrollUp, messagesEndRef }) => {
-  const { isLoading, error, data, fetchNextPage, isFetching, hasNextPage } =
+  const { isLoading, error, data, fetchNextPage, isFetching } =
     useRoomChats(roomId);
   const { data: actualUser } = useLoginCheck();
   const { rooms } = useSelector(roomState);
@@ -18,11 +18,7 @@ const ChatRoomMessages = ({ roomId, handleScrollUp, messagesEndRef }) => {
   const firstPageLength = data?.pages[0].length;
 
   const { ref: newPageRef, inView } = useInView();
-
-  console.log("firstPageLength", firstPageLength);
-  console.log("data?.pages", data?.pages);
-  console.log("hasNextPage", hasNextPage);
-  console.log("isFetching", isFetching);
+  const [scrollDirection, setScrollDirection] = useState("down"); // Keep track of scroll direction
 
   const member = useMemo(() => {
     const findRoom = rooms?.find((room) => room._id === roomId);
@@ -45,16 +41,32 @@ const ChatRoomMessages = ({ roomId, handleScrollUp, messagesEndRef }) => {
   }, [firstPageLength]);
 
   useEffect(() => {
-    if (inView && !isFetching) {
+    if (inView && scrollDirection === "up" && !isFetching) {
       fetchNextPage();
     }
-  }, [inView, isFetching, fetchNextPage]);
+  }, [inView, isFetching, fetchNextPage, scrollDirection]);
 
   const handleScroll = debounce(() => {
     const chatContainer = chatContainerRef.current;
     if (chatContainer) {
       const { scrollTop, scrollHeight, clientHeight } = chatContainer;
       const distanceFromBottom = scrollHeight - (scrollTop + clientHeight);
+
+      // Ensure previous scroll position is a number, default to 0 if undefined
+      const prevScrollTop = parseFloat(
+        chatContainer.dataset.prevScrollTop || "0"
+      );
+
+      // Set scroll direction based on the previous scroll position
+      if (scrollTop < prevScrollTop) {
+        setScrollDirection("up");
+      } else {
+        setScrollDirection("down");
+      }
+
+      // Update previous scroll position
+      chatContainer.dataset.prevScrollTop = String(scrollTop);
+
       handleScrollUp(distanceFromBottom > 100);
     }
   }, 200);

@@ -16,6 +16,11 @@ import usePostLikeToggle from "@/hooks/mutation/Like/usePostLikeToggle";
 import { useRef } from "react";
 import usePostSaveToggle from "@/hooks/mutation/Save/usePostSaveToggle";
 import useLoginCheck from "@/hooks/useLoginCheck";
+import useIncreaseView from "@/hooks/mutation/View/useIncreaseView";
+import {
+  checkAlreadyView,
+  setViewPostId,
+} from "@/utils/javascript/checkAlreadyView";
 
 type Props = {
   post: Post;
@@ -40,6 +45,8 @@ const LikeAndComment = ({ post, user }: Props) => {
     usePostLikeToggle(actualUser, postId, user._id);
   const { mutate: mutateSave, isPending: isPendingSaveToggle } =
     usePostSaveToggle(actualUser, postId, user._id);
+
+  const { mutate: mutatePostViewCount } = useIncreaseView(postId);
 
   const handleCopyLink = () => {
     const link = `${environment.CLIENT_URL}/posts/${postId}`;
@@ -104,14 +111,29 @@ const LikeAndComment = ({ post, user }: Props) => {
             <button
               disabled={isPendingLikeToggle}
               className="text-red-500 p-2 rounded-full"
-              onClick={() => mutateLike({ toggle: false, post })}
+              onClick={() => {
+                mutateLike({ toggle: false, post });
+
+                const check = checkAlreadyView(postId);
+                if (!check) {
+                  mutatePostViewCount();
+                  setViewPostId(postId);
+                }
+              }}
             >
               <ReactIcons.heartSolid />
             </button>
           ) : (
             <button
               disabled={isPendingLikeToggle}
-              onClick={() => mutateLike({ toggle: true, post })}
+              onClick={() => {
+                mutateLike({ toggle: true, post });
+                const check = checkAlreadyView(postId);
+                if (!check) {
+                  mutatePostViewCount();
+                  setViewPostId(postId);
+                }
+              }}
               className="hover:text-red-500 hover:bg-red-200 p-2 rounded-full"
             >
               <ReactIcons.heartOutline />
@@ -134,7 +156,15 @@ const LikeAndComment = ({ post, user }: Props) => {
           {isSaved ? (
             <button
               disabled={isPendingSaveToggle}
-              onClick={() => mutateSave({ toggle: false, post })}
+              onClick={() => {
+                mutateSave({ toggle: false, post });
+
+                const check = checkAlreadyView(postId);
+                if (!check) {
+                  mutatePostViewCount();
+                  setViewPostId(postId);
+                }
+              }}
               className="text-blue-500 p-2 rounded-full"
             >
               <ReactIcons.bookmarkSolid />
@@ -142,7 +172,15 @@ const LikeAndComment = ({ post, user }: Props) => {
           ) : (
             <button
               disabled={isPendingSaveToggle}
-              onClick={() => mutateSave({ toggle: true, post })}
+              onClick={() => {
+                mutateSave({ toggle: true, post });
+
+                const check = checkAlreadyView(postId);
+                if (!check) {
+                  mutatePostViewCount();
+                  setViewPostId(postId);
+                }
+              }}
               className="hover:text-blue-500 hover:bg-blue-200 p-2 rounded-full"
             >
               <ReactIcons.bookMarkOutline />

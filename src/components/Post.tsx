@@ -20,6 +20,10 @@ import HoveredUserInfo from "./HoveredUserInfo";
 import { useDispatch, useSelector } from "react-redux";
 import { addToPost, postState } from "@/redux/slice/postSlice";
 import useIncreaseView from "@/hooks/mutation/View/useIncreaseView";
+import {
+  checkAlreadyView,
+  setViewPostId,
+} from "@/utils/javascript/checkAlreadyView";
 
 const Post = ({
   post,
@@ -83,7 +87,13 @@ const Post = ({
   };
 
   const handleNavigate = () => {
-    mutate(_id);
+    const check = checkAlreadyView(_id);
+
+    if (!check) {
+      mutate();
+      setViewPostId(_id);
+    }
+
     if (!isReply) {
       navigate(`/posts/${_id}`);
       return;

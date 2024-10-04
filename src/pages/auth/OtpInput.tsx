@@ -1,4 +1,3 @@
-"use client";
 import { type ChangeEvent, useEffect, useRef } from "react";
 
 const OtpInput = ({

@@ -1,10 +1,10 @@
 import { postReq } from "@/utils/api/api";
 import { useMutation } from "@tanstack/react-query";
 
-const useIncreaseView = (postId) => {
+const useIncreaseView = (postId: string) => {
   const mutation = useMutation({
     mutationKey: ["post view update", postId],
-    mutationFn: (id) => postReq("/view", { id }),
+    mutationFn: () => postReq("/view", { id: postId }),
   });
 
   return mutation;

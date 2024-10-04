@@ -60,9 +60,6 @@ const useLikeAndCommentSocket = () => {
         response.post,
       ]);
 
-      console.log("response add", response);
-      console.log("response add checkStatus", checkStatus);
-
       if (checkStatus) {
         queryClient.setQueryData(
           ["post details", response.post],

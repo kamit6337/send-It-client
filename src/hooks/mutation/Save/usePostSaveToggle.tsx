@@ -1,9 +1,9 @@
 import Toastify from "@/lib/Toastify";
-import { PostDetails } from "@/types";
+import { PostDetail, User } from "@/types";
 import { deleteReq, postReq } from "@/utils/api/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-const usePostSaveToggle = (actualUser, postId: string) => {
+const usePostSaveToggle = (actualUser: User, postId: string) => {
   const queryClient = useQueryClient();
   const { showErrorMessage } = Toastify();
 
@@ -39,7 +39,7 @@ const usePostSaveToggle = (actualUser, postId: string) => {
       );
 
       // Optimistically add the new todo to the cache with the temporary postId
-      queryClient.setQueryData(["post details", postId], (old: PostDetails) => {
+      queryClient.setQueryData(["post details", postId], (old: PostDetail) => {
         if (toggle) {
           old.isSaved = true;
         } else {

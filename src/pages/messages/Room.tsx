@@ -2,7 +2,6 @@ import ReactIcons from "@/assets/icons";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import useLoginCheck from "@/hooks/useLoginCheck";
 import { User, type Room as RoomType } from "@/types";
-import dayMonthYear from "@/utils/javascript/dayMonthYear";
 import { DialogTrigger } from "@radix-ui/react-dialog";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -17,7 +16,7 @@ type Props = {
 
 const Room = ({ room, handleNavigate }: Props) => {
   const navigate = useNavigate();
-  const { _id, users, createdAt } = room;
+  const { _id, users } = room;
   const { data: actualUser } = useLoginCheck();
   const { pathname } = useLocation();
   const [showOption, setShowOption] = useState(false);
@@ -58,21 +57,21 @@ const Room = ({ room, handleNavigate }: Props) => {
           key={_id}
           className={`${
             isRoomActive ? "bg-gray-200" : "hover:bg-gray-100"
-          } flex items-center gap-2 p-3 group/item`}
+          } flex items-center justify-between gap-2 p-3 group/item`}
           onMouseEnter={() => setShowOption(true)}
           onMouseLeave={handleClose}
         >
-          <div
-            className="w-10 shrink-0 cursor-pointer"
-            onClick={() => handleNavigate(_id)}
-          >
-            <img
-              src={photo}
-              alt={name}
-              className="w-full object-cover rounded-full"
-            />
-          </div>
-          <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div
+              className="w-10 shrink-0 cursor-pointer"
+              onClick={() => handleNavigate(_id)}
+            >
+              <img
+                src={photo}
+                alt={name}
+                className="w-full object-cover rounded-full"
+              />
+            </div>
             <div
               className="flex-1 flex items-center justify-between cursor-pointer"
               onClick={() => handleNavigate(_id)}
@@ -81,12 +80,6 @@ const Room = ({ room, handleNavigate }: Props) => {
                 <p className="truncate">{name}</p>
                 <p className="text-grey truncate">@{username}</p>
               </div>
-              <p>
-                <ReactIcons.dot />
-              </p>
-              <p className="text-xs text-grey w-20">
-                {dayMonthYear(createdAt)}
-              </p>
             </div>
           </div>
 
