@@ -5,7 +5,7 @@ const Profile = () => {
   const { data: user } = useLoginCheck();
 
   return (
-    <div className="flex justify-center items-center p-1 gap-2 hover:bg-sidebar_link_hover cursor-pointer rounded-full">
+    <div className="flex justify-center items-center p-1 px-2 gap-2 hover:bg-sidebar_link_hover cursor-pointer rounded-full">
       <div className="w-10 md:w-12">
         <img src={user.photo} alt={user.name} className="w-full rounded-full" />
       </div>

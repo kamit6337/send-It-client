@@ -68,7 +68,32 @@ const useNewPostToggle = (actualUser: User) => {
           );
         }
 
-        return;
+        if (post.thumbnail === "" || post.duration === 0) return;
+
+        const userMediaPostState = queryClient.getQueryState([
+          "user media",
+          actualUser._id,
+        ]);
+
+        if (userMediaPostState) {
+          queryClient.setQueryData(
+            ["user media", actualUser._id],
+            (old: PostSocket) => {
+              const newPages = [...old.pages];
+              newPages[0] = [post, ...newPages[0]];
+              return { ...old, pages: newPages };
+            }
+          );
+        }
+
+        if (userProfileState) {
+          queryClient.setQueryData(
+            ["user profile", actualUser.username],
+            (old) => {
+              return { ...old, mediaPosts: old.mediaPosts + 1 };
+            }
+          );
+        }
       }
 
       try {

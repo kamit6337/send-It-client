@@ -70,6 +70,3 @@ docker run --env-file .env -p 5173:80 kamit6337/sendit-client
 ```
 
 - react-app started on http://localhost:5173
-
-Thank you,  
-Amit

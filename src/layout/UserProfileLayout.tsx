@@ -3,6 +3,7 @@ import LeftArrowBtn from "@/components/LeftArrowBtn";
 import UserFollowAndUnfollow from "@/components/UserFollowAndUnfollow";
 import userProfileLinks from "@/data/userProfileLinks";
 import useLoginCheck from "@/hooks/useLoginCheck";
+import useUserProfile from "@/hooks/useUserProfile";
 import { followingState } from "@/redux/slice/followingSlice";
 import { OutletContext } from "@/types";
 import getMonthAndYear from "@/utils/javascript/getMonthAndYear";
@@ -12,7 +13,9 @@ import { Link, useLocation, useOutletContext } from "react-router-dom";
 import { NavLink, Outlet } from "react-router-dom";
 
 const UserProfileLayout = () => {
-  const { user: currentUser } = useOutletContext<OutletContext>();
+  const { username } = useOutletContext<OutletContext>();
+  const { data: currentUser } = useUserProfile(username);
+
   const { data: actualUser } = useLoginCheck();
   const { pathname } = useLocation();
   const { followings } = useSelector(followingState);
@@ -20,7 +23,6 @@ const UserProfileLayout = () => {
   const {
     _id,
     name,
-    username,
     photo,
     bg_photo,
     bio,
@@ -48,7 +50,7 @@ const UserProfileLayout = () => {
     return userProfileLinks(username, actualUser);
   }, [username, actualUser]);
 
-  const info = useMemo(() => {
+  const info = () => {
     if (pathname === `/${username}`) {
       return `${userPosts} posts`;
     }
@@ -67,15 +69,7 @@ const UserProfileLayout = () => {
     }
 
     return "";
-  }, [
-    pathname,
-    username,
-    userPosts,
-    likePosts,
-    replyPosts,
-    mediaPosts,
-    savePosts,
-  ]);
+  };
 
   return (
     <>
@@ -85,7 +79,7 @@ const UserProfileLayout = () => {
           <LeftArrowBtn />
           <div>
             <p className="font-semibold tracking-wider">{name}</p>
-            <p className="text-grey text-sm">{info}</p>
+            <p className="text-grey text-sm">{info()}</p>
           </div>
         </div>
 

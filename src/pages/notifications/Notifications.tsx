@@ -1,5 +1,14 @@
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 const Notifications = () => {
-  return <div>Notifications</div>;
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    navigate("/");
+  }, [navigate]);
+
+  return null;
 };
 
 export default Notifications;

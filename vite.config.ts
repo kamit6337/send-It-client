@@ -17,6 +17,5 @@ export default defineConfig({
     host: true, // Expose to external (required for Docker)
     port: 5173, // The port that the dev server will run on
     strictPort: true, // Fails if port is already in use
-    origin: "http://0.0.0.0:5173",
   },
 });
