@@ -1,30 +1,75 @@
-# React + TypeScript + Vite
+# SendIt
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+<p>It's a Full Stack Social Media Web App build in MERN Stack including real-time communications</p>
 
-Currently, two official plugins are available:
+You can visit the [Live website](https://commercify-client.vercel.app)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Table of Contents
 
-## Expanding the ESLint configuration
+- [Description](#description)
+- [Features](#features)
+- [Tech](#tech)
+- [Screenshots](#screenshots)
+- [Running](#running)
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Description
 
-- Configure the top-level `parserOptions` property like this:
+This is a social media website like Twitter where you can post, like, reply post and share post and also chat with members.
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json', './tsconfig.app.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+## Features
+
+- Google-OAuth based login
+- custom login using email and password
+- Socket.io for real-time communications
+- efficient fetching and mutation using react-query
+- real-time optimistic update on post creation, like, save and reply post
+- search functionality
+- store multimedia into AWS S3 directly from frontend using pre-signed url
+- chat features with members, direct message to a user
+- responsive website for all size of devices
+- Dockerize this React-Vite app for development and production
+- for development using compose.yaml file
+- for production using nginx server
+
+## Tech
+
+<ul>
+<li>React JS</li>
+<li>Tailwind CSS - <i>for styling of web pages</i></li>
+<li>Socket.io - <i>for web socket connection</i></li>
+<li>Redux - <i>for global state management</i></li>
+<li>React Hook Form - <i>making form filling and validation easy</i></li>
+<li>React Toastify - <i>showing better UI notification or errors</i></li>
+<li>React Query - <i>efficient data fetching and caching making user experience better</i></li>
+<li>Shadcn - <i>designing of web page with pre-built component</i></li>
+</ul>
+
+## Screenshots
+
+Here are the screenshots of my project:
+
+![product 1](https://commercify-vercel.s3.ap-south-1.amazonaws.com/images/commercify1.png)
+![product 2](https://commercify-vercel.s3.ap-south-1.amazonaws.com/images/commercify2.png)
+
+## Running
+
+To run this app locally using Docker Image :
+
+- install Docker Desktop from [Docker website](https://www.docker.com/products/docker-desktop) and start to run in background
+- create a folder in desktop, open this folder in VS Code
+- create a .env file
+- copy .env.example file variables from above and paste in .env file
+- start filling all environment variables
+
+### SERVER_URL and CLIENT_URL will be enough to run this app.
+
+- open VS Code terminal
+
+```
+docker run --env-file .env -p 5173:80 kamit6337/sendit-client
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+- react-app started on http://localhost:5173
+
+Thank you,  
+Amit
