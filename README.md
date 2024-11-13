@@ -2,14 +2,15 @@
 
 <p>It's a Full Stack Social Media Web App build in MERN Stack including real-time communications</p>
 
-You can visit the [Live website](https://commercify-client.vercel.app)
+[Preview](https://amit-general-bucket.s3.ap-south-1.amazonaws.com/videos/send-it.mp4)
+
+Docker Image : [kamit6337/sendit-client](https://hub.docker.com/repository/docker/kamit6337/sendit-client/general)
 
 ## Table of Contents
 
 - [Description](#description)
 - [Features](#features)
 - [Tech](#tech)
-- [Screenshots](#screenshots)
 - [Running](#running)
 
 ## Description
@@ -43,13 +44,6 @@ This is a social media website like Twitter where you can post, like, reply post
 <li>React Query - <i>efficient data fetching and caching making user experience better</i></li>
 <li>Shadcn - <i>designing of web page with pre-built component</i></li>
 </ul>
-
-## Screenshots
-
-Here are the screenshots of my project:
-
-![product 1](https://commercify-vercel.s3.ap-south-1.amazonaws.com/images/commercify1.png)
-![product 2](https://commercify-vercel.s3.ap-south-1.amazonaws.com/images/commercify2.png)
 
 ## Running
 
