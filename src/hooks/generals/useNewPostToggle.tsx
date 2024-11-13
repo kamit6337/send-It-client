@@ -94,6 +94,8 @@ const useNewPostToggle = (actualUser: User) => {
             }
           );
         }
+
+        return;
       }
 
       try {
@@ -114,8 +116,20 @@ const useNewPostToggle = (actualUser: User) => {
       dispatch(addToUpdatePost(obj));
     };
 
-    const handleDeletePost = (id: string) => {
+    const handleDeletePost = (obj) => {
+      const { id, username } = obj;
       dispatch(deletePost(id));
+
+      const userProfileState = queryClient.getQueryState([
+        "user profile",
+        username,
+      ]);
+
+      if (userProfileState) {
+        queryClient.setQueryData(["user profile", username], (old) => {
+          return { ...old, userPosts: old.userPosts - 1 };
+        });
+      }
     };
 
     onNewPost(handleCreatePost);

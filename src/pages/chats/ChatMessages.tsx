@@ -115,9 +115,9 @@ const ChatMessages = ({ id = null }: Props) => {
 
           {/* NOTE: SELECTED IMAGE FILE */}
           {selectedFile && (
-            <div className="absolute z-10 bottom-full left-0 text-sm border border-div_border p-2 flex items-center gap-2">
+            <div className="absolute z-10 bottom-full left-0 text-sm border border-div_border p-2 flex items-center gap-2 bg-white ">
               <Dialog>
-                <DialogTrigger className="hover:underline underline-offset-4">
+                <DialogTrigger className="hover:underline underline-offset-4 truncate w-32">
                   {selectedFile.name}
                 </DialogTrigger>
                 <DialogContent className="p-0 top-0 translate-y-0 w-max">

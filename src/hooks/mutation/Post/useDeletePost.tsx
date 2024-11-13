@@ -12,7 +12,7 @@ const useDeletePost = (actualUser, postId) => {
     onMutate(variables) {
       const previousUserProfile = JSON.parse(
         JSON.stringify(
-          queryClient.getQueryData(["user profile", actualUser.username])
+          queryClient.getQueryData(["user profile", actualUser.username]) || []
         )
       );
 
@@ -27,8 +27,6 @@ const useDeletePost = (actualUser, postId) => {
         queryClient.setQueryData(
           ["user profile", actualUser.username],
           (old) => {
-            old.userPosts = old.userPosts - 1;
-
             if (postDetails.isLiked) {
               old.likePosts = old.likePosts - 1;
             }

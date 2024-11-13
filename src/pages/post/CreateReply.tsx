@@ -17,7 +17,6 @@ const CreateReply = ({ actualUser, postId }: Props) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { showErrorMessage, showAlertMessage } = Toastify();
-
   const maxLength = 200;
 
   const { register, getValues, reset, watch } = useForm({
@@ -46,6 +45,7 @@ const CreateReply = ({ actualUser, postId }: Props) => {
         media = await uploadToAWS(selectedFile);
       }
       await postReq("/reply", { postId, message, media });
+      setIsFocus(false);
       reset();
       setSelectedFile(null);
     } catch (error) {
