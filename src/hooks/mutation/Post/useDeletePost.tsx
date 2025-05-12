@@ -1,15 +1,16 @@
 import Toastify from "@/lib/Toastify";
+import { User } from "@/types";
 import { deleteReq } from "@/utils/api/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-const useDeletePost = (actualUser, postId) => {
+const useDeletePost = (actualUser: User, postId: string) => {
   const queryClient = useQueryClient();
   const { showErrorMessage } = Toastify();
 
   const mutation = useMutation({
     mutationKey: ["delete post", postId],
     mutationFn: () => deleteReq("/post", { id: postId }),
-    onMutate(variables) {
+    onMutate() {
       const previousUserProfile = JSON.parse(
         JSON.stringify(
           queryClient.getQueryData(["user profile", actualUser.username]) || []
