@@ -14,7 +14,7 @@ const VerifyOAuthLogin = () => {
       return;
     }
 
-    Cookies.set("_use", token, { expires: 30 });
+    Cookies.set("_use", token, { expires: 30, secure: false });
     navigate("/");
   }, [token, navigate]);
 

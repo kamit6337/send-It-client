@@ -14,6 +14,16 @@ const SocketConnectionProvider = ({
   useEffect(() => {
     if (!socket) return;
     socket.emit("isConnected", "I am from Client");
+
+    const handleNewPost = (data) => {
+      console.log("new data", data);
+    };
+
+    socket.on("new-post", handleNewPost);
+
+    return () => {
+      socket.off("new-post", handleNewPost);
+    };
   }, [socket]);
 
   return <>{children}</>;

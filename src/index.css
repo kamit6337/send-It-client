@@ -46,6 +46,19 @@
     --detail-btn: #3677ee;
     --cancel-btn: #cbd0d6;
     --save-btn: #f1f2f4;
+
+    --sky-blue: #1d9bf0;
+    --div-hover: rgb(30 41 59);
+    --light-grey: rgba(183, 186, 189, 0.1);
+
+    --grey: #727277;
+    --search-bg: #ffffff;
+    --sidebar-div-hover: rgb(230, 232, 236);
+    --auth-button-hover: rgb(229, 229, 229);
+    --auth-input: #ffffff;
+    --or-dash: #ddd7d7;
+    --div-border: #e0dddd;
+    --user-name: #000000;
   }
 
   .dark {
@@ -76,6 +89,14 @@
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
+
+    --search-bg: #2b2b2b;
+    --auth-button-hover: rgb(20, 20, 24);
+    --auth-input: #444141;
+    --or-dash: #2b2b2b;
+    --div-border: #2b2b2b;
+    --sidebar-div-hover: rgb(31, 32, 32);
+    --user-name: #ffffff;
   }
 }
 

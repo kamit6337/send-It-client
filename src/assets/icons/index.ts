@@ -56,6 +56,35 @@ import { CiFilter } from "react-icons/ci";
 
 import { PiNotepadFill } from "react-icons/pi";
 
+import {
+  LiaAngleLeftSolid,
+  LiaAngleRightSolid,
+  LiaAngleDoubleLeftSolid,
+  LiaAngleDoubleRightSolid,
+} from "react-icons/lia";
+import { HiOutlineDotsHorizontal } from "react-icons/hi";
+import { IoMdNotificationsOutline, IoMdNotifications } from "react-icons/io";
+import { IoPeopleOutline, IoPeopleSharp } from "react-icons/io5";
+import { BsPerson, BsBookmark, BsFillBookmarkFill } from "react-icons/bs";
+import { FaXTwitter } from "react-icons/fa6";
+import {
+  MdPermMedia,
+  MdOutlineKeyboardDoubleArrowUp,
+  MdOutlineKeyboardDoubleArrowDown,
+} from "react-icons/md";
+import { LuDot } from "react-icons/lu";
+import { IoIosHeartEmpty, IoMdHeart } from "react-icons/io";
+import { BiMessageRounded } from "react-icons/bi";
+import { RiBarChartFill } from "react-icons/ri";
+import { IoLocationOutline } from "react-icons/io5";
+import { SlCalender } from "react-icons/sl";
+import { CiGlobe, CiMail } from "react-icons/ci";
+import { IoMdMail } from "react-icons/io";
+import { TbMailPlus } from "react-icons/tb";
+import { BiSend } from "react-icons/bi";
+import { IoArrowDownSharp } from "react-icons/io5";
+import { IoPerson } from "react-icons/io5";
+
 const ReactIcons = {
   notepad: PiNotepadFill,
   eyeOn: IoMdEye,
@@ -108,6 +137,36 @@ const ReactIcons = {
   download: LiaDownloadSolid,
   history: MdOutlineHistory,
   cart: IoCart,
+  doubleArrowDown: MdOutlineKeyboardDoubleArrowDown,
+  doubleArrowUp: MdOutlineKeyboardDoubleArrowUp,
+  arrowDown: IoArrowDownSharp,
+  send: BiSend,
+  messagePlus: TbMailPlus,
+  globe: CiGlobe,
+  calender: SlCalender,
+  location: IoLocationOutline,
+  bookMarkOutline: BsBookmark,
+  bookmarkSolid: BsFillBookmarkFill,
+  views: RiBarChartFill,
+  reply: BiMessageRounded,
+  heartOutline: IoIosHeartEmpty,
+  heartSolid: IoMdHeart,
+  leftAngle: LiaAngleLeftSolid,
+  rightAngle: LiaAngleRightSolid,
+  leftDoubleAngle: LiaAngleDoubleLeftSolid,
+  rightDoubleAngle: LiaAngleDoubleRightSolid,
+  threeDot: HiOutlineDotsHorizontal,
+  notificationOutline: IoMdNotificationsOutline,
+  notificationSolid: IoMdNotifications,
+  messageOutline: CiMail,
+  messageSolid: IoMdMail,
+  communityOutline: IoPeopleOutline,
+  communitySolid: IoPeopleSharp,
+  profileOutline: BsPerson,
+  profileSolid: IoPerson,
+  twitterLogo: FaXTwitter,
+  media: MdPermMedia,
+  dot: LuDot,
 };
 
 export default ReactIcons;

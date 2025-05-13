@@ -1,3 +1,4 @@
+import SideNavbar from "@/components/SideNavbar/SideNavbar";
 import useLoginCheck from "@/hooks/auth/useLoginCheck";
 import InitialLoading from "@/lib/InitialLoading";
 import Loading from "@/lib/Loading";
@@ -20,11 +21,12 @@ const RootLayout = () => {
 
   useEffect(() => {
     if (error) {
+      console.log("Error", error);
       sessionStorage.setItem("initialLoading", "1");
       setShowInitialLoading(false);
       navigate(`/login?msg=${error.message}`);
     }
-  }, [error]);
+  }, [error, navigate]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -52,7 +54,14 @@ const RootLayout = () => {
   return (
     <SocketConnectionProvider>
       <OfflineDetector />
-      <Outlet />
+      <main className="w-full flex items-start">
+        <div className="sticky top-0 lg:w-80 w-max h-screen border-r border-div_border flex flex-col items-center">
+          <SideNavbar />
+        </div>
+        <div className="flex-1">
+          <Outlet />
+        </div>
+      </main>
       <ScrollToTop />
       <ToastContainer />
     </SocketConnectionProvider>

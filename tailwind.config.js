@@ -20,6 +20,15 @@ export const theme = {
       sans: ["Poppins", "sans-serif"],
     },
     colors: {
+      user_name: "var(--user-name)",
+      div_border: "var(--div-border)",
+      or_dash: "var(--or-dash)",
+      sidebar_link_hover: "var(--sidebar-div-hover)",
+      sky_blue: "var(--sky-blue)",
+      div_hover: "var(--div-hover)",
+      grey: "var(--grey)",
+      search_bg: "var(--search-bg)",
+
       auth_background: "var(--auth-background)",
       auth_text: "var( --auth-text)",
       auth_input_border: "var(--auth-input-border)",
