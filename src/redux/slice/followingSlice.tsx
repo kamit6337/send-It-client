@@ -1,0 +1,48 @@
+import { createSlice } from "@reduxjs/toolkit";
+import { RootState } from "../store";
+
+type INITIALSTATE = {
+  allView: string[];
+  followings: string[];
+};
+
+type PAYLOAD = {
+  userId: string;
+  isFollowed: boolean;
+};
+
+const initialState: INITIALSTATE = {
+  allView: [],
+  followings: [],
+};
+
+const followingSlice = createSlice({
+  name: "followingSlice",
+  initialState,
+  reducers: {
+    viewAndAddFollowing: (state, { payload }) => {
+      const user = payload as PAYLOAD;
+
+      const isAlreadyView = state.allView.includes(user.userId);
+      if (isAlreadyView) return state;
+
+      state.allView = [...new Set([...state.allView, user.userId])];
+
+      if (user.isFollowed) {
+        state.followings = [...new Set([...state.followings, user.userId])];
+      }
+
+      return state;
+    },
+  },
+});
+
+
+
+export const {viewAndAddFollowing} = followingSlice.actions
+
+export const followingReducer = followingSlice.reducer
+
+export const followingState = (state : RootState) => state.following
+
+

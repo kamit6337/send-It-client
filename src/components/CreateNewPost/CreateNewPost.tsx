@@ -11,7 +11,12 @@ import ReactIcons from "@/assets/icons";
 import imageAndVideoSizeFilteration from "@/utils/javascript/ImageAndVideoSizeFilteration";
 import uploadImageOrVideoForPost from "@/utils/upload/uploadImageOrVideoForPost";
 import getGraphql from "@/utils/api/graphql";
-import createPostSchema from "@/graphql/posts/createPostSchema";
+import createPostSchema, {
+  createPostDataQuery,
+} from "@/graphql/posts/createPostSchema";
+import createPostReplySchema, {
+  createPostReplyDataQuery,
+} from "@/graphql/reply/createPostReplySchema";
 
 type SelectedFile = File | null; // Define type for selectedFile
 
@@ -69,8 +74,18 @@ const CreateNewPost = ({
 
       if (isOfReply) {
         const media = await uploadImageOrVideoForPost(selectedFile);
-        const obj = { postId, message, media };
-        await postReq("/reply", obj);
+
+        const response = await getGraphql(
+          createPostReplySchema,
+          createPostReplyDataQuery,
+          {
+            postId,
+            message,
+            media,
+          }
+        );
+
+        console.log("response", response);
       } else {
         let media;
         let duration;
@@ -90,12 +105,16 @@ const CreateNewPost = ({
           }
         }
 
-        const response = await getGraphql(createPostSchema, {
-          message,
-          media,
-          duration,
-          thumbnail,
-        });
+        const response = await getGraphql(
+          createPostSchema,
+          createPostDataQuery,
+          {
+            message,
+            media,
+            duration,
+            thumbnail,
+          }
+        );
 
         console.log("response", response);
 
@@ -121,9 +140,12 @@ const CreateNewPost = ({
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="pt-6 pb-0">
-      <div className="flex gap-3 mb-5 px-3 md:px-6">
-        <div className="w-10">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className={`${isOfReply ? "pt-3" : "pt-6"} pb-0 `}
+    >
+      <div className="flex justify-between gap-3 px-3 md:px-6">
+        <div className="w-10 grow-0 shrink-0">
           <img
             src={photo}
             alt={name}
@@ -131,58 +153,62 @@ const CreateNewPost = ({
           />
         </div>
 
-        <textarea
-          {...register("message")}
-          placeholder="What is happening?!"
-          className="bg-inherit w-full resize-none p-3 border rounded"
-          maxLength={maxLength}
-          onFocus={() => setIsFocused(true)}
-          rows={isFocused ? 4 : 1}
-        />
-      </div>
-      {selectedFile && (
-        <div className="w-full relative my-3 px-3 md:px-6">
-          {selectedFile.type.startsWith("image/") ? (
-            <img
-              src={URL.createObjectURL(selectedFile)}
-              className="w-full object-cover rounded-xl border border-border"
-              alt="Selected Image"
+        <div className="flex-1 gap-3 mb-5">
+          <div>
+            <textarea
+              {...register("message")}
+              placeholder="What is happening?!"
+              className="bg-inherit w-full resize-none p-3 border rounded"
+              maxLength={maxLength}
+              onFocus={() => setIsFocused(true)}
+              rows={isFocused ? 4 : 1}
             />
-          ) : (
-            <video
-              key={selectedFile.name} // Use file name as the key to force re-render
-              className="w-full rounded-xl border border-border"
-              controls
-            >
-              <source
-                src={URL.createObjectURL(selectedFile)}
-                type={selectedFile.type}
-              />
-              Your browser does not support the video tag.
-            </video>
-          )}
-
-          {/* MARK: EDIT AND CANCEL */}
-          <div className="absolute z-10 top-0 left-0 w-full flex justify-between items-center py-4 px-10 ">
-            <button
-              type="button"
-              className="bg-search_bg px-3 py-2 rounded-full"
-              onClick={openFile}
-            >
-              Edit
-            </button>
-            <button
-              type="button"
-              className="text-red-500 p-1 rounded-full border border-red-500"
-              onClick={() => {
-                setSelectedFile(null);
-              }}
-            >
-              <ReactIcons.cancel className="text-2xl" />
-            </button>
           </div>
+          {selectedFile && (
+            <div className="w-full relative my-3">
+              {selectedFile.type.startsWith("image/") ? (
+                <img
+                  src={URL.createObjectURL(selectedFile)}
+                  className="w-full object-cover rounded-xl border border-border"
+                  alt="Selected Image"
+                />
+              ) : (
+                <video
+                  key={selectedFile.name} // Use file name as the key to force re-render
+                  className="w-full rounded-xl border border-border"
+                  controls
+                >
+                  <source
+                    src={URL.createObjectURL(selectedFile)}
+                    type={selectedFile.type}
+                  />
+                  Your browser does not support the video tag.
+                </video>
+              )}
+
+              {/* MARK: EDIT AND CANCEL */}
+              <div className="absolute z-10 top-0 left-0 w-full flex justify-between items-center py-4 px-10 ">
+                <button
+                  type="button"
+                  className="bg-search_bg px-3 py-2 rounded-full"
+                  onClick={openFile}
+                >
+                  Edit
+                </button>
+                <button
+                  type="button"
+                  className="text-red-500 p-1 rounded-full border border-red-500"
+                  onClick={() => {
+                    setSelectedFile(null);
+                  }}
+                >
+                  <ReactIcons.cancel className="text-2xl" />
+                </button>
+              </div>
+            </div>
+          )}
         </div>
-      )}
+      </div>
 
       {/* MARK: FOOTER */}
       <div className="flex items-center justify-between border-t border-sky_blue py-2 sticky bottom-0 bg-background px-2 md:px-5">

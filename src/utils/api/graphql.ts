@@ -5,8 +5,14 @@ import getAuthToken from "./getAuthToken";
 
 const endpoint = `${environment.SERVER_URL}/graphql`;
 
+type RESULT = {
+  dataQuery: object;
+  [key: string]: any; // Index signature to allow any string key
+};
+
 const getGraphql = async (
   schema: RequestDocument | TypedDocumentNode<unknown, object>,
+  dataQuery: string,
   variables?: object | undefined
 ) => {
   try {
@@ -18,9 +24,14 @@ const getGraphql = async (
       },
     });
 
-    const response = await client.request(schema, variables);
+    const response = (await client.request(schema, variables)) as RESULT;
 
-    return response;
+    if (response[dataQuery] === undefined) {
+      throw new Error(
+        `Data query '${dataQuery}' not found in GraphQL response.`
+      );
+    }
+    return response[dataQuery];
   } catch (error) {
     throw new Error(error instanceof Error ? error.message : String(error));
   }

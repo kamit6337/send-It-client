@@ -126,6 +126,62 @@
   .auth_input_password {
     @apply outline-none border-none w-full px-3 h-full rounded-l-lg bg-auth_background;
   }
+
+  .section_padding {
+    @apply px-10 md:px-20;
+  }
+
+  .btn_google_oauth {
+    @apply mt-10 w-full flex justify-center items-center bg-primary text-primary-foreground hover:bg-primary/90 rounded-md text-sm font-medium h-10 cursor-pointer;
+  }
+
+  .otp_input {
+    @apply flex h-[48px] w-[46px] items-center justify-center rounded-md px-4 text-lg bg-div_border;
+  }
+
+  .input_div {
+    @apply focus-within:bg-auth_input bg-gray-100 rounded-full  border-sky_blue focus-within:border;
+  }
+
+  .input {
+    @apply bg-inherit text-sm w-full h-full py-3 px-5 rounded-full;
+  }
+
+  .input_div_profile {
+    @apply bg-auth_input border rounded border-foreground focus-within:border-sky_blue;
+  }
+
+  .input_profile {
+    @apply bg-inherit text-sm w-full rounded h-full py-3 px-5;
+  }
+
+  .input_error {
+    @apply mt-[2px] ml-4 text-xs text-red-500;
+  }
+
+  .username {
+    @apply text-sm text-grey;
+  }
+
+  .following {
+    @apply px-5 py-2 border border-border rounded-full hover:border-red-500 hover:text-red-500;
+  }
+
+  .following_actual_user {
+    @apply px-5 py-2 border border-border rounded-full cursor-default;
+  }
+
+  .follow {
+    @apply px-5 py-2 border border-border rounded-full bg-foreground text-background hover:bg-slate-800;
+  }
+
+  .left_arrow {
+    @apply p-3 rounded-full hover:bg-sidebar_link_hover;
+  }
+
+  .post_btn {
+    @apply px-3 py-2 rounded-full bg-sky_blue text-white;
+  }
 }
 
 /* NOTE: AUTH BUTTON GRADIENT */

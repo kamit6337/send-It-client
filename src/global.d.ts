@@ -4,6 +4,7 @@ declare global {
     env: {
       VITE_APP_SERVER_URL?: string;
       VITE_APP_NODE_ENV?: string;
+      VITE_APP_CLIENT_URL?: string;
     };
   }
 }

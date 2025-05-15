@@ -1,5 +1,57 @@
-export type PostSocket = {
+export type POST_SOCKET = {
   pages: POST[][];
+};
+
+export type PARAMS = {
+  id: string;
+  email: string;
+};
+
+export type FOLLOWER = {
+  _id: string;
+  follower: USER;
+  user: USER;
+  isActualUserFollow: boolean;
+};
+
+export type ROOM = {
+  _id: string;
+  users: USER[];
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type CHAT = {
+  _id: string;
+  room: string;
+  sender: string;
+  message: string;
+  media: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type SIMPLE_POST = {
+  _id: string;
+  message: string;
+  media: string;
+  likeCount: number;
+  viewCount: number;
+  saveCount: number;
+  replyCount: number;
+  retweetCount: number;
+};
+
+export type POST = {
+  _id: string;
+  message: string;
+  media: string;
+  thumbnail?: string;
+  duration?: number;
+  replyPostId?: string;
+  createdAt: string;
+  updatedAt: string;
+  user: USER;
 };
 
 export type POST_DETAIL = {
@@ -17,46 +69,6 @@ export type POST_DETAIL = {
   updatedAt: string;
 };
 
-export type Params = {
-  id: string;
-  email: string;
-};
-
-export type Follower = {
-  _id: string;
-  follower: USER;
-  user: USER;
-  isActualUserFollow: boolean;
-};
-
-export type Room = {
-  _id: string;
-  users: USER[];
-  createdAt: string;
-  updatedAt: string;
-};
-
-export type CHAT = {
-  _id: string;
-  room: string;
-  sender: string;
-  message: string;
-  media: string;
-  createdAt: string;
-  updatedAt: string;
-};
-
-export type POST = {
-  _id: string;
-  message: string;
-  media: string;
-  thumbnail?: string;
-  duration?: number;
-  createdAt: string;
-  updatedAt: string;
-  user: USER;
-};
-
 export type USER = {
   _id: string;
   name: string;
@@ -70,7 +82,15 @@ export type USER = {
   updatedAt: string;
 };
 
-export type USER_DETAILS = {
+export type USER_PROFILE = {
+  _id: string;
+  name: string;
+  email: string;
+  photo: string;
+  bg_photo: string;
+  bio: string;
+  location: string;
+  website: string;
   userPosts: number;
   likePosts: number;
   replyPosts: number;
@@ -79,6 +99,8 @@ export type USER_DETAILS = {
   followersCount: number;
   followingCount: number;
   isFollowed: boolean;
+  createdAt: string;
+  updatedAt: string;
 };
 
 export type REPLY = {
@@ -103,8 +125,4 @@ export type SAVE = {
   _id: string;
   post: string;
   user: string;
-};
-
-export type ROOM = {
-  _id: string;
 };

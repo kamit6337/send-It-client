@@ -27,9 +27,7 @@ const SideNavbar = () => {
   const { pathname } = useLocation();
   const { showErrorMessage } = Toastify();
   const navigate = useNavigate();
-  const { data } = useLoginCheck();
-
-  const user = data[getLoginCheckDataQuery] as USER;
+  const { data: user } = useLoginCheck();
 
   const closeRef = useRef<HTMLButtonElement>(null);
 
@@ -67,8 +65,7 @@ const SideNavbar = () => {
           let to: string = href;
 
           if (to === "/profile") {
-            // to = user?.username;
-            to = "hello";
+            to = user?.email;
           }
 
           const singleMessageHref =
@@ -119,8 +116,7 @@ const SideNavbar = () => {
 
         <DropdownMenu>
           <DropdownMenuTrigger className="w-full mt-8">
-            {/* <Profile /> */}
-            Profile
+            <Profile />
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-full mb-2 " align="end">
             <DropdownMenuItem

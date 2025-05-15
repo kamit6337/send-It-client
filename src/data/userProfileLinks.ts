@@ -1,19 +1,19 @@
-import { User } from "@/types";
+import { USER } from "@/types";
 
-const userProfileLinks = (username: string | undefined, actualUser: User) => {
-  if (username !== actualUser.username) {
+const userProfileLinks = (email: string | undefined, actualUser: USER) => {
+  if (email !== actualUser.email) {
     const userLinks = [
       {
         name: "Posts",
-        href: `/${username}`,
+        href: `/${email}`,
       },
       {
         name: "Replies",
-        href: `/${username}/replies`,
+        href: `/${email}/replies`,
       },
       {
         name: "Media",
-        href: `/${username}/media`,
+        href: `/${email}/media`,
       },
     ];
 
@@ -23,23 +23,23 @@ const userProfileLinks = (username: string | undefined, actualUser: User) => {
   const userLinks = [
     {
       name: "Posts",
-      href: `/${username}`,
+      href: `/${email}`,
     },
     {
       name: "Likes",
-      href: `/${username}/likes`,
+      href: `/${email}/likes`,
     },
     {
       name: "Replies",
-      href: `/${username}/replies`,
+      href: `/${email}/replies`,
     },
     {
       name: "Media",
-      href: `/${username}/media`,
+      href: `/${email}/media`,
     },
     {
       name: "Saved",
-      href: `/${username}/save`,
+      href: `/${email}/save`,
     },
   ];
 
