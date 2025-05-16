@@ -3,8 +3,8 @@ import { gql } from "graphql-request";
 export const getUserLikePostsDataQuery = "getUserLikePosts";
 
 const getUserLikePostsSchema = gql`
-  query GetUserLikePosts($userId: ID!, $page: Int!) {
-    getUserLikePosts(userId: $userId, page: $page) {
+  query GetUserLikePosts($page: Int!) {
+    getUserLikePosts(page: $page) {
       _id
       message
       media

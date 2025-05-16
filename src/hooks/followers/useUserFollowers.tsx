@@ -1,14 +1,15 @@
-import getUserSavePostsSchema, {
-  getUserSavePostsDataQuery,
-} from "@/graphql/user/getUserSavePostsSchema";
+import getUserFollowersSchema, {
+  getUserFollowersDataQuery,
+} from "@/graphql/followers/getUserFollowersSchema";
 import getGraphql from "@/utils/api/graphql";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
-const useUserSavePosts = () => {
+const useUserFollowers = (userId: string) => {
   const query = useInfiniteQuery({
-    queryKey: ["user save posts"],
+    queryKey: ["user followers", userId],
     queryFn: ({ pageParam }) =>
-      getGraphql(getUserSavePostsSchema, getUserSavePostsDataQuery, {
+      getGraphql(getUserFollowersSchema, getUserFollowersDataQuery, {
+        userId,
         page: pageParam,
       }),
     staleTime: Infinity,
@@ -25,4 +26,4 @@ const useUserSavePosts = () => {
   return query;
 };
 
-export default useUserSavePosts;
+export default useUserFollowers;

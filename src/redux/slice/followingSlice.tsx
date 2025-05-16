@@ -34,15 +34,31 @@ const followingSlice = createSlice({
 
       return state;
     },
+    addFollowing: (state, { payload }) => {
+      const userId = payload as string;
+
+      state.allView = [...new Set([...state.allView, userId])];
+      state.followings = [...new Set([...state.followings, userId])];
+
+      return state;
+    },
+    removeFollowing: (state, { payload }) => {
+      const userId = payload as string;
+
+      state.allView = [...new Set([...state.allView, userId])];
+
+      state.followings = state.followings.filter(
+        (followingUserId) => followingUserId !== userId
+      );
+
+      return state;
+    },
   },
 });
 
+export const { viewAndAddFollowing, addFollowing, removeFollowing } =
+  followingSlice.actions;
 
+export const followingReducer = followingSlice.reducer;
 
-export const {viewAndAddFollowing} = followingSlice.actions
-
-export const followingReducer = followingSlice.reducer
-
-export const followingState = (state : RootState) => state.following
-
-
+export const followingState = (state: RootState) => state.following;

@@ -2,7 +2,6 @@ import ReactIcons from "@/assets/icons";
 import navlinks from "@/data/navlinks";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import Toastify from "@/lib/Toastify";
-import { getAuthReq } from "@/utils/api/authApi";
 // import CreateNewPost from "./CreateNewPost";
 import { useRef } from "react";
 import useLoginCheck from "@/hooks/auth/useLoginCheck";
@@ -20,8 +19,7 @@ import {
 } from "../ui/dropdown-menu";
 import Profile from "./Profile";
 import CreateNewPost from "../CreateNewPost/CreateNewPost";
-import { getLoginCheckDataQuery } from "@/graphql/auth/loginCheckSchema";
-import { USER } from "@/types";
+import Cookies from "js-cookie";
 
 const SideNavbar = () => {
   const { pathname } = useLocation();
@@ -33,8 +31,8 @@ const SideNavbar = () => {
 
   const handleLogout = async () => {
     try {
-      await getAuthReq("/logout");
-      navigate("/signup");
+      Cookies.remove("_use");
+      navigate("/login");
       window.location.reload();
     } catch (error) {
       showErrorMessage({

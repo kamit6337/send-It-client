@@ -140,7 +140,7 @@
   }
 
   .input_div {
-    @apply focus-within:bg-auth_input bg-gray-100 rounded-full  border-sky_blue focus-within:border;
+    @apply bg-gray-100 rounded-full  border-sky_blue focus-within:border;
   }
 
   .input {
@@ -148,7 +148,7 @@
   }
 
   .input_div_profile {
-    @apply bg-auth_input border rounded border-foreground focus-within:border-sky_blue;
+    @apply border rounded border-foreground focus-within:border-sky_blue;
   }
 
   .input_profile {

@@ -1,14 +1,15 @@
-import getUserSavePostsSchema, {
-  getUserSavePostsDataQuery,
-} from "@/graphql/user/getUserSavePostsSchema";
+import getUserReplyPosts, {
+  getUserReplyPostsDataQuery,
+} from "@/graphql/user/getUserReplyPosts";
 import getGraphql from "@/utils/api/graphql";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
-const useUserSavePosts = () => {
+const useUserReplyPosts = (userId: string) => {
   const query = useInfiniteQuery({
-    queryKey: ["user save posts"],
+    queryKey: ["user reply posts", userId],
     queryFn: ({ pageParam }) =>
-      getGraphql(getUserSavePostsSchema, getUserSavePostsDataQuery, {
+      getGraphql(getUserReplyPosts, getUserReplyPostsDataQuery, {
+        userId,
         page: pageParam,
       }),
     staleTime: Infinity,
@@ -25,4 +26,4 @@ const useUserSavePosts = () => {
   return query;
 };
 
-export default useUserSavePosts;
+export default useUserReplyPosts;

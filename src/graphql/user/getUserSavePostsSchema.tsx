@@ -3,8 +3,8 @@ import { gql } from "graphql-request";
 export const getUserSavePostsDataQuery = "getUserSavePosts";
 
 const getUserSavePostsSchema = gql`
-  query GetUserSavePosts($userId: ID!, $page: Int!) {
-    getUserSavePosts(userId: $userId, page: $page) {
+  query GetUserSavePosts($page: Int!) {
+    getUserSavePosts(page: $page) {
       _id
       message
       media

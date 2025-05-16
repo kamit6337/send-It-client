@@ -3,14 +3,9 @@ import LeftArrowBtn from "@/components/LeftArrowBtn";
 import UserFollowAndUnfollow from "@/components/UserFollowAndUnfollow";
 import userProfileLinks from "@/data/userProfileLinks";
 import useLoginCheck from "@/hooks/auth/useLoginCheck";
-import {
-  followingState,
-  viewAndAddFollowing,
-} from "@/redux/slice/followingSlice";
 import { USER_PROFILE } from "@/types";
 import getMonthAndYear from "@/utils/javascript/getMonthAndYear";
-import { useEffect, useMemo } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useMemo } from "react";
 import { Link, useLocation, useOutletContext } from "react-router-dom";
 import { NavLink, Outlet } from "react-router-dom";
 
@@ -20,13 +15,10 @@ type OutletContext = {
 
 const UserProfileLayout = () => {
   const { user } = useOutletContext<OutletContext>();
-  const dispatch = useDispatch();
   const { data: actualUser } = useLoginCheck();
   const { pathname } = useLocation();
-  const { followings } = useSelector(followingState);
 
   const {
-    _id,
     name,
     email,
     photo,
@@ -35,7 +27,6 @@ const UserProfileLayout = () => {
     createdAt,
     followersCount,
     followingCount,
-    isFollowed: isActualUserFollow,
     location,
     website,
     userPosts,
@@ -44,17 +35,6 @@ const UserProfileLayout = () => {
     mediaPosts,
     savePosts,
   } = user;
-
-  useEffect(() => {
-    if (_id) {
-      const obj = { userId: _id, isFollowed: isActualUserFollow };
-      dispatch(viewAndAddFollowing(obj));
-    }
-  }, [_id]);
-
-  const isFollowed = useMemo(() => {
-    return followings.includes(_id);
-  }, [followings, _id]);
 
   const userlinks = useMemo(() => {
     return userProfileLinks(email, actualUser);
@@ -85,13 +65,7 @@ const UserProfileLayout = () => {
     <>
       <section className="">
         {/* NOTE: HEADER */}
-        <div className="sticky z-20 top-0 py-2 bg-background flex items-center gap-5 px-5 border-b border-div_border">
-          <LeftArrowBtn />
-          <div>
-            <p className="font-semibold tracking-wider">{name}</p>
-            <p className="text-grey text-sm">{info()}</p>
-          </div>
-        </div>
+        <LeftArrowBtn title={name} isUserLayout={true} info={info} />
 
         <div className="w-full border-b border-border">
           {/* NOTE: BACKGROUND IMAGE */}
@@ -113,7 +87,6 @@ const UserProfileLayout = () => {
               <UserFollowAndUnfollow
                 actualUser={actualUser}
                 currentUser={user}
-                isFollowed={isFollowed}
               />
             </div>
 

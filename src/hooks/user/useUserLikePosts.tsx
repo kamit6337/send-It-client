@@ -4,12 +4,11 @@ import getUserLikePostsSchema, {
 import getGraphql from "@/utils/api/graphql";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
-const useUserLikePosts = (userId: string) => {
+const useUserLikePosts = () => {
   const query = useInfiniteQuery({
-    queryKey: ["user like posts", userId],
+    queryKey: ["user like posts"],
     queryFn: ({ pageParam }) =>
       getGraphql(getUserLikePostsSchema, getUserLikePostsDataQuery, {
-        userId,
         page: pageParam,
       }),
     staleTime: Infinity,

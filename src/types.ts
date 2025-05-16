@@ -9,9 +9,10 @@ export type PARAMS = {
 
 export type FOLLOWER = {
   _id: string;
-  follower: USER;
-  user: USER;
-  isActualUserFollow: boolean;
+  name: string;
+  email: string;
+  photo: string;
+  isFollowed: boolean;
 };
 
 export type ROOM = {
@@ -80,6 +81,7 @@ export type USER = {
   website: string;
   createdAt: string;
   updatedAt: string;
+  isFollowed?: boolean;
 };
 
 export type USER_PROFILE = {
@@ -105,24 +107,12 @@ export type USER_PROFILE = {
 
 export type REPLY = {
   _id: string;
-  post: string;
-  replyPost: POST;
-};
-
-export type REPLY_FULL = {
-  _id: string;
-  post: POST;
-  replyPost: POST;
-};
-
-export type LIKE = {
-  _id: string;
-  post: string;
-  user: string;
-};
-
-export type SAVE = {
-  _id: string;
-  post: string;
-  user: string;
+  message: string;
+  media: string;
+  thumbnail?: string;
+  duration?: number;
+  createdAt: string;
+  updatedAt: string;
+  user: USER;
+  replyPostId: POST;
 };

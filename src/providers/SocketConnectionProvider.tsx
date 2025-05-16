@@ -1,7 +1,10 @@
 import useExampleSocket from "@/hooks/sockets/useExampleSocket";
+import useFollower from "@/hooks/sockets/useFollower";
+import useFollowing from "@/hooks/sockets/useFollowing";
 import useNewPost from "@/hooks/sockets/useNewPost";
 import useNewReply from "@/hooks/sockets/useNewReply";
 import usePostDetails from "@/hooks/sockets/usePostDetails";
+import useUpdateUserBio from "@/hooks/sockets/useUpdateUserBio";
 import getSocket from "@/lib/socketConnection";
 import { useEffect } from "react";
 
@@ -16,6 +19,9 @@ const SocketConnectionProvider = ({
   useNewPost(socket);
   usePostDetails(socket);
   useNewReply(socket);
+  useUpdateUserBio(socket);
+  useFollowing(socket);
+  useFollower(socket);
 
   useEffect(() => {
     if (!socket) return;

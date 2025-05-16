@@ -7,6 +7,7 @@ import Loading from "@/lib/Loading";
 import { PARAMS, POST } from "@/types";
 import { useNavigate, useParams } from "react-router-dom";
 import PostReplies from "./PostReplies";
+import LeftArrowBtn from "@/components/LeftArrowBtn";
 
 const SinglePost = () => {
   const navigate = useNavigate();
@@ -27,13 +28,7 @@ const SinglePost = () => {
 
   return (
     <section className="">
-      <div className="sticky z-20 top-0 py-2 bg-background flex items-center gap-5 px-5 border-b border-div_border">
-        <button className="left_arrow" onClick={() => navigate(-1)}>
-          <ReactIcons.leftArrow className="text-xl" />
-        </button>
-        <p className="text-xl font-semibold tracking-wider">Post</p>
-      </div>
-
+      <LeftArrowBtn title="Post" />
       <div className="pt-3">
         <PostDetails post={post} actualUser={actualUser} />
       </div>

@@ -38,12 +38,6 @@ const PostDetails = ({
   const { updatePosts, deletePostIds } = useSelector(postState);
 
   useEffect(() => {
-    if (post) {
-      setIsFollow(post.isFollow);
-    }
-  }, [post]);
-
-  useEffect(() => {
     if (post._id) {
       dispatch(addToPost(post._id));
     }

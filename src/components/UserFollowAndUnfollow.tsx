@@ -1,38 +1,92 @@
-import { useRef, useState } from "react";
-// import EditProfile from "./EditProfile";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Dialog, DialogClose, DialogContent, DialogTrigger } from "./ui/dialog";
 import Loading from "@/lib/Loading";
 import { USER } from "@/types";
+import EditProfile from "./EditProfile";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addFollowing,
+  followingState,
+  removeFollowing,
+  viewAndAddFollowing,
+} from "@/redux/slice/followingSlice";
+import Toastify from "@/lib/Toastify";
+import getGraphql from "@/utils/api/graphql";
+import createNewFollowingSchema, {
+  createNewFollowingDataQuery,
+} from "@/graphql/followers/createNewFollowingSchema";
+import removeSingleFollowingSchema, {
+  removeSingleFollowingDataQuery,
+} from "@/graphql/followers/removeSingleFollowingSchema";
+import useLoginCheck from "@/hooks/auth/useLoginCheck";
 
 type Props = {
-  actualUser: USER;
   currentUser: USER;
-  isFollowed: boolean;
   showEdit?: boolean;
 };
 
-const UserFollowAndUnfollow = ({
-  actualUser,
-  currentUser,
-  isFollowed,
-  showEdit = true,
-}: Props) => {
+const UserFollowAndUnfollow = ({ currentUser, showEdit = true }: Props) => {
+  const { data: actualUser } = useLoginCheck();
+  const dispatch = useDispatch();
   const [hideScroll, setHideScroll] = useState(false);
   const closeRef = useRef<HTMLButtonElement>(null);
   const [isPending, setIsPending] = useState(false);
-  const { _id, name, email, photo } = currentUser;
+  const { _id: currentUserId, isFollowed: isActualUserFollow } = currentUser;
+  const { followings } = useSelector(followingState);
+  const { showErrorMessage } = Toastify();
 
-  const isItActualUser = actualUser._id === currentUser._id;
+  useEffect(() => {
+    if (currentUserId) {
+      const obj = { userId: currentUserId, isFollowed: isActualUserFollow };
+      dispatch(viewAndAddFollowing(obj));
+    }
+  }, [currentUserId]);
 
-  const userObj = {
-    _id,
-    name,
-    email,
-    photo,
+  const isFollowed = useMemo(() => {
+    return followings.includes(currentUserId);
+  }, [followings, currentUserId]);
+
+  const handleFollow = async () => {
+    try {
+      setIsPending(true);
+
+      await getGraphql(createNewFollowingSchema, createNewFollowingDataQuery, {
+        userId: currentUserId,
+      });
+
+      dispatch(addFollowing(currentUserId));
+    } catch (error) {
+      showErrorMessage({
+        message: error instanceof Error ? error.message : "Issue in Follow",
+      });
+    } finally {
+      setIsPending(false);
+    }
   };
 
-  const handleFollow = () => {};
-  const handleCancelFollow = () => {};
+  const handleCancelFollow = async () => {
+    try {
+      setIsPending(true);
+
+      const response = await getGraphql(
+        removeSingleFollowingSchema,
+        removeSingleFollowingDataQuery,
+        {
+          userId: currentUserId,
+        }
+      );
+
+      console.log("response", response);
+
+      dispatch(removeFollowing(currentUserId));
+    } catch (error) {
+      showErrorMessage({
+        message: error instanceof Error ? error.message : "Issue in Follow",
+      });
+    } finally {
+      setIsPending(false);
+    }
+  };
 
   const handleScroll = (bool: boolean) => {
     setHideScroll(bool);
@@ -41,6 +95,8 @@ const UserFollowAndUnfollow = ({
   const handleClose = () => {
     closeRef.current?.click();
   };
+
+  const isItActualUser = actualUser._id === currentUserId;
 
   if (isItActualUser && showEdit) {
     return (
@@ -51,13 +107,13 @@ const UserFollowAndUnfollow = ({
         <DialogContent
           className={`${
             hideScroll ? "overflow-y-hidden" : "overflow-y-auto"
-          } top-[3%] translate-y-0 p-0 max-h-[500px]`}
+          } top-[3%] translate-y-0 p-0 max-h-[500px] w-full max-w-2xl`}
         >
-          {/* <EditProfile
+          <EditProfile
             handleClose={handleClose}
             user={currentUser}
             handleScroll={handleScroll}
-          /> */}
+          />
           <DialogClose ref={closeRef} asChild className="hidden">
             <button>Close</button>
           </DialogClose>
@@ -75,7 +131,7 @@ const UserFollowAndUnfollow = ({
         className="w-max following"
         onClick={handleCancelFollow}
       >
-        {isPending ? <Loading /> : "Following"}
+        {isPending ? <Loading height={"full"} small={true} /> : "Following"}
       </button>
     );
   }
@@ -86,7 +142,7 @@ const UserFollowAndUnfollow = ({
       className="w-max follow"
       onClick={handleFollow}
     >
-      {isPending ? <Loading /> : "Follow"}
+      {isPending ? <Loading height={"full"} small={true} /> : "Follow"}
     </button>
   );
 };
