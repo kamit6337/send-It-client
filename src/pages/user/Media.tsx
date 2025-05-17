@@ -39,7 +39,11 @@ const Media = () => {
         <meta name="discription" content="User Post page of this project" />
       </Helmet>
       {posts.length > 0 ? (
-        posts.map((post) => <SingleMedia post={post} key={post._id} />)
+        <div className="grid grid-cols-2">
+          {posts.map((post) => (
+            <SingleMedia post={post} key={post._id} />
+          ))}
+        </div>
       ) : (
         <div className="h-96 flex justify-center items-center">
           You don't have any post

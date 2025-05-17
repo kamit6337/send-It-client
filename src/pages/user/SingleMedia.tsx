@@ -45,7 +45,7 @@ const SingleMedia = ({ post }: Props) => {
     const minutes = Math.floor(givenSeconds / 60);
 
     return (
-      <div key={_id} className="w-full relative">
+      <div key={_id} className="w-full relative ">
         <Link to={`/posts/${_id}`}>
           <img src={thumbnail} className="w-full object-cover" />
           <div className="absolute z-10 bottom-0 left-0 flex text-white mb-2 ml-2 bg-black py-1 px-2 rounded-full text-sm">

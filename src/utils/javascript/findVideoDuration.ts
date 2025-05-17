@@ -1,4 +1,4 @@
-const findVideoDuration = (file: File) => {
+const findVideoDuration = (file: File): Promise<number> => {
   if (!file) return Promise.reject("No file provided");
 
   return new Promise((resolve, reject) => {
@@ -9,7 +9,7 @@ const findVideoDuration = (file: File) => {
     // This function will be triggered when the video metadata is loaded
     videoElement.onloadedmetadata = () => {
       // Set the video duration in seconds
-      const duration = videoElement.duration;
+      const duration = Math.trunc(videoElement.duration);
       resolve(duration); // Resolve the promise with the duration
     };
 

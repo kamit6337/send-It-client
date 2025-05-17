@@ -20,9 +20,7 @@ const postSlice = createSlice({
   reducers: {
     addToPost: (state, { payload }) => {
       const postId = payload as string;
-
       state.allPostIds = [...new Set([...state.allPostIds, postId])];
-
       return state;
     },
     addUpdatePost: (state, { payload }) => {

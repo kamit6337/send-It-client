@@ -1,17 +1,17 @@
 import { gql } from "graphql-request";
 
-export const createPostReplyDataQuery = "createPostReply";
+export const updatePostDataQuery = "updatePost";
 
-const createPostReplySchema = gql`
-  mutation CreatePostReply(
-    $postId: ID!
+const updatePostSchema = gql`
+  mutation UpdatePost(
+    $id: ID!
     $message: String
     $media: String
     $duration: Int
     $thumbnail: String
   ) {
-    createPostReply(
-      postId: $postId
+    updatePost(
+      id: $id
       message: $message
       media: $media
       duration: $duration
@@ -20,7 +20,6 @@ const createPostReplySchema = gql`
       _id
       message
       media
-      replyPostId
       createdAt
       updatedAt
       user {
@@ -33,4 +32,4 @@ const createPostReplySchema = gql`
   }
 `;
 
-export default createPostReplySchema;
+export default updatePostSchema;

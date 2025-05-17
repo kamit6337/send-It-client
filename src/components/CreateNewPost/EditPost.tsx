@@ -1,45 +1,43 @@
-import { USER } from "@/types";
+import { POST } from "@/types";
 import Toastify from "@/lib/Toastify";
-import { ChangeEvent, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import Loading from "@/lib/Loading";
 import ReactIcons from "@/assets/icons";
 import imageAndVideoSizeFilteration from "@/utils/javascript/imageAndVideoSizeFilteration";
 import uploadImageOrVideoForPost from "@/utils/upload/uploadImageOrVideoForPost";
 import getGraphql from "@/utils/api/graphql";
-import createPostSchema, {
-  createPostDataQuery,
-} from "@/graphql/posts/createPostSchema";
-import createPostReplySchema, {
-  createPostReplyDataQuery,
-} from "@/graphql/reply/createPostReplySchema";
 import EditAndCancel from "./EditAndCancel";
+import updatePostSchema, {
+  updatePostDataQuery,
+} from "@/graphql/posts/updatePostSchema";
 
 type SelectedFile = File | null; // Define type for selectedFile
 
 type Props = {
-  user: USER;
-  isOfReply?: boolean;
+  post: POST;
   handleClose: () => void;
-  postId?: string;
 };
 
-const CreateNewPost = ({
-  user,
-  handleClose,
-  isOfReply = false,
-  postId,
-}: Props) => {
+type FormDataType = {
+  message: string;
+};
+
+const imageTypeList = ["png", "jpeg", "jpg"];
+
+const EditPost = ({ handleClose, post }: Props) => {
   const { showErrorMessage, showAlertMessage } = Toastify();
   const [selectedFile, setSelectedFile] = useState<SelectedFile>(null);
-  const { photo, name } = user;
+  const [defaultMedia, setDefaultMedia] = useState<string | null>(null);
+  const { photo, name } = post.user;
   const [isFocused, setIsFocused] = useState(true);
   const fileRef = useRef<HTMLInputElement>(null);
   const maxLength = 200;
 
+  const { _id: postId, message, media } = post;
+  console.log("defaultMedia", defaultMedia);
   const {
     register,
-    getValues,
     reset,
     watch,
     handleSubmit,
@@ -52,63 +50,52 @@ const CreateNewPost = ({
 
   const messageLength = watch("message").length;
 
+  useEffect(() => {
+    if (postId) {
+      reset({ message });
+      setDefaultMedia(media);
+    }
+  }, [postId]);
+
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     const fileReturn = imageAndVideoSizeFilteration(file);
 
-    console.log("fileReturn", fileReturn);
-
     if (fileReturn) {
       setSelectedFile(fileReturn);
+      setDefaultMedia(null);
     }
   };
 
-  const onSubmit = async () => {
+  const onSubmit = async (data: FormDataType) => {
     try {
-      const message = getValues().message;
-      if (!message && !selectedFile) {
-        showAlertMessage({ message: "Please write a message or add media" });
+      if (message === data.message && defaultMedia) {
+        showAlertMessage({
+          message: "Please update Message or Media to Update",
+        });
         return;
       }
 
-      if (isOfReply) {
-        const { duration, media, thumbnail } = await uploadImageOrVideoForPost(
-          selectedFile
-        );
-
-        const response = await getGraphql(
-          createPostReplySchema,
-          createPostReplyDataQuery,
-          {
-            postId,
-            message,
-            media,
-            duration,
-            thumbnail,
-          }
-        );
-
-        console.log("response", response);
-      } else {
-        const { duration, media, thumbnail } = await uploadImageOrVideoForPost(
-          selectedFile
-        );
-
-        const response = await getGraphql(
-          createPostSchema,
-          createPostDataQuery,
-          {
-            message,
-            media,
-            duration,
-            thumbnail,
-          }
-        );
-
-        console.log("response", response);
+      if (!data.message && !selectedFile) {
+        showAlertMessage({
+          message: "Please write Message or select Media to Update",
+        });
+        return;
       }
+
+      const { duration, media, thumbnail } = await uploadImageOrVideoForPost(
+        selectedFile
+      );
+
+      await getGraphql(updatePostSchema, updatePostDataQuery, {
+        id: postId,
+        message: data.message,
+        media: media || post.media,
+        duration: duration || post.duration,
+        thumbnail: thumbnail || post.thumbnail,
+      });
 
       handleClose();
       reset();
@@ -133,10 +120,7 @@ const CreateNewPost = ({
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className={`${isOfReply ? "pt-3" : "pt-10"} pb-0 `}
-    >
+    <form onSubmit={handleSubmit(onSubmit)} className={`pt-10 pb-0 `}>
       <div className="flex justify-between gap-3 px-3 md:px-6">
         <div className="w-10 grow-0 shrink-0">
           <img
@@ -164,6 +148,44 @@ const CreateNewPost = ({
               handleCancel={handleCancelSelectedFile}
             />
           )}
+          {defaultMedia && (
+            <div className="w-full relative my-3">
+              {defaultMedia.endsWith(".mp4") ? (
+                <video
+                  preload="metadata"
+                  className="w-full rounded-xl border border-border"
+                  controls
+                >
+                  <source src={defaultMedia} type={"video/mp4"} />
+                  Your browser does not support the video tag.
+                </video>
+              ) : (
+                <img
+                  src={defaultMedia}
+                  className="w-full object-cover rounded-xl border border-border"
+                  alt="Selected Image"
+                />
+              )}
+
+              {/* MARK: EDIT AND CANCEL */}
+              <div className="absolute z-10 top-0 left-0 w-full flex justify-between items-center py-4 px-10 ">
+                <button
+                  type="button"
+                  className="bg-search_bg px-3 py-2 rounded-full"
+                  onClick={openFile}
+                >
+                  Edit
+                </button>
+                <button
+                  type="button"
+                  className="text-red-500 p-1 rounded-full border border-red-500"
+                  onClick={() => setDefaultMedia(null)}
+                >
+                  <ReactIcons.cancel className="text-2xl" />
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -190,13 +212,7 @@ const CreateNewPost = ({
             disabled={isSubmitting}
             className={`bg-sky_blue py-2 px-6 rounded-full  text-white`}
           >
-            {isSubmitting ? (
-              <Loading height={"full"} small={true} />
-            ) : isOfReply ? (
-              "Reply"
-            ) : (
-              "Post"
-            )}
+            {isSubmitting ? <Loading height={"full"} small={true} /> : "Submit"}
           </button>
         </div>
       </div>
@@ -213,4 +229,4 @@ const CreateNewPost = ({
   );
 };
 
-export default CreateNewPost;
+export default EditPost;

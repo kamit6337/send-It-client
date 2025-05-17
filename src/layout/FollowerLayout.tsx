@@ -18,8 +18,8 @@ const FollowerLayout = () => {
   const isFollower = pathname === `/${email}/follower`;
   return (
     <section>
-      <div className="sticky z-20 top-0 pt-2 bg-background flex flex-col gap-5 px-5 border-b border-div_border">
-        <div className="flex items-center gap-5">
+      <div className="sticky z-20 top-0 bg-background pt-2 flex flex-col gap-5 border-b border-div_border">
+        <div className="flex items-center gap-5 px-5">
           <button className="left_arrow" onClick={() => navigate(-1)}>
             <ReactIcons.leftArrow className="text-xl" />
           </button>

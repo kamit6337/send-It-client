@@ -68,15 +68,13 @@ const UserFollowAndUnfollow = ({ currentUser, showEdit = true }: Props) => {
     try {
       setIsPending(true);
 
-      const response = await getGraphql(
+      await getGraphql(
         removeSingleFollowingSchema,
         removeSingleFollowingDataQuery,
         {
           userId: currentUserId,
         }
       );
-
-      console.log("response", response);
 
       dispatch(removeFollowing(currentUserId));
     } catch (error) {

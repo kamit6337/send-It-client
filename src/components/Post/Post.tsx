@@ -6,17 +6,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import formatRelativeDate from "@/utils/javascript/formatRelativeDate";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import LikeAndComment from "./LikeAndComment";
 import { POST } from "@/types";
 import ShowPostMessage from "./ShowPostMessage";
 import { Dialog } from "../ui/dialog";
-import HoveredUserInfo from "./HoveredUserInfo";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  checkAlreadyView,
-  setViewPostId,
-} from "@/utils/javascript/checkAlreadyView";
 import { addToPost, postState } from "@/redux/slice/postSlice";
 import useLoginCheck from "@/hooks/auth/useLoginCheck";
 
@@ -32,12 +27,8 @@ const Post = ({
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const [showUserInfo, setShowUserInfo] = useState(false);
-  const [showUserInfoOnImg, setShowUserInfoOnImg] = useState(false);
   const { updatePosts, deletePostIds } = useSelector(postState);
   const { data: actualUser } = useLoginCheck();
-
-  // const { mutate } = useIncreaseView(post._id);
 
   useEffect(() => {
     if (post._id) {
@@ -61,8 +52,8 @@ const Post = ({
   if (!newPost) return;
 
   const {
-    _id,
-    user: { email, name, photo },
+    _id: postId,
+    user: { _id: currentUserId, email, name, photo },
     message,
     media,
     createdAt,
@@ -78,18 +69,11 @@ const Post = ({
   };
 
   const handleNavigate = () => {
-    // const check = checkAlreadyView(_id);
-
-    // if (!check) {
-    //   mutate();
-    //   setViewPostId(_id);
-    // }
-
     if (!isReply) {
-      navigate(`/posts/${_id}`);
+      navigate(`/posts/${postId}`);
       return;
     }
-    navigate(`/reply/${_id}`);
+    navigate(`/reply/${postId}`);
   };
 
   return (
@@ -105,8 +89,6 @@ const Post = ({
           <div
             className="w-9 md:w-10 relative"
             onClick={(e) => e.stopPropagation()}
-            onMouseEnter={() => setShowUserInfoOnImg(true)}
-            onMouseLeave={() => setShowUserInfoOnImg(false)}
           >
             <Link to={`/${email}`} onClick={handleScroll}>
               <img
@@ -116,7 +98,6 @@ const Post = ({
                 loading="lazy"
               />
             </Link>
-            {/* {showUserInfoOnImg && <HoveredUserInfo username={username} />} */}
           </div>
 
           {showLine && <div className="h-full w-[2px] bg-div_border" />}
@@ -129,11 +110,7 @@ const Post = ({
           >
             <div className="flex items-center gap-2">
               {/* NOTE: USER NAME */}
-              <div
-                className="relative"
-                onMouseEnter={() => setShowUserInfo(true)}
-                onMouseLeave={() => setShowUserInfo(false)}
-              >
+              <div className="relative">
                 <Link
                   to={`/${email}`}
                   onClick={handleScroll}
@@ -141,7 +118,6 @@ const Post = ({
                 >
                   {name}
                 </Link>
-                {/* {showUserInfo && <HoveredUserInfo username={username} />} */}
               </div>
 
               {/* NOTE: USER USERNAME, CREATED-AT */}
@@ -157,22 +133,18 @@ const Post = ({
             </div>
 
             {/* NOTE: SHOW OPTION IN CASE IT IS USER POST */}
-            {/* {email === actualUser.email && (
+            {currentUserId === actualUser._id && (
               <div onClick={(e) => e.stopPropagation()}>
                 <Dialog>
                   <DropdownMenu>
                     <DropdownMenuTrigger className="text-grey p-2 hover:bg-gray-300 hover:rounded-full">
                       <ReactIcons.threeDot />
                     </DropdownMenuTrigger>
-                    <PostOptions
-                      post={newPost}
-                      isReply={isReply}
-                      actualUser={actualUser}
-                    />
+                    <PostOptions post={newPost} />
                   </DropdownMenu>
                 </Dialog>
               </div>
-            )} */}
+            )}
           </div>
 
           {/* NOTE: POST MESSAGE */}

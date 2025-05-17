@@ -19,8 +19,6 @@ const UserLayout = () => {
     );
   }
 
-  console.log("user data from user layout", data);
-
   return (
     <>
       <Outlet context={{ user: data, email }} />

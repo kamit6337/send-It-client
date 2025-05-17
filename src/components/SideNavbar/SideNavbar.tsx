@@ -103,9 +103,8 @@ const SideNavbar = () => {
             </div>
           </DialogTrigger>
           <DialogContent className="top-[10%] translate-y-0 w-full max-w-2xl max-h-[500px] overflow-auto p-0">
-            <div className="mt-5">
-              <CreateNewPost user={user} handleClose={handleClose} />
-            </div>
+            <CreateNewPost user={user} handleClose={handleClose} />
+
             <DialogClose ref={closeRef} asChild className="hidden">
               <button>close</button>
             </DialogClose>

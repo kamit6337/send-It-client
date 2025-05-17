@@ -7,18 +7,10 @@ const imageAndVideoSizeFilteration = (file: File) => {
     return file;
   } else if (isVideo && file.size < 10 * 1024 * 1024) {
     // Video file < 10 MB
-
-    const videoElement = document.createElement("video");
-    videoElement.preload = "metadata";
-    videoElement.src = URL.createObjectURL(file);
-    // This function will be triggered when the video metadata is loaded
-    videoElement.onloadedmetadata = () => {
-      // Set the video duration in seconds
-      console.log("video duration", videoElement.duration);
-      return file;
-    };
+    return file;
   } else {
     alert("File size must be less than 1 MB for images and 10 MB for videos");
+    return undefined; // Return undefined for files that don't meet criteria
   }
 };
 
