@@ -1,16 +1,13 @@
-import ReactIcons from "@/assets/icons";
-import Post from "@/components/Post/Post";
 import PostDetails from "@/components/Post_Details/PostDetails";
 import useLoginCheck from "@/hooks/auth/useLoginCheck";
 import useSinglePost from "@/hooks/posts/useSinglePost";
 import Loading from "@/lib/Loading";
 import { PARAMS, POST } from "@/types";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import PostReplies from "./PostReplies";
 import LeftArrowBtn from "@/components/LeftArrowBtn";
 
 const SinglePost = () => {
-  const navigate = useNavigate();
   const { id } = useParams() as PARAMS;
   const { data: actualUser } = useLoginCheck();
 

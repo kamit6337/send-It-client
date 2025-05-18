@@ -9,6 +9,7 @@ const getUserProfileSchema = gql`
       name
       email
       photo
+      bg_photo
       bio
       location
       website

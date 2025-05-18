@@ -92,9 +92,9 @@ const EditPost = ({ handleClose, post }: Props) => {
       await getGraphql(updatePostSchema, updatePostDataQuery, {
         id: postId,
         message: data.message,
-        media: media || post.media,
-        duration: duration || post.duration,
-        thumbnail: thumbnail || post.thumbnail,
+        media: selectedFile ? media : post.media,
+        duration: selectedFile ? duration : post.duration,
+        thumbnail: selectedFile ? thumbnail : post.thumbnail,
       });
 
       handleClose();

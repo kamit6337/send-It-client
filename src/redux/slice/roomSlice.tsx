@@ -1,12 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../store";
+import { ROOM } from "@/types";
 
 type INITIALSTATE = {
   rooms: string[];
+  activeRoom: ROOM | null;
 };
 
 const initialState: INITIALSTATE = {
   rooms: [],
+  activeRoom: null,
 };
 
 const roomSlice = createSlice({
@@ -14,13 +17,26 @@ const roomSlice = createSlice({
   initialState,
   reducers: {
     addRooms: (state, { payload }) => {
-      state.rooms = [...payload];
+      const roomIds = payload as string[];
+
+      state.rooms = [...roomIds];
+      return state;
+    },
+    addSingleRoom: (state, { payload }) => {
+      const roomId = payload as string;
+      state.rooms = [roomId, ...state.rooms];
+      return state;
+    },
+    setActiveRoom: (state, { payload }) => {
+      const room = payload as ROOM | null;
+
+      state.activeRoom = room;
       return state;
     },
   },
 });
 
-export const { addRooms } = roomSlice.actions;
+export const { addRooms, addSingleRoom, setActiveRoom } = roomSlice.actions;
 
 export const roomReducer = roomSlice.reducer;
 

@@ -16,6 +16,7 @@ const getSocket = (): Socket => {
       reconnectionDelay: 1000, // Delay between retries
     });
     socket.on("connect", () => {
+      socket?.emit("joinRooms", "hello");
       console.log("Socket connected:", socket?.id);
     });
 

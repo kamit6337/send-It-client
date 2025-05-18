@@ -1,9 +1,26 @@
 import ReactIcons from "@/assets/icons";
-import SelectMessageUser from "@/components/SelectMessageUser";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import MessageTemplate from "@/pages/messages/MessageTemplate";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { useRef } from "react";
+import SelectMessageUser from "../room/SelectMessageUser";
+import MessageTemplate from "../room/MessageTemplate";
 
-const UserRooms = ({ showMessageArea, handleCloseMessage }) => {
+type Props = {
+  showMessageArea: boolean;
+  handleCloseMessage: (value: boolean) => void;
+};
+
+const UserRooms = ({ showMessageArea, handleCloseMessage }: Props) => {
+  const closeRef = useRef<HTMLButtonElement>(null);
+
+  const handleClose = () => {
+    closeRef.current?.click();
+  };
+
   return (
     <>
       <div
@@ -19,8 +36,9 @@ const UserRooms = ({ showMessageArea, handleCloseMessage }) => {
                   <ReactIcons.messagePlus />
                 </button>
               </DialogTrigger>
-              <DialogContent className="top-[5%] translate-y-0 h-[500px] overflow-y-auto p-0">
-                <SelectMessageUser />
+              <DialogContent className="top-[5%] translate-y-0 h-[500px] overflow-y-auto p-0 max-w-2xl w-full">
+                <SelectMessageUser handleClose={handleClose} />
+                <DialogClose ref={closeRef} asChild className="hidden" />
               </DialogContent>
             </Dialog>
           </div>

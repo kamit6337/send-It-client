@@ -15,8 +15,6 @@ const Home = () => {
     return <p>{error.message}</p>;
   }
 
-  console.log("Data", data);
-
   const posts = data?.pages.flatMap((page) => page) as POST[];
 
   return (

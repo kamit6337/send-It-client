@@ -1,16 +1,11 @@
 import ReactIcons from "@/assets/icons";
 import PostOptions from "@/components/Post/PostOptions";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import formatRelativeDate from "@/utils/javascript/formatRelativeDate";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useMemo } from "react";
 import LikeAndComment from "./LikeAndComment";
 import { POST } from "@/types";
 import ShowPostMessage from "./ShowPostMessage";
-import { Dialog } from "../ui/dialog";
 import { useDispatch, useSelector } from "react-redux";
 import { addToPost, postState } from "@/redux/slice/postSlice";
 import useLoginCheck from "@/hooks/auth/useLoginCheck";
@@ -133,18 +128,7 @@ const Post = ({
             </div>
 
             {/* NOTE: SHOW OPTION IN CASE IT IS USER POST */}
-            {currentUserId === actualUser._id && (
-              <div onClick={(e) => e.stopPropagation()}>
-                <Dialog>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger className="text-grey p-2 hover:bg-gray-300 hover:rounded-full">
-                      <ReactIcons.threeDot />
-                    </DropdownMenuTrigger>
-                    <PostOptions post={newPost} />
-                  </DropdownMenu>
-                </Dialog>
-              </div>
-            )}
+            {currentUserId === actualUser._id && <PostOptions post={newPost} />}
           </div>
 
           {/* NOTE: POST MESSAGE */}

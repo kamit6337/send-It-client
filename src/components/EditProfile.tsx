@@ -62,7 +62,7 @@ const EditProfile = ({ handleClose, user, handleScroll }: Props) => {
       const body = {
         name: data.name,
         photo: response.profilePhoto || user.photo,
-        bg_photo: "",
+        bg_photo: response.bgPhoto || user.bg_photo || "",
         bio: data.bio,
         location: data.location,
         website: data.website,

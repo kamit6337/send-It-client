@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addToPost, postState } from "@/redux/slice/postSlice";
 import ShowPostMessage from "../Post/ShowPostMessage";
 import LikeAndComment from "../Post/LikeAndComment";
+import PostOptions from "../Post/PostOptions";
 
 type Props = {
   post: POST;
@@ -46,7 +47,7 @@ const PostDetails = ({ post, actualUser, userReply = false }: Props) => {
   if (!newPost) return;
 
   const {
-    user: { name, email, photo },
+    user: { _id: currentUserId, name, email, photo },
     message,
     media,
     createdAt,
@@ -54,23 +55,26 @@ const PostDetails = ({ post, actualUser, userReply = false }: Props) => {
 
   return (
     <>
-      <div className="w-full flex gap-3 py-2 px-5">
-        <div className="w-9 md:w-10 prevent-navigation">
-          <Link to={`/${email}`}>
-            <img
-              src={photo}
-              alt={name}
-              className="w-full rounded-full"
-              loading="lazy"
-            />
-          </Link>
+      <div className="w-full flex justify-between py-2 px-5">
+        <div className="flex gap-3">
+          <div className="w-9 md:w-10 prevent-navigation">
+            <Link to={`/${email}`}>
+              <img
+                src={photo}
+                alt={name}
+                className="w-full rounded-full"
+                loading="lazy"
+              />
+            </Link>
+          </div>
+          <div className="">
+            <p className="font-semibold text-user_name text-sm hover:underline underline-offset-4">
+              <Link to={`/${email}`}>{name}</Link>
+            </p>
+            <p className="text-grey text-sm">{email}</p>
+          </div>
         </div>
-        <div className="">
-          <p className="font-semibold text-user_name text-sm hover:underline underline-offset-4">
-            <Link to={`/${email}`}>{name}</Link>
-          </p>
-          <p className="text-grey text-sm">{email}</p>
-        </div>
+        {currentUserId === actualUser._id && <PostOptions post={newPost} />}
       </div>
 
       <div className="px-5">

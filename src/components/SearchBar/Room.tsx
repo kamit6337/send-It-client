@@ -1,19 +1,27 @@
 import ReactIcons from "@/assets/icons";
-import LeftArrowBtn from "@/components/LeftArrowBtn";
-import useLoginCheck from "@/hooks/useLoginCheck";
-import ChatMessages from "@/pages/chats/ChatMessages";
+import useLoginCheck from "@/hooks/auth/useLoginCheck";
+import useUserRooms from "@/hooks/rooms/useUserRooms";
 import { roomState, setActiveRoom } from "@/redux/slice/roomSlice";
 import { useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import ChatMessages from "../chat/ChatMessages";
 
-const Room = ({ showMessageArea, handleCloseMessage }) => {
-  const { rooms, activeRoom } = useSelector(roomState);
+type Props = {
+  showMessageArea: boolean;
+  handleCloseMessage: (value: boolean) => void;
+};
+
+const Room = ({ showMessageArea, handleCloseMessage }: Props) => {
+  const { activeRoom } = useSelector(roomState);
   const { data: actualUser } = useLoginCheck();
   const dispatch = useDispatch();
+  const { data: rooms } = useUserRooms();
 
   const member = useMemo(() => {
-    const findRoom = rooms?.find((room) => room._id === activeRoom);
-    const member = findRoom?.users.find((user) => user._id !== actualUser._id);
+    if (!activeRoom) return { name: "", email: "" };
+    const member = activeRoom?.users.find(
+      (user) => user._id !== actualUser._id
+    );
     return member;
   }, [activeRoom, rooms, actualUser._id]);
 
@@ -29,12 +37,14 @@ const Room = ({ showMessageArea, handleCloseMessage }) => {
       >
         {showMessageArea && (
           <div onClick={(e) => e.stopPropagation()}>
-            <LeftArrowBtn handleClick={handleClick} />
+            <button className="left_arrow" onClick={() => handleClick()}>
+              <ReactIcons.leftArrow className="text-xl" />
+            </button>
           </div>
         )}
         <div>
           <p className="text-xl font-semibold">{member?.name}</p>
-          <p className="text-user_name text-sm">@{member?.username}</p>
+          <p className="text-user_name text-sm">{member?.email}</p>
         </div>
 
         <div className="flex text-xl">

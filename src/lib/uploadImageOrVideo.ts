@@ -9,7 +9,7 @@ import axios from "axios";
 
 type FOLDER = "POST" | "CHAT" | "THUMBNAIL" | "PROFILE" | "PROFILE_BG";
 
-const uploadImageOrVideo = async (file: File, folderName: FOLDER) => {
+const uploadImageOrVideo = async (file: File | null, folderName: FOLDER) => {
   try {
     if (!file) return "";
 

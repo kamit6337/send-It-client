@@ -84,10 +84,7 @@ const UserProfileLayout = () => {
           </div>
           <div className="px-5 flex flex-col">
             <div className="my-5 self-end">
-              <UserFollowAndUnfollow
-                actualUser={actualUser}
-                currentUser={user}
-              />
+              <UserFollowAndUnfollow currentUser={user} />
             </div>
 
             {/* NOTE: USER INFO (NAME, USERNAME, BIO, LOCATION, WEBSITE) */}

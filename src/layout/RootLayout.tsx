@@ -1,5 +1,6 @@
 import SideNavbar from "@/components/SideNavbar/SideNavbar";
 import useLoginCheck from "@/hooks/auth/useLoginCheck";
+import useUserRooms from "@/hooks/rooms/useUserRooms";
 import InitialLoading from "@/lib/InitialLoading";
 import Loading from "@/lib/Loading";
 import OfflineDetector from "@/lib/OfflineDetector";
@@ -19,14 +20,20 @@ const RootLayout = () => {
     return value === "1" ? false : true;
   });
 
+  const {
+    isLoading: isLoadingUserRooms,
+    error: errorUserRooms,
+    isSuccess: isSuccessUserRooms,
+  } = useUserRooms(isSuccess);
+
   useEffect(() => {
-    if (error) {
-      console.log("Error", error);
+    if (error || errorUserRooms) {
+      console.log("Error", error || errorUserRooms);
       sessionStorage.setItem("initialLoading", "1");
       setShowInitialLoading(false);
-      navigate(`/login?msg=${error.message}`);
+      navigate(`/login?msg=${error?.message || errorUserRooms?.message}`);
     }
-  }, [error, navigate]);
+  }, [error, errorUserRooms, navigate]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -43,11 +50,11 @@ const RootLayout = () => {
     return <InitialLoading onTimeout={handleInitialLoadingTimeout} />;
   }
 
-  if (isLoading) {
+  if (isLoading || isLoadingUserRooms) {
     return <Loading />;
   }
 
-  if (!isSuccess) {
+  if (!isSuccess || !isSuccessUserRooms) {
     return <div>Error: Unable to login. Please try after sometime</div>; // Display error when isSuccess is false
   }
 

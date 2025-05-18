@@ -1,39 +1,27 @@
 import ReactIcons from "@/assets/icons";
-import Toastify, { ToastContainer } from "@/lib/Toastify";
-import { getReq } from "@/utils/api/api";
-import { useCallback, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import UserRooms from "./UserRooms";
-import { useSelector } from "react-redux";
-import { roomState } from "@/redux/slice/roomSlice";
-import Room from "./Room";
 import useUserSearch from "@/hooks/user/useUserSearch";
 import useDebounce from "@/hooks/general/useDebounce";
 import { USER } from "@/types";
+import { useSelector } from "react-redux";
+import { roomState } from "@/redux/slice/roomSlice";
+import Room from "./Room";
+import UserRooms from "./UserRooms";
 
 const SearchBar = () => {
   const [isFocused, setIsFocused] = useState(false);
   const [showCancel, setShowCancel] = useState(false);
-  const { showErrorMessage } = Toastify();
+  const { activeRoom } = useSelector(roomState);
   const [showMessageArea, setShowMessageArea] = useState(false);
-  // const { activeRoom } = useSelector(roomState);
   const [input, setInput] = useState("");
   const debounceInput = useDebounce(input);
 
   const { data: searchedUsers = [] } = useUserSearch(debounceInput);
 
-  const { register, reset } = useForm({
-    defaultValues: {
-      search: "",
-    },
-  });
-
   const handleChange = (value: string) => {
     setInput(value);
     setShowCancel(!!value);
-
-    // make query with value and debounce
   };
 
   const handleCancel = () => {
@@ -42,9 +30,11 @@ const SearchBar = () => {
     setIsFocused(false);
   };
 
-  const handleCloseMessage = (bool) => {
+  const handleCloseMessage = (bool: boolean) => {
     setShowMessageArea(bool);
   };
+
+  console.log("active room", activeRoom);
 
   return (
     <>
@@ -103,7 +93,7 @@ const SearchBar = () => {
             </div>
           </div>
         </div>
-        {/* <div className="self-center fixed bottom-0 w-[370px] border border-div_border rounded-t-xl shadow-xl">
+        <div className="self-center fixed bottom-0 w-[370px] border border-div_border rounded-t-xl shadow-xl">
           {activeRoom ? (
             <Room
               showMessageArea={showMessageArea}
@@ -115,7 +105,7 @@ const SearchBar = () => {
               handleCloseMessage={handleCloseMessage}
             />
           )}
-        </div> */}
+        </div>
       </main>
     </>
   );
