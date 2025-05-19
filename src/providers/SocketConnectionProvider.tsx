@@ -4,6 +4,7 @@ import useFollowing from "@/hooks/sockets/useFollowing";
 import useNewPost from "@/hooks/sockets/useNewPost";
 import useNewReply from "@/hooks/sockets/useNewReply";
 import useNewRoomAndChat from "@/hooks/sockets/useNewRoomAndChat";
+import useNotification from "@/hooks/sockets/useNotification";
 import usePostDetails from "@/hooks/sockets/usePostDetails";
 import useUpdateAndDeletePost from "@/hooks/sockets/useUpdateAndDeletePost";
 import useUpdateUserBio from "@/hooks/sockets/useUpdateUserBio";
@@ -30,6 +31,8 @@ const SocketConnectionProvider = ({
   useFollower(socket);
 
   useNewRoomAndChat(socket);
+
+  useNotification(socket);
 
   useEffect(() => {
     if (!socket) return;
