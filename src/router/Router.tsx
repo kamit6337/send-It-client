@@ -22,6 +22,14 @@ import SingleReply from "@/pages/reply/SingleReply";
 import FollowerLayout from "@/layout/FollowerLayout";
 import Following from "@/pages/followers/Following";
 import Followers from "@/pages/followers/Followers";
+import MessagesLayout from "@/layout/MessagesLayout";
+import Messages from "@/pages/messages/Messages";
+import Chats from "@/pages/chats/Chats";
+import Explore from "@/pages/explore/Explore";
+import Communities from "@/pages/communities/Communities";
+import Premium from "@/pages/premium/Premium";
+import More from "@/pages/more/More";
+import Notifications from "@/pages/notifications/Notifications";
 
 const Router = () => {
   return (
@@ -38,6 +46,18 @@ const Router = () => {
 
       {/* NOTE: ROOTLAYOUT */}
       <Route path="/" element={<RootLayout />}>
+        {/* NOTE: NOT YET PAGE ROUTE */}
+        <Route path="explore" element={<Explore />} />
+        <Route path="communities" element={<Communities />} />
+        <Route path="premium" element={<Premium />} />
+        <Route path="more" element={<More />} />
+
+        {/* NOTE: MESSAGES LAYOUT */}
+        <Route path="/messages" element={<MessagesLayout />}>
+          <Route index element={<Messages />} />
+          <Route path=":id" element={<Chats />} />
+        </Route>
+
         {/* NOTE: SEARCHBAR LAYOUT */}
         <Route path="/" element={<SearchBarLayout />}>
           <Route index element={<Home />} />
@@ -45,6 +65,8 @@ const Router = () => {
           {/* NOTE: USER PROFILE */}
           <Route path="posts/:id" element={<SinglePost />} />
           <Route path="reply/:id" element={<SingleReply />} />
+
+          <Route path="notifications" element={<Notifications />} />
 
           {/* NOTE: USER PROFILE */}
           <Route path="/:email" element={<UserLayout />}>

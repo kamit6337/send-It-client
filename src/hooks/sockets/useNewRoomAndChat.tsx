@@ -30,6 +30,33 @@ const useNewRoomAndChat = (socket: Socket) => {
       }
     };
 
+    const handleDeleteRoom = (data: string) => {
+      const roomId = data;
+
+      const checkStatus = queryClient.getQueryState(["user rooms"]);
+
+      if (checkStatus?.status === "success") {
+        queryClient.setQueryData(["user rooms"], (old: ROOM[] = []) => {
+          const filterRooms = old.filter((room) => room._id !== roomId);
+          return filterRooms;
+        });
+      }
+
+      dispatch(setActiveRoom(null));
+    };
+
+    socket.on("new-room", handleNewRoom);
+    socket.on("delete-room", handleDeleteRoom);
+
+    return () => {
+      socket.off("new-room", handleNewRoom);
+      socket.off("delete-room", handleDeleteRoom);
+    };
+  }, [socket, queryClient]);
+
+  useEffect(() => {
+    if (!socket) return;
+
     const handleNewChat = (data: CHAT) => {
       const newChat = data;
 
@@ -52,11 +79,9 @@ const useNewRoomAndChat = (socket: Socket) => {
       }
     };
 
-    socket.on("new-room", handleNewRoom);
     socket.on("new-chat", handleNewChat);
 
     return () => {
-      socket.off("new-room", handleNewRoom);
       socket.off("new-chat", handleNewChat);
     };
   }, [socket, queryClient]);

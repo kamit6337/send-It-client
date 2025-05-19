@@ -15,12 +15,6 @@ type Props = {
 };
 
 const UserRooms = ({ showMessageArea, handleCloseMessage }: Props) => {
-  const closeRef = useRef<HTMLButtonElement>(null);
-
-  const handleClose = () => {
-    closeRef.current?.click();
-  };
-
   return (
     <>
       <div
@@ -36,10 +30,7 @@ const UserRooms = ({ showMessageArea, handleCloseMessage }: Props) => {
                   <ReactIcons.messagePlus />
                 </button>
               </DialogTrigger>
-              <DialogContent className="top-[5%] translate-y-0 h-[500px] overflow-y-auto p-0 max-w-2xl w-full">
-                <SelectMessageUser handleClose={handleClose} />
-                <DialogClose ref={closeRef} asChild className="hidden" />
-              </DialogContent>
+              <SelectMessageUser />
             </Dialog>
           </div>
 

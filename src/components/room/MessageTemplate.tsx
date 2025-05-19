@@ -11,9 +11,14 @@ import Room from "./Room";
 type Props = {
   height: string;
   willNavigate?: boolean;
+  showDeleteRoom?: boolean;
 };
 
-const MessageTemplate = ({ height, willNavigate = true }: Props) => {
+const MessageTemplate = ({
+  height,
+  willNavigate = true,
+  showDeleteRoom = false,
+}: Props) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { data: rooms } = useUserRooms();
@@ -52,8 +57,6 @@ const MessageTemplate = ({ height, willNavigate = true }: Props) => {
   };
 
   const handleNavigate = (room: ROOM) => {
-    console.log("active room template", room);
-
     dispatch(setActiveRoom(room));
 
     if (willNavigate) {
@@ -95,6 +98,7 @@ const MessageTemplate = ({ height, willNavigate = true }: Props) => {
                   key={room._id}
                   room={room}
                   handleNavigate={handleNavigate}
+                  showDeleteRoom={showDeleteRoom}
                 />
               );
             })
@@ -116,6 +120,7 @@ const MessageTemplate = ({ height, willNavigate = true }: Props) => {
                   key={room._id}
                   room={room}
                   handleNavigate={handleNavigate}
+                  showDeleteRoom={showDeleteRoom}
                 />
               );
             })

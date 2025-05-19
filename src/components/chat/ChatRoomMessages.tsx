@@ -93,7 +93,7 @@ const ChatRoomMessages = ({ activeRoom }: Props) => {
       // Update previous scroll position
       chatContainer.dataset.prevScrollTop = String(scrollTop);
     }
-  }, 200);
+  }, 100);
 
   // useLayoutEffect(() => {
   //   const timer = setTimeout(() => {
@@ -110,7 +110,7 @@ const ChatRoomMessages = ({ activeRoom }: Props) => {
   //   return () => clearTimeout(timer);
   // }, [chats?.length]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const chatContainer = chatContainerRef.current;
 
     if (chatContainer) {
@@ -187,7 +187,6 @@ const ChatRoomMessages = ({ activeRoom }: Props) => {
       )}
     </div>
   );
-  //
 };
 
 export default ChatRoomMessages;

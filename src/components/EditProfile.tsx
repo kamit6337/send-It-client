@@ -57,8 +57,6 @@ const EditProfile = ({ handleClose, user, handleScroll }: Props) => {
         bgImageSelected
       );
 
-      console.log("response", response);
-
       const body = {
         name: data.name,
         photo: response.profilePhoto || user.photo,
@@ -68,13 +66,11 @@ const EditProfile = ({ handleClose, user, handleScroll }: Props) => {
         website: data.website,
       };
 
-      const result = await getGraphql(
+      await getGraphql(
         updateUserProfileSchema,
         updateUserProfileDataQuery,
         body
       );
-
-      console.log("result", result);
 
       setBgImageSelected(null);
       setProfileImageSelected(null);

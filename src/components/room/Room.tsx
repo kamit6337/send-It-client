@@ -16,18 +16,22 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import { useDispatch } from "react-redux";
+import { setActiveRoom } from "@/redux/slice/roomSlice";
 
 type Props = {
   room: ROOM;
   handleNavigate: (value: ROOM) => void;
+  showDeleteRoom: boolean;
 };
 
-const Room = ({ room, handleNavigate }: Props) => {
+const Room = ({ room, handleNavigate, showDeleteRoom }: Props) => {
   const navigate = useNavigate();
   const { _id, users } = room;
   const { data: actualUser } = useLoginCheck();
   const { pathname } = useLocation();
-  const { showErrorMessage } = Toastify();
+  const { showErrorMessage, showSuccessMessage } = Toastify();
+  const dispatch = useDispatch();
 
   const member = users.find((user) => user._id !== actualUser._id) as USER;
 
@@ -45,8 +49,8 @@ const Room = ({ room, handleNavigate }: Props) => {
         roomId: _id,
       });
 
-      console.log("response delete room", response);
-
+      showSuccessMessage({ message: response });
+      dispatch(setActiveRoom(null));
       navigate("/messages");
     } catch (error) {
       showErrorMessage({
@@ -86,18 +90,22 @@ const Room = ({ room, handleNavigate }: Props) => {
             </div>
           </div>
 
-          <div className="w-10 shrink-0 invisible group-hover:visible">
-            <DropdownMenu>
-              <DropdownMenuTrigger className="p-2 rounded-full hover:bg-sky-200 hover:text-sky_blue">
-                <ReactIcons.threeDot />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DialogTrigger className="w-full">
-                  <DropdownMenuItem className="w-full">Delete</DropdownMenuItem>
-                </DialogTrigger>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
+          {showDeleteRoom && (
+            <div className="w-10 shrink-0 invisible group-hover:visible">
+              <DropdownMenu>
+                <DropdownMenuTrigger className="p-2 rounded-full hover:bg-sky-200 hover:text-sky_blue">
+                  <ReactIcons.threeDot />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DialogTrigger className="w-full">
+                    <DropdownMenuItem className="w-full">
+                      Delete
+                    </DropdownMenuItem>
+                  </DialogTrigger>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          )}
         </main>
         <DialogContent className="w-80 p-0">
           <ConfirmDelete handleDelete={handleDelete} />
