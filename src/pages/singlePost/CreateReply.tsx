@@ -6,7 +6,7 @@ import Loading from "@/lib/Loading";
 import Toastify from "@/lib/Toastify";
 import { USER } from "@/types";
 import getGraphql from "@/utils/api/graphql";
-import imageAndVideoSizeFilteration from "@/utils/javascript/ImageAndVideoSizeFilteration";
+import imageAndVideoSizeFilteration from "@/utils/javascript/imageAndVideoSizeFilteration";
 import uploadImageOrVideoForPost from "@/utils/upload/uploadImageOrVideoForPost";
 import { ChangeEvent, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -57,7 +57,11 @@ const CreateReply = ({ actualUser, postId }: Props) => {
         return;
       }
 
-      const media = await uploadImageOrVideoForPost(selectedFile);
+      const { media, thumbnail, duration } = await uploadImageOrVideoForPost(
+        selectedFile
+      );
+
+      console.log();
 
       const response = await getGraphql(
         createPostReplySchema,
@@ -66,6 +70,8 @@ const CreateReply = ({ actualUser, postId }: Props) => {
           postId,
           message,
           media,
+          thumbnail,
+          duration,
         }
       );
 

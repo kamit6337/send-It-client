@@ -1,6 +1,5 @@
-import ReactIcons from "@/assets/icons";
 import Loading from "@/lib/Loading";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { PARAMS, REPLY } from "@/types";
 import useSingleReply from "@/hooks/reply/useSingleReply";
 import useLoginCheck from "@/hooks/auth/useLoginCheck";
@@ -10,7 +9,6 @@ import LeftArrowBtn from "@/components/LeftArrowBtn";
 
 const SingleReply = () => {
   const { id } = useParams() as PARAMS;
-  const navigate = useNavigate();
   const { data: actualUser } = useLoginCheck();
   const { isLoading, error, data } = useSingleReply(id);
 

@@ -2,7 +2,6 @@ import ReactIcons from "@/assets/icons";
 import navlinks from "@/data/navlinks";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import Toastify from "@/lib/Toastify";
-// import CreateNewPost from "./CreateNewPost";
 import { useRef } from "react";
 import useLoginCheck from "@/hooks/auth/useLoginCheck";
 import {
@@ -20,12 +19,14 @@ import {
 import Profile from "./Profile";
 import CreateNewPost from "../CreateNewPost/CreateNewPost";
 import Cookies from "js-cookie";
+import useNotificationCount from "@/hooks/notification/useNotificationCount";
 
 const SideNavbar = () => {
   const { pathname } = useLocation();
   const { showErrorMessage } = Toastify();
   const navigate = useNavigate();
   const { data: user } = useLoginCheck();
+  const { data: notificationCount } = useNotificationCount();
 
   const closeRef = useRef<HTMLButtonElement>(null);
 
@@ -69,6 +70,11 @@ const SideNavbar = () => {
           const singleMessageHref =
             to === "/messages" && pathname.startsWith("/messages/");
 
+          const showNotificationCount =
+            to === "/notifications" &&
+            pathname !== "/notifications" &&
+            notificationCount !== 0;
+
           return (
             <NavLink
               to={to}
@@ -85,9 +91,14 @@ const SideNavbar = () => {
                     <OutlineIcon />
                   )}
                 </p>
-                <p className="lg:text-[20px] text-base hidden md:block">
+                <div className="lg:text-[20px] text-base hidden md:block relative tracking-wide">
                   {name}
-                </p>
+                  {showNotificationCount && (
+                    <div className="absolute bottom-full left-[97%] -top-[10px] text-xs size-5 bg-blue-500 rounded-full flex justify-center items-center text-white">
+                      {notificationCount}
+                    </div>
+                  )}
+                </div>
               </div>
             </NavLink>
           );

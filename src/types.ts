@@ -2,6 +2,20 @@ export type POST_SOCKET = {
   pages: POST[][];
 };
 
+type TYPE = "like" | "reply" | "follower" | "message";
+
+export type NOTIFICATION = {
+  _id: string;
+  user: string;
+  type: TYPE;
+  message: string;
+  sender: USER[];
+  totalSenders: number;
+  isRead: boolean;
+  post: string;
+  room: string;
+};
+
 export type PARAMS = {
   id: string;
   email: string;
@@ -50,9 +64,9 @@ export type POST = {
   thumbnail?: string;
   duration?: number;
   replyPostId?: string;
-  createdAt: string;
-  updatedAt: string;
-  user: USER;
+  createdAt?: string;
+  updatedAt?: string;
+  user: USER | string;
 };
 
 export type POST_DETAIL = {
