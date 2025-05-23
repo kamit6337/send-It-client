@@ -73,38 +73,32 @@ const CreateNewPost = ({
         return;
       }
 
-      if (isOfReply) {
-        const { duration, media, thumbnail } = await uploadImageOrVideoForPost(
-          selectedFile
-        );
+      const { duration, media, thumbnail } = await uploadImageOrVideoForPost(
+        selectedFile
+      );
+      const obj = {
+        postId,
+        message,
+        media,
+        duration,
+        thumbnail,
+      };
 
+      console.log("obj", obj);
+
+      if (isOfReply) {
         const response = await getGraphql(
           createPostReplySchema,
           createPostReplyDataQuery,
-          {
-            postId,
-            message,
-            media,
-            duration,
-            thumbnail,
-          }
+          obj
         );
 
         console.log("response", response);
       } else {
-        const { duration, media, thumbnail } = await uploadImageOrVideoForPost(
-          selectedFile
-        );
-
         const response = await getGraphql(
           createPostSchema,
           createPostDataQuery,
-          {
-            message,
-            media,
-            duration,
-            thumbnail,
-          }
+          obj
         );
 
         console.log("response", response);

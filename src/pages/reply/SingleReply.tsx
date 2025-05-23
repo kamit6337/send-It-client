@@ -6,11 +6,19 @@ import useLoginCheck from "@/hooks/auth/useLoginCheck";
 import ReplyPost from "@/components/reply/ReplyPost";
 import PostReplies from "../singlePost/PostReplies";
 import LeftArrowBtn from "@/components/LeftArrowBtn";
+import { useEffect } from "react";
 
 const SingleReply = () => {
   const { id } = useParams() as PARAMS;
   const { data: actualUser } = useLoginCheck();
   const { isLoading, error, data } = useSingleReply(id);
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "instant",
+    });
+  }, [id]);
 
   if (isLoading) {
     return <Loading />;

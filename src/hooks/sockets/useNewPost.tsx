@@ -1,4 +1,4 @@
-import { POST } from "@/types";
+import { POST, REPLY } from "@/types";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { Socket } from "socket.io-client";
@@ -19,7 +19,7 @@ const useNewPost = (socket: Socket) => {
   useEffect(() => {
     if (!socket) return;
 
-    const handleNewPost = async (data: POST) => {
+    const handleNewPost = async (data: REPLY) => {
       try {
         const newPost = data;
         console.log("newPost", newPost);

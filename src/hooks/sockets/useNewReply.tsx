@@ -20,12 +20,12 @@ const useNewReply = (socket: Socket) => {
 
       const checkStatus = queryClient.getQueryState([
         "reply posts",
-        newReply.replyPostId,
+        newReply.replyPost,
       ]);
 
       if (checkStatus?.status === "success") {
         queryClient.setQueryData(
-          ["reply posts", newReply.replyPostId],
+          ["reply posts", newReply.replyPost],
           (old: OLD) => {
             const modifyPages = old.pages.map((page) => [...page]);
             modifyPages[0] = [newReply, ...modifyPages[0]];

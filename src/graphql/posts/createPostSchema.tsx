@@ -14,19 +14,7 @@ const createPostSchema = gql`
       media: $media
       duration: $duration
       thumbnail: $thumbnail
-    ) {
-      _id
-      message
-      media
-      createdAt
-      updatedAt
-      user {
-        _id
-        name
-        email
-        photo
-      }
-    }
+    )
   }
 `;
 

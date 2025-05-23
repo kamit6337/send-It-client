@@ -4,6 +4,7 @@ import UpperPortion from "./UpperPortion";
 import { useInView } from "react-intersection-observer";
 import { useEffect } from "react";
 import useUpdateNotification from "@/hooks/notification/useUpdateNotification";
+import useLoginCheck from "@/hooks/auth/useLoginCheck";
 
 type Props = {
   notification: NOTIFICATION;
@@ -11,6 +12,7 @@ type Props = {
 
 const SingleNotification = ({ notification }: Props) => {
   const navigate = useNavigate();
+  const { data: actualUser } = useLoginCheck();
 
   const { ref, inView } = useInView({
     triggerOnce: true,
@@ -23,7 +25,7 @@ const SingleNotification = ({ notification }: Props) => {
 
   useEffect(() => {
     if (inView && notificationID) {
-      mutate(notificationID);
+      // mutate(notificationID);
     }
   }, [inView, notificationID]);
 
@@ -49,6 +51,18 @@ const SingleNotification = ({ notification }: Props) => {
             />
           </div>
         )}
+      </div>
+    );
+  }
+
+  if (type === "follower") {
+    return (
+      <div
+        ref={ref}
+        className="border-b py-2 px-5 space-y-5 hover:bg-gray-50 cursor-pointer"
+        onClick={() => navigate(`/${actualUser.email}/follower`)}
+      >
+        <UpperPortion notification={notification} />
       </div>
     );
   }

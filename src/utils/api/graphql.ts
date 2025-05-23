@@ -32,8 +32,6 @@ const getGraphql = async (
       );
     }
 
-    console.log("get graphql response", response);
-
     return response[dataQuery];
   } catch (error) {
     const parseError = JSON.parse(JSON.stringify(error));
@@ -41,7 +39,7 @@ const getGraphql = async (
     const err = parseError?.response?.errors[0];
 
     console.log("get graphql error", err);
-    throw new Error(err || "Something went wrong");
+    throw new Error(err?.message || err || "Something went wrong");
   }
 };
 

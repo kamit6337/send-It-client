@@ -61,8 +61,6 @@ const CreateReply = ({ actualUser, postId }: Props) => {
         selectedFile
       );
 
-      console.log();
-
       const response = await getGraphql(
         createPostReplySchema,
         createPostReplyDataQuery,

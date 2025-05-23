@@ -16,20 +16,7 @@ const createPostReplySchema = gql`
       media: $media
       duration: $duration
       thumbnail: $thumbnail
-    ) {
-      _id
-      message
-      media
-      replyPostId
-      createdAt
-      updatedAt
-      user {
-        _id
-        name
-        email
-        photo
-      }
-    }
+    )
   }
 `;
 
