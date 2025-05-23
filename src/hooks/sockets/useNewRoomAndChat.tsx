@@ -9,6 +9,11 @@ type OLD_CHAT = {
   pages: CHAT[][];
 };
 
+type DELETE_CHAT = {
+  chatId: string;
+  roomId: string;
+};
+
 const useNewRoomAndChat = (socket: Socket) => {
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
@@ -79,10 +84,28 @@ const useNewRoomAndChat = (socket: Socket) => {
       }
     };
 
+    const handleDeleteChat = (data: DELETE_CHAT) => {
+      const { chatId, roomId } = data;
+
+      const checkStatus = queryClient.getQueryState(["room chats", roomId]);
+
+      if (checkStatus?.status === "success") {
+        queryClient.setQueryData(["room chats", roomId], (old: OLD_CHAT) => {
+          const modifyPages = old.pages.map((page) =>
+            page.filter((chat) => chat._id !== chatId)
+          );
+
+          return { ...old, pages: modifyPages };
+        });
+      }
+    };
+
     socket.on("new-chat", handleNewChat);
+    socket.on("delete-chat", handleDeleteChat);
 
     return () => {
       socket.off("new-chat", handleNewChat);
+      socket.off("delete-chat", handleDeleteChat);
     };
   }, [socket, queryClient]);
 };

@@ -8,6 +8,7 @@ import useLoginCheck from "@/hooks/auth/useLoginCheck";
 import ChatSingleMessage from "./ChatSingleMessage";
 import debounce from "@/utils/javascript/debounce";
 import ReactIcons from "@/assets/icons";
+import waitForImagesToLoad from "@/utils/waitForImagesToLoad";
 
 type Props = {
   activeRoom: ROOM;
@@ -50,9 +51,19 @@ const ChatRoomMessages = ({ activeRoom }: Props) => {
     scrollToBottom("instant");
   }, []);
 
-  useLayoutEffect(() => {
-    if (chats?.length > 0) {
-      scrollToBottom("instant");
+  useEffect(() => {
+    const chatContainer = chatContainerRef.current;
+
+    if (chats?.length > 0 && chatContainer) {
+      waitForImagesToLoad(chatContainer).then(() => {
+        // Scroll to bottom if user was already at the bottom
+        if (isAtBottom) {
+          scrollToBottom("instant");
+        }
+
+        // Manually trigger scroll handler to update scroll state
+        handleScroll();
+      });
     }
   }, [chats?.length]);
 
@@ -94,21 +105,6 @@ const ChatRoomMessages = ({ activeRoom }: Props) => {
       chatContainer.dataset.prevScrollTop = String(scrollTop);
     }
   }, 100);
-
-  // useLayoutEffect(() => {
-  //   const timer = setTimeout(() => {
-  //     const chatContainer = chatContainerRef.current;
-  //     if (chatContainer) {
-  //       const { scrollTop, scrollHeight, clientHeight } = chatContainer;
-  //       const distanceFromBottom = scrollHeight - (scrollTop + clientHeight);
-
-  //       setIsAtBottom(distanceFromBottom < 50);
-  //       chatContainer.dataset.prevScrollTop = String(scrollTop);
-  //     }
-  //   }, 100); // 100–200ms to wait for layout/styling completion
-
-  //   return () => clearTimeout(timer);
-  // }, [chats?.length]);
 
   useLayoutEffect(() => {
     const chatContainer = chatContainerRef.current;
@@ -161,7 +157,7 @@ const ChatRoomMessages = ({ activeRoom }: Props) => {
 
       {hasNextPage && !isFetchingNextPage && <div ref={newPageRef} />}
 
-      <div className="flex flex-col-reverse gap-10 py-5">
+      <div className="flex flex-col-reverse gap-10 pt-5 pb-10">
         {chats.length > 0 ? (
           chats.map((chat) => {
             return (
