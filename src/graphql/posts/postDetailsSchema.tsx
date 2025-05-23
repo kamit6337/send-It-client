@@ -6,15 +6,12 @@ const postDetailsSchema = gql`
   query GetPostDetails($id: ID!) {
     getPostDetails(id: $id) {
       _id
-      user {
-        _id
-      }
+      post
       replyCount
       likeCount
       viewCount
       saveCount
       retweetCount
-      isFollow
       isLiked
       isSaved
     }

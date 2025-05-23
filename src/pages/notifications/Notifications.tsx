@@ -3,9 +3,26 @@ import Loading from "@/lib/Loading";
 import { NOTIFICATION } from "@/types";
 import SingleNotification from "./SingleNotification";
 import LeftArrowBtn from "@/components/LeftArrowBtn";
+import { useInView } from "react-intersection-observer";
+import { useEffect } from "react";
 
 const Notifications = () => {
-  const { isLoading, error, data } = useUserNotification();
+  const {
+    isLoading,
+    error,
+    data,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useUserNotification();
+
+  const { ref, inView } = useInView();
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView]);
 
   if (isLoading) {
     return <Loading />;
@@ -38,6 +55,11 @@ const Notifications = () => {
           </div>
         )}
       </div>
+      <div
+        ref={hasNextPage && !isFetchingNextPage ? ref : null}
+        className="h-96"
+      />
+      {isFetchingNextPage && <div>Loading ...</div>}
     </div>
   );
 };

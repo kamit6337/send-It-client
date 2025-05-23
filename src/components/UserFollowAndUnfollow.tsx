@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Dialog, DialogClose, DialogContent, DialogTrigger } from "./ui/dialog";
 import Loading from "@/lib/Loading";
-import { USER } from "@/types";
+import { FOLLOWER_USER, USER_PROFILE } from "@/types";
 import EditProfile from "./EditProfile";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -21,7 +21,7 @@ import removeSingleFollowingSchema, {
 import useLoginCheck from "@/hooks/auth/useLoginCheck";
 
 type Props = {
-  currentUser: USER;
+  currentUser: USER_PROFILE | FOLLOWER_USER;
   showEdit?: boolean;
 };
 

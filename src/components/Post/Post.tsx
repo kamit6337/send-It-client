@@ -44,7 +44,9 @@ const Post = ({
     }
   }, [post, updatePosts, deletePostIds]);
 
-  if (!newPost) return;
+  if (!newPost) {
+    return <div>Post has been deleted</div>;
+  }
 
   const {
     _id: postId,

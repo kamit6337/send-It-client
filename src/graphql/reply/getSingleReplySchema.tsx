@@ -16,7 +16,7 @@ const getSingleReplySchema = gql`
         email
         photo
       }
-      replyPostId {
+      replyPost {
         _id
         message
         media

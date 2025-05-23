@@ -2,7 +2,7 @@ import getUserPostsSchema, {
   getUserPostsDataQuery,
 } from "@/graphql/user/getUserPostsSchema";
 import getGraphql from "@/utils/api/graphql";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { keepPreviousData, useInfiniteQuery } from "@tanstack/react-query";
 
 const useUserPosts = (userId: string) => {
   const query = useInfiniteQuery({
@@ -13,6 +13,7 @@ const useUserPosts = (userId: string) => {
         page: pageParam,
       }),
     staleTime: Infinity,
+    placeholderData: keepPreviousData,
     initialPageParam: 1,
     getNextPageParam: (lastPage, _allPages, lastPageParam) => {
       if (!lastPage || lastPage.length === 0) {

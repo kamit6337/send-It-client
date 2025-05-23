@@ -16,7 +16,7 @@ const getUserReplyPosts = gql`
         email
         photo
       }
-      replyPostId {
+      replies {
         _id
         message
         media

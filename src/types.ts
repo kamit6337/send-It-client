@@ -1,7 +1,3 @@
-export type POST_SOCKET = {
-  pages: POST[][];
-};
-
 type TYPE = "like" | "reply" | "follower" | "message";
 
 export type NOTIFICATION = {
@@ -12,8 +8,8 @@ export type NOTIFICATION = {
   sender: USER[];
   totalSenders: number;
   isRead: boolean;
-  post: string;
-  room: string;
+  post?: POST;
+  room?: ROOM;
 };
 
 export type PARAMS = {
@@ -46,16 +42,16 @@ export type CHAT = {
   updatedAt: string;
 };
 
-export type SIMPLE_POST = {
-  _id: string;
-  message: string;
-  media: string;
-  likeCount: number;
-  viewCount: number;
-  saveCount: number;
-  replyCount: number;
-  retweetCount: number;
-};
+// export type SIMPLE_POST = {
+//   _id: string;
+//   message: string;
+//   media: string;
+//   likeCount: number;
+//   viewCount: number;
+//   saveCount: number;
+//   replyCount: number;
+//   retweetCount: number;
+// };
 
 export type POST = {
   _id: string;
@@ -63,14 +59,15 @@ export type POST = {
   media: string;
   thumbnail?: string;
   duration?: number;
-  replyPostId?: string;
-  createdAt?: string;
-  updatedAt?: string;
-  user: USER | string;
+  replyPost?: POST;
+  createdAt: string;
+  updatedAt: string;
+  user: USER;
 };
 
 export type POST_DETAIL = {
   _id: string;
+  post: string;
   likeCount: number;
   viewCount: number;
   saveCount: number;
@@ -78,8 +75,6 @@ export type POST_DETAIL = {
   retweetCount: number;
   isLiked: boolean;
   isSaved: boolean;
-  isReply: boolean;
-  isFollow: boolean;
   createdAt: string;
   updatedAt: string;
 };
@@ -89,13 +84,21 @@ export type USER = {
   name: string;
   email: string;
   photo: string;
-  bg_photo: string;
-  bio: string;
-  location: string;
-  website: string;
-  createdAt: string;
-  updatedAt: string;
+  bg_photo?: string;
+  bio?: string;
+  location?: string;
+  website?: string;
+  createdAt?: string;
+  updatedAt?: string;
   isFollowed?: boolean;
+};
+
+export type FOLLOWER_USER = {
+  _id: string;
+  name: string;
+  email: string;
+  photo: string;
+  isFollowed: boolean;
 };
 
 export type USER_PROFILE = {
@@ -107,13 +110,13 @@ export type USER_PROFILE = {
   bio: string;
   location: string;
   website: string;
+  followingCount: number;
+  followersCount: number;
   userPosts: number;
   likePosts: number;
   replyPosts: number;
   mediaPosts: number;
   savePosts: number;
-  followersCount: number;
-  followingCount: number;
   isFollowed: boolean;
   createdAt: string;
   updatedAt: string;
@@ -121,12 +124,13 @@ export type USER_PROFILE = {
 
 export type REPLY = {
   _id: string;
+  user: USER;
   message: string;
   media: string;
   thumbnail?: string;
   duration?: number;
   createdAt: string;
   updatedAt: string;
-  user: USER;
-  replyPostId: POST;
+  replyPost: POST;
+  replies: POST[];
 };

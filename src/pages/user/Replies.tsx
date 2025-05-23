@@ -1,4 +1,5 @@
-import ReplyPost from "@/components/reply/ReplyPost";
+import Post from "@/components/Post/Post";
+import PostDetails from "@/components/Post_Details/PostDetails";
 import useUserReplyPosts from "@/hooks/user/useUserReplyPosts";
 import Loading from "@/lib/Loading";
 import { REPLY, USER } from "@/types";
@@ -13,10 +14,22 @@ type OutletContext = {
 
 const Replies = () => {
   const { user } = useOutletContext<OutletContext>();
-  const { isLoading, error, data, isFetching, fetchNextPage } =
-    useUserReplyPosts(user._id);
+  const {
+    isLoading,
+    error,
+    data,
+    fetchNextPage,
+    isFetchingNextPage,
+    hasNextPage,
+  } = useUserReplyPosts(user._id);
 
   const { ref, inView } = useInView();
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView]);
 
   if (isLoading) {
     return <Loading />;
@@ -39,16 +52,33 @@ const Replies = () => {
         <meta name="discription" content="User Post page of this project" />
       </Helmet>
       {reply.length > 0 ? (
-        reply.map((reply) => (
-          <ReplyPost reply={reply} key={reply._id} userReply={true} />
-        ))
+        reply.map((reply) => {
+          const posts = reply.replies;
+          return (
+            <div key={reply._id}>
+              <Post post={reply} showLine={true} />
+              {posts.map((post, i, arr) => {
+                const lastPost = i === arr.length - 1;
+
+                if (lastPost)
+                  return <PostDetails post={post} userReply={false} />;
+
+                return <Post post={post} showLine={true} />;
+              })}
+            </div>
+          );
+        })
       ) : (
         <div className="h-96 flex justify-center items-center">
           You don't have any post
         </div>
       )}
 
-      <div ref={ref} className="h-96" />
+      {isFetchingNextPage && <div>Loading ...</div>}
+      <div
+        ref={hasNextPage && !isFetchingNextPage ? ref : null}
+        className="h-96"
+      />
     </>
   );
 };

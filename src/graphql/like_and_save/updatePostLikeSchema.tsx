@@ -4,7 +4,10 @@ export const updatePostLikeDataQuery = "updatePostLike";
 
 const updatePostLikeSchema = gql`
   mutation UpdatePostLike($toggle: Boolean!, $id: ID!) {
-    updatePostLike(toggle: $toggle, id: $id)
+    updatePostLike(toggle: $toggle, id: $id) {
+      bool
+      count
+    }
   }
 `;
 

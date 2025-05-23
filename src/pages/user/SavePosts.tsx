@@ -1,22 +1,28 @@
 import Post from "@/components/Post/Post";
 import useUserSavePosts from "@/hooks/user/useUserSavePosts";
 import Loading from "@/lib/Loading";
-import { POST, USER } from "@/types";
+import { POST } from "@/types";
 import { useEffect } from "react";
 import { Helmet } from "react-helmet";
 import { useInView } from "react-intersection-observer";
-import { useOutletContext } from "react-router-dom";
-
-type OutletContext = {
-  user: USER;
-};
 
 const SavePosts = () => {
-  const { user } = useOutletContext<OutletContext>();
-  const { isLoading, error, data, isFetching, fetchNextPage } =
-    useUserSavePosts(user._id?.toString());
+  const {
+    isLoading,
+    error,
+    data,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
+  } = useUserSavePosts();
 
   const { ref, inView } = useInView();
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView]);
 
   if (isLoading) {
     return <Loading />;
@@ -46,7 +52,11 @@ const SavePosts = () => {
         </div>
       )}
 
-      <div ref={ref} className="h-96" />
+      {isFetchingNextPage && <div>Loading ...</div>}
+      <div
+        ref={hasNextPage && !isFetchingNextPage ? ref : null}
+        className="h-96"
+      />
     </>
   );
 };

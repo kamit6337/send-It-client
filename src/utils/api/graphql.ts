@@ -31,9 +31,17 @@ const getGraphql = async (
         `Data query '${dataQuery}' not found in GraphQL response.`
       );
     }
+
+    console.log("get graphql response", response);
+
     return response[dataQuery];
   } catch (error) {
-    throw new Error(error instanceof Error ? error.message : String(error));
+    const parseError = JSON.parse(JSON.stringify(error));
+
+    const err = parseError?.response?.errors[0];
+
+    console.log("get graphql error", err);
+    throw new Error(err || "Something went wrong");
   }
 };
 

@@ -1,8 +1,10 @@
 import useUserFollowings from "@/hooks/followers/useUserFollowings";
 import Loading from "@/lib/Loading";
-import { USER } from "@/types";
+import { FOLLOWER_USER, USER } from "@/types";
 import { useOutletContext } from "react-router-dom";
 import SingleFollow from "./SingleFollow";
+import { useInView } from "react-intersection-observer";
+import { useEffect } from "react";
 
 type OutletContext = {
   user: USER;
@@ -10,7 +12,22 @@ type OutletContext = {
 
 const Following = () => {
   const { user } = useOutletContext<OutletContext>();
-  const { isLoading, error, data } = useUserFollowings(user._id);
+  const {
+    isLoading,
+    error,
+    data,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useUserFollowings(user._id);
+
+  const { ref, inView } = useInView();
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView]);
 
   if (isLoading) {
     return <Loading />;
@@ -24,7 +41,7 @@ const Following = () => {
     );
   }
 
-  const followings = data?.pages.flatMap((page) => page) as USER[];
+  const followings = data?.pages.flatMap((page) => page) as FOLLOWER_USER[];
 
   return (
     <>
@@ -37,6 +54,9 @@ const Following = () => {
           You do not follow anyone
         </div>
       )}
+
+      {hasNextPage && !isFetchingNextPage && <div ref={ref} className="h-96" />}
+      {isFetchingNextPage && <div>Loading ...</div>}
     </>
   );
 };

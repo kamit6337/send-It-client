@@ -7,17 +7,18 @@ import { addToPost, postState } from "@/redux/slice/postSlice";
 import ShowPostMessage from "../Post/ShowPostMessage";
 import LikeAndComment from "../Post/LikeAndComment";
 import PostOptions from "../Post/PostOptions";
+import useLoginCheck from "@/hooks/auth/useLoginCheck";
 
 type Props = {
   post: POST;
-  actualUser: USER;
   userReply?: boolean;
 };
 
-const PostDetails = ({ post, actualUser, userReply = false }: Props) => {
+const PostDetails = ({ post, userReply = false }: Props) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { updatePosts, deletePostIds } = useSelector(postState);
+  const { data: actualUser } = useLoginCheck();
 
   useEffect(() => {
     if (post._id) {
@@ -44,7 +45,9 @@ const PostDetails = ({ post, actualUser, userReply = false }: Props) => {
     }
   }, [newPost, navigate]);
 
-  if (!newPost) return;
+  if (!newPost) {
+    return <div>Post has been deleted</div>;
+  }
 
   const {
     user: { _id: currentUserId, name, email, photo },

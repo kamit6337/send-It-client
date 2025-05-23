@@ -1,6 +1,6 @@
 import Loading from "@/lib/Loading";
 import { useParams } from "react-router-dom";
-import { PARAMS, REPLY } from "@/types";
+import { PARAMS, POST } from "@/types";
 import useSingleReply from "@/hooks/reply/useSingleReply";
 import useLoginCheck from "@/hooks/auth/useLoginCheck";
 import ReplyPost from "@/components/reply/ReplyPost";
@@ -24,7 +24,7 @@ const SingleReply = () => {
     );
   }
 
-  const reply = data as REPLY;
+  const reply = data as POST;
 
   return (
     <div>

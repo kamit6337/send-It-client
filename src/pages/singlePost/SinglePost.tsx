@@ -6,12 +6,20 @@ import { PARAMS, POST } from "@/types";
 import { useParams } from "react-router-dom";
 import PostReplies from "./PostReplies";
 import LeftArrowBtn from "@/components/LeftArrowBtn";
+import { useEffect } from "react";
 
 const SinglePost = () => {
   const { id } = useParams() as PARAMS;
   const { data: actualUser } = useLoginCheck();
 
   const { isLoading, error, data } = useSinglePost(id);
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "instant",
+    });
+  }, [id]);
 
   if (isLoading) {
     return <Loading />;
@@ -27,7 +35,7 @@ const SinglePost = () => {
     <section className="">
       <LeftArrowBtn title="Post" />
       <div className="pt-3">
-        <PostDetails post={post} actualUser={actualUser} />
+        <PostDetails post={post} />
       </div>
       <PostReplies id={id} actualUser={actualUser} />
       <div className="h-96" />

@@ -9,16 +9,28 @@ const getUserNotificationsSchema = gql`
       user
       type
       message
+      totalSenders
       sender {
         _id
         name
         email
         photo
       }
-      totalSenders
       isRead
-      post
-      room
+      post {
+        _id
+        message
+        media
+        user {
+          _id
+          name
+          email
+          photo
+        }
+      }
+      room {
+        _id
+      }
     }
   }
 `;

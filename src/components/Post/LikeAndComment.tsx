@@ -1,6 +1,6 @@
 import ReactIcons from "@/assets/icons";
 import Toastify, { ToastContainer } from "@/lib/Toastify";
-import { POST, POST_DETAIL, USER } from "@/types";
+import { POST, USER } from "@/types";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,23 +16,12 @@ import {
 } from "../ui/dialog";
 // import CreatePostReply from "./CreatePostReply";
 import { useInView } from "react-intersection-observer";
-import { useRef, useState } from "react";
-import useLoginCheck from "@/hooks/auth/useLoginCheck";
-import {
-  checkAlreadyView,
-  setViewPostId,
-} from "@/utils/javascript/checkAlreadyView";
+import { useRef } from "react";
 import usePostDetails from "@/hooks/posts/usePostDetails";
 import Loading from "@/lib/Loading";
-import getGraphql from "@/utils/api/graphql";
-import updatePostLikeSchema, {
-  updatePostLikeDataQuery,
-} from "@/graphql/like_and_save/updatePostLikeSchema";
-import { useQueryClient } from "@tanstack/react-query";
-import updatePostSaveSchema, {
-  updatePostSaveDataQuery,
-} from "@/graphql/like_and_save/updatePostSaveSchema";
 import CreatePostReply from "./CreatePostReply";
+import useTogglePostLike from "@/hooks/like_and_save/useTogglePostLike";
+import useTogglePostSave from "@/hooks/like_and_save/useTogglePostSave";
 
 type Props = {
   post: POST;
@@ -40,11 +29,8 @@ type Props = {
 };
 
 const LikeAndComment = ({ post, user }: Props) => {
-  const queryClient = useQueryClient();
   const closeRef = useRef<HTMLButtonElement>(null);
   const { showErrorMessage, showSuccessMessage } = Toastify();
-  const { data: actualUser } = useLoginCheck();
-  const [isPending, setIsPending] = useState(false);
 
   const { ref, inView } = useInView({
     threshold: 0.1, // Trigger when 50% of the element is in view
@@ -55,6 +41,12 @@ const LikeAndComment = ({ post, user }: Props) => {
   const postId = post._id;
 
   const { data, isLoading, error } = usePostDetails(postId, inView);
+
+  const { mutate: mutateLike, isPending: isPendingLike } =
+    useTogglePostLike(post);
+
+  const { mutate: mutateSave, isPending: isPendingSave } =
+    useTogglePostSave(post);
 
   if (isLoading) {
     return <Loading height={"full"} small={true} />;
@@ -94,75 +86,11 @@ const LikeAndComment = ({ post, user }: Props) => {
   const isSaved = data?.isSaved;
 
   const handleTogglePostLike = async (toggle: boolean) => {
-    try {
-      setIsPending(true);
-
-      const result = await getGraphql(
-        updatePostLikeSchema,
-        updatePostLikeDataQuery,
-        { toggle, id: postId }
-      );
-
-      const checkStatus = queryClient.getQueryState(["post details", postId]);
-
-      if (checkStatus?.status === "success") {
-        queryClient.setQueryData(
-          ["post details", postId],
-          (old: POST_DETAIL) => {
-            if (result === "true") {
-              return { ...old, isLiked: true };
-            }
-
-            if (result === "false") {
-              return { ...old, isLiked: false };
-            }
-            return old;
-          }
-        );
-      }
-    } catch (error) {
-      showErrorMessage({
-        message: error instanceof Error ? error.message : "",
-      });
-    } finally {
-      setIsPending(false);
-    }
+    mutateLike(toggle);
   };
 
   const handleTogglePostSave = async (toggle: boolean) => {
-    try {
-      setIsPending(true);
-
-      const result = await getGraphql(
-        updatePostSaveSchema,
-        updatePostSaveDataQuery,
-        { toggle, id: postId }
-      );
-
-      const checkStatus = queryClient.getQueryState(["post details", postId]);
-
-      if (checkStatus?.status === "success") {
-        queryClient.setQueryData(
-          ["post details", postId],
-          (old: POST_DETAIL) => {
-            if (result === "true") {
-              return { ...old, isSaved: true };
-            }
-
-            if (result === "false") {
-              return { ...old, isSaved: false };
-            }
-            return old;
-          }
-        );
-      }
-    } catch (error) {
-      showErrorMessage({
-        message: error instanceof Error ? error.message : "",
-      });
-    } finally {
-      setIsPending(false);
-    }
+    mutateSave(toggle);
   };
 
   return (
@@ -197,7 +125,7 @@ const LikeAndComment = ({ post, user }: Props) => {
         <div className=" flex items-center gap-1 w-10">
           {isLiked ? (
             <button
-              disabled={isPending}
+              disabled={isPendingLike}
               className="text-red-500 p-2 rounded-full"
               onClick={() => handleTogglePostLike(false)}
             >
@@ -205,7 +133,7 @@ const LikeAndComment = ({ post, user }: Props) => {
             </button>
           ) : (
             <button
-              disabled={isPending}
+              disabled={isPendingLike}
               onClick={() => handleTogglePostLike(true)}
               className="hover:text-red-500 hover:bg-red-200 p-2 rounded-full"
             >
@@ -228,7 +156,7 @@ const LikeAndComment = ({ post, user }: Props) => {
         <div className=" flex items-center gap-1 w-10">
           {isSaved ? (
             <button
-              disabled={isPending}
+              disabled={isPendingSave}
               onClick={() => handleTogglePostSave(false)}
               className="text-blue-500 p-2 rounded-full"
             >
@@ -236,7 +164,7 @@ const LikeAndComment = ({ post, user }: Props) => {
             </button>
           ) : (
             <button
-              disabled={isPending}
+              disabled={isPendingSave}
               onClick={() => handleTogglePostSave(true)}
               className="hover:text-blue-500 hover:bg-blue-200 p-2 rounded-full"
             >

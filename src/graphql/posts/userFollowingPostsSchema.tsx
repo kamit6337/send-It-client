@@ -16,6 +16,32 @@ const userFollowingPostsSchema = gql`
         email
         photo
       }
+      replyPost {
+        _id
+        message
+        media
+        createdAt
+        updatedAt
+        user {
+          _id
+          name
+          email
+          photo
+        }
+      }
+      replies {
+        _id
+        message
+        media
+        createdAt
+        updatedAt
+        user {
+          _id
+          name
+          email
+          photo
+        }
+      }
     }
   }
 `;

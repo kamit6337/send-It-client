@@ -13,11 +13,22 @@ type OutletContext = {
 
 const UserPosts = () => {
   const { user } = useOutletContext<OutletContext>();
-  const { isLoading, error, data, isFetching, fetchNextPage } = useUserPosts(
-    user._id?.toString()
-  );
+  const {
+    isLoading,
+    error,
+    data,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
+  } = useUserPosts(user._id?.toString());
 
   const { ref, inView } = useInView();
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView]);
 
   if (isLoading) {
     return <Loading />;
@@ -47,7 +58,11 @@ const UserPosts = () => {
         </div>
       )}
 
-      <div ref={ref} className="h-96" />
+      {isFetchingNextPage && <div>Loading ...</div>}
+      <div
+        ref={hasNextPage && !isFetchingNextPage ? ref : null}
+        className="h-96"
+      />
     </>
   );
 };

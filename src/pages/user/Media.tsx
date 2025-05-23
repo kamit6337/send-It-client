@@ -13,10 +13,22 @@ type OutletContext = {
 
 const Media = () => {
   const { user } = useOutletContext<OutletContext>();
-  const { isLoading, error, data, fetchNextPage, isFetching } = useUserMedia(
-    user._id
-  );
+  const {
+    isLoading,
+    error,
+    data,
+    fetchNextPage,
+    isFetchingNextPage,
+    hasNextPage,
+  } = useUserMedia(user._id);
+
   const { ref, inView } = useInView();
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView]);
 
   if (isLoading) {
     return <Loading />;
@@ -50,7 +62,11 @@ const Media = () => {
         </div>
       )}
 
-      <div ref={ref} className="h-96" />
+      {isFetchingNextPage && <div>Loading ...</div>}
+      <div
+        ref={hasNextPage && !isFetchingNextPage ? ref : null}
+        className="h-96"
+      />
     </>
   );
 };

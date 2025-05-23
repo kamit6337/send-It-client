@@ -3,6 +3,9 @@ import CreateReply from "./CreateReply";
 import { POST, USER } from "@/types";
 import usePostReplies from "@/hooks/reply/usePostReplies";
 import Post from "@/components/Post/Post";
+import sortByDate from "@/utils/javascript/sortByDate";
+import { useInView } from "react-intersection-observer";
+import { useEffect } from "react";
 
 type Props = {
   id: string;
@@ -10,7 +13,22 @@ type Props = {
 };
 
 const PostReplies = ({ id, actualUser }: Props) => {
-  const { isLoading, error, data } = usePostReplies(id as string);
+  const {
+    isLoading,
+    error,
+    data,
+    fetchNextPage,
+    isFetchingNextPage,
+    hasNextPage,
+  } = usePostReplies(id as string);
+
+  const { ref, inView } = useInView();
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView]);
 
   if (isLoading) {
     return <Loading />;
@@ -26,17 +44,30 @@ const PostReplies = ({ id, actualUser }: Props) => {
 
   const posts = data?.pages.flatMap((page) => page) as POST[];
 
+  console.log("posts", posts);
+
+  const sortedPosts = sortByDate(posts);
+
+  console.log("sortedPosts", sortedPosts);
+
   return (
-    <div>
+    <>
       <CreateReply actualUser={actualUser} postId={id} />
-      {posts.length > 0 ? (
-        posts.map((post) => <Post post={post} key={post._id} isReply={true} />)
+      {sortedPosts.length > 0 ? (
+        sortedPosts.map((post) => (
+          <Post post={post} key={post._id} isReply={true} />
+        ))
       ) : (
         <p className="w-full h-96 flex justify-center items-center">
           No Reply Post yet
         </p>
       )}
-    </div>
+      {isFetchingNextPage && <div>Loading ...</div>}
+      <div
+        ref={hasNextPage && !isFetchingNextPage ? ref : null}
+        className="h-96"
+      />
+    </>
   );
 };
 

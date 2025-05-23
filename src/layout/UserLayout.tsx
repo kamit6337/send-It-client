@@ -1,6 +1,6 @@
 import useUserProfile from "@/hooks/user/useUserProfile";
 import Loading from "@/lib/Loading";
-import { PARAMS } from "@/types";
+import { PARAMS, USER_PROFILE } from "@/types";
 import { Outlet, useParams } from "react-router-dom";
 
 const UserLayout = () => {
@@ -19,9 +19,11 @@ const UserLayout = () => {
     );
   }
 
+  const user = data as USER_PROFILE;
+
   return (
     <>
-      <Outlet context={{ user: data, email }} />
+      <Outlet context={{ user, email }} />
     </>
   );
 };
