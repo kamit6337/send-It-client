@@ -5,6 +5,7 @@ import { useOutletContext } from "react-router-dom";
 import SingleFollow from "./SingleFollow";
 import { useInView } from "react-intersection-observer";
 import { useEffect } from "react";
+import { Helmet } from "react-helmet";
 
 type OutletContext = {
   user: USER;
@@ -45,6 +46,10 @@ const Followers = () => {
 
   return (
     <>
+      <Helmet>
+        <title>User Followers</title>
+        <meta name="messages" content="User followers page of this project" />
+      </Helmet>
       {followers.length > 0 ? (
         followers.map((follower) => (
           <SingleFollow user={follower} key={follower._id} />

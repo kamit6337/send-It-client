@@ -22,10 +22,7 @@ const VerifySignUp = () => {
     <>
       <Helmet>
         <title>Verify</title>
-        <meta
-          name="discription"
-          content="Signup Verify page of Voosh project"
-        />
+        <meta name="discription" content="Signup Verify page of this project" />
       </Helmet>
       <VerifyOTP callback={handleVerify} />
     </>

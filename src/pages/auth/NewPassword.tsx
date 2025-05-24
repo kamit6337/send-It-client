@@ -74,7 +74,7 @@ const NewPassword = () => {
     <>
       <Helmet>
         <title>New Password</title>
-        <meta name="discription" content="New Password page of Voosh project" />
+        <meta name="discription" content="New Password page of this project" />
       </Helmet>
       <p className="auth_page_title">New Password</p>
 

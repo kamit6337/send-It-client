@@ -7,6 +7,7 @@ import { useParams } from "react-router-dom";
 import PostReplies from "./PostReplies";
 import LeftArrowBtn from "@/components/LeftArrowBtn";
 import { useEffect } from "react";
+import { Helmet } from "react-helmet";
 
 const SinglePost = () => {
   const { id } = useParams() as PARAMS;
@@ -32,14 +33,20 @@ const SinglePost = () => {
   const post = data as POST;
 
   return (
-    <section className="">
-      <LeftArrowBtn title="Post" />
-      <div className="pt-3">
-        <PostDetails post={post} />
-      </div>
-      <PostReplies id={id} actualUser={actualUser} />
-      <div className="h-96" />
-    </section>
+    <>
+      <Helmet>
+        <title>Posts</title>
+        <meta name="posts" content="Posts page of this project" />
+      </Helmet>
+      <section className="">
+        <LeftArrowBtn title="Post" />
+        <div className="pt-3">
+          <PostDetails post={post} />
+        </div>
+        <PostReplies id={id} actualUser={actualUser} />
+        <div className="h-96" />
+      </section>
+    </>
   );
 };
 

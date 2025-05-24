@@ -83,7 +83,7 @@ const Login = () => {
     <>
       <Helmet>
         <title>Login</title>
-        <meta name="discription" content="Login page of Voosh project" />
+        <meta name="discription" content="Login page of this project" />
       </Helmet>
       {/* MARK: HEADLINE*/}
       <p className="auth_page_title">Sign In.</p>

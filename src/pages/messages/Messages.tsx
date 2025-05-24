@@ -2,10 +2,15 @@ import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import ReactIcons from "@/assets/icons";
 import SelectMessageUser from "@/components/room/SelectMessageUser";
 import MessageTemplate from "@/components/room/MessageTemplate";
+import { Helmet } from "react-helmet";
 
 const Messages = () => {
   return (
     <>
+      <Helmet>
+        <title>Messages</title>
+        <meta name="messages" content="Message page of this project" />
+      </Helmet>
       <div className="lg:hidden w-full h-screen border-r border-div_border">
         <div className="h-16 sticky top-0 flex justify-between items-center px-5">
           <p>Messages</p>

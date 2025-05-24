@@ -7,6 +7,7 @@ import useLoginCheck from "@/hooks/auth/useLoginCheck";
 import useUserRooms from "@/hooks/rooms/useUserRooms";
 import ReactIcons from "@/assets/icons";
 import ChatMessages from "@/components/chat/ChatMessages";
+import { Helmet } from "react-helmet";
 
 const Chats = () => {
   const { id } = useParams<PARAMS>();
@@ -35,23 +36,29 @@ const Chats = () => {
   };
 
   return (
-    <div className="h-screen relative">
-      {/* NOTE: HEADER */}
-      <div className="h-14 w-full text-xl font-semibold tracking-wider sticky top-0 z-10 border-b border-div_border bg-background flex items-center gap-2 px-3">
-        <button className="left_arrow" onClick={() => handleClick()}>
-          <ReactIcons.leftArrow className="text-xl" />
-        </button>
+    <>
+      <Helmet>
+        <title>Messages</title>
+        <meta name="messages" content="Message page of this project" />
+      </Helmet>
+      <div className="h-screen relative">
+        {/* NOTE: HEADER */}
+        <div className="h-14 w-full text-xl font-semibold tracking-wider sticky top-0 z-10 border-b border-div_border bg-background flex items-center gap-2 px-3">
+          <button className="left_arrow" onClick={() => handleClick()}>
+            <ReactIcons.leftArrow className="text-xl" />
+          </button>
 
-        <p>{member?.name}</p>
+          <p>{member?.name}</p>
+        </div>
+        <div
+          style={{
+            height: "calc(100% - 56px)",
+          }}
+        >
+          <ChatMessages />
+        </div>
       </div>
-      <div
-        style={{
-          height: "calc(100% - 56px)",
-        }}
-      >
-        <ChatMessages />
-      </div>
-    </div>
+    </>
   );
 };
 

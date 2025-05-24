@@ -48,8 +48,11 @@ const Replies = () => {
   return (
     <>
       <Helmet>
-        <title>User Reply</title>
-        <meta name="discription" content="User Post page of this project" />
+        <title>User Reply Posts</title>
+        <meta
+          name="discription"
+          content="User Reply Post page of this project"
+        />
       </Helmet>
       {reply.length > 0 ? (
         reply.map((reply) => {

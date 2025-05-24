@@ -47,8 +47,11 @@ const Media = () => {
   return (
     <>
       <Helmet>
-        <title>User Posts</title>
-        <meta name="discription" content="User Post page of this project" />
+        <title>User Media Posts</title>
+        <meta
+          name="discription"
+          content="User Media Posts page of this project"
+        />
       </Helmet>
       {posts.length > 0 ? (
         <div className="grid grid-cols-2">

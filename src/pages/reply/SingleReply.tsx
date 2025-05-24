@@ -7,6 +7,7 @@ import ReplyPost from "@/components/reply/ReplyPost";
 import PostReplies from "../singlePost/PostReplies";
 import LeftArrowBtn from "@/components/LeftArrowBtn";
 import { useEffect } from "react";
+import { Helmet } from "react-helmet";
 
 const SingleReply = () => {
   const { id } = useParams() as PARAMS;
@@ -35,12 +36,18 @@ const SingleReply = () => {
   const reply = data as POST;
 
   return (
-    <div>
-      <LeftArrowBtn title="Reply" />
-      <ReplyPost reply={reply} key={reply._id} userReply={true} />
-      <PostReplies actualUser={actualUser} id={id} />
-      <div className="h-96" />
-    </div>
+    <>
+      <Helmet>
+        <title>Reply Post</title>
+        <meta name="reply post" content="Reply post page of this project" />
+      </Helmet>
+      <div>
+        <LeftArrowBtn title="Reply" />
+        <ReplyPost reply={reply} key={reply._id} userReply={true} />
+        <PostReplies actualUser={actualUser} id={id} />
+        <div className="h-96" />
+      </div>
+    </>
   );
 };
 

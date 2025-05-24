@@ -41,8 +41,11 @@ const Likes = () => {
   return (
     <>
       <Helmet>
-        <title>User Posts</title>
-        <meta name="discription" content="User Post page of this project" />
+        <title>User Like Posts</title>
+        <meta
+          name="discription"
+          content="User Like Post page of this project"
+        />
       </Helmet>
       {posts.length > 0 ? (
         posts.map((post) => <Post post={post} key={post._id} />)

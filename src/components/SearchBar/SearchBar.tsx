@@ -14,8 +14,6 @@ const SearchBar = () => {
     setShowMessageArea(bool);
   };
 
-  console.log("active room", activeRoom);
-
   return (
     <>
       <main className="h-full flex flex-col justify-center items-center">
