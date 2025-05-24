@@ -1,4 +1,4 @@
-import { POST, USER } from "@/types";
+import { POST } from "@/types";
 import actualDateAndTime from "@/utils/javascript/actualDateAndTime";
 import { useEffect, useLayoutEffect, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";

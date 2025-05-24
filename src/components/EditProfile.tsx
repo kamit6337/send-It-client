@@ -19,9 +19,9 @@ type Props = {
 
 type FormData = {
   name: string;
-  bio: string;
+  bio?: string;
   location?: string;
-  website: string;
+  website?: string;
 };
 
 type SelectedFile = File | null;

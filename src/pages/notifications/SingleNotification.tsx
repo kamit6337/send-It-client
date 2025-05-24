@@ -25,7 +25,7 @@ const SingleNotification = ({ notification }: Props) => {
 
   useEffect(() => {
     if (inView && notificationID) {
-      // mutate(notificationID);
+      mutate(notificationID);
     }
   }, [inView, notificationID]);
 

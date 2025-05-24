@@ -1,11 +1,5 @@
 import ReactIcons from "@/assets/icons";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { useRef } from "react";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import SelectMessageUser from "../room/SelectMessageUser";
 import MessageTemplate from "../room/MessageTemplate";
 

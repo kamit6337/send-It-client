@@ -1,7 +1,7 @@
 import Post from "@/components/Post/Post";
 import useFollowingUserPosts from "@/hooks/posts/useFollowingUserPosts";
 import Loading from "@/lib/Loading";
-import { POST, REPLY } from "@/types";
+import { REPLY } from "@/types";
 import { useEffect } from "react";
 import { Helmet } from "react-helmet";
 import { useInView } from "react-intersection-observer";

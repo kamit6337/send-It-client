@@ -23,8 +23,6 @@ type FormDataType = {
   message: string;
 };
 
-const imageTypeList = ["png", "jpeg", "jpg"];
-
 const EditPost = ({ handleClose, post }: Props) => {
   const { showErrorMessage, showAlertMessage } = Toastify();
   const [selectedFile, setSelectedFile] = useState<SelectedFile>(null);

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 
 const imageTypeList = ["png", "jpeg", "jpg"];
 
@@ -11,14 +11,17 @@ const ShowPostMessage = ({ message, media }: Props) => {
   const imageType = media.split(".").at(-1) as string;
   const [isFullScreen, setIsFullScreen] = useState(false);
 
-  const handleShowFullImage = (e) => {
+  const handleShowFullImage = (
+    e: React.MouseEvent<HTMLImageElement, MouseEvent>
+  ) => {
     e.stopPropagation();
     setIsFullScreen(true);
-    // dispatch(toggleFullImage({ bool: true, data: media }));
     document.body.style.overflow = "hidden"; // Prevent scrolling when full image is open
   };
 
-  const handleCloseFullImage = (e) => {
+  const handleCloseFullImage = (
+    e: React.MouseEvent<HTMLImageElement, MouseEvent>
+  ) => {
     e.stopPropagation();
     setIsFullScreen(false);
     document.body.style.overflow = "auto"; // Enable scrolling when full image is closed

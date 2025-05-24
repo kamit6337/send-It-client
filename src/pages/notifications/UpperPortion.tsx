@@ -8,7 +8,7 @@ type Props = {
 const UpperPortion = ({ notification }: Props) => {
   const navigate = useNavigate();
 
-  const { sender, isRead, post, message, type } = notification;
+  const { sender, message } = notification;
 
   return (
     <div className="flex items-center gap-5">

@@ -20,11 +20,6 @@ import removeSingleFollowingSchema, {
 } from "@/graphql/followers/removeSingleFollowingSchema";
 import useLoginCheck from "@/hooks/auth/useLoginCheck";
 
-type CURRENT_USER = {
-  _id: string;
-  isFollowed: boolean;
-};
-
 type Props = {
   currentUser: USER_PROFILE | FOLLOWER_USER;
   showEdit?: boolean;
