@@ -38,7 +38,6 @@ const getGraphql = async (
 
     const err = parseError?.response?.errors[0];
 
-    console.log("get graphql error", err);
     throw new Error(err?.message || err || "Something went wrong");
   }
 };
