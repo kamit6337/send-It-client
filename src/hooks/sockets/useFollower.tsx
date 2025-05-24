@@ -25,8 +25,6 @@ const useFollower = (socket: Socket) => {
 
     const handleNewFollower = async (data: DATA) => {
       try {
-        console.log("new follower", data);
-
         const { user, followerCount: newFollowerCount, followerUser } = data;
 
         const checkStatus = queryClient.getQueryState([
@@ -55,8 +53,6 @@ const useFollower = (socket: Socket) => {
             { userId: followerUser._id }
           );
 
-          console.log("whetherIsFollowed", "use Follower", whetherIsFollowed);
-
           const obj = {
             ...followerUser,
             isFollowed: whetherIsFollowed,
@@ -75,8 +71,6 @@ const useFollower = (socket: Socket) => {
     };
 
     const handleRemoveFollower = (data: DATA) => {
-      console.log("remove follower", data);
-
       const { user, followerCount: newFollowerCount, followerUser } = data;
 
       const checkStatus = queryClient.getQueryState([

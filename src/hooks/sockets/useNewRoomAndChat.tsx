@@ -22,7 +22,6 @@ const useNewRoomAndChat = (socket: Socket) => {
     if (!socket) return;
 
     const handleNewRoom = (data: ROOM) => {
-      console.log("new room", data);
       const newRoom = data;
       dispatch(setActiveRoom(newRoom));
 

@@ -33,7 +33,6 @@ const EditPost = ({ handleClose, post }: Props) => {
   const maxLength = 200;
 
   const { _id: postId, message, media } = post;
-  console.log("defaultMedia", defaultMedia);
   const {
     register,
     reset,

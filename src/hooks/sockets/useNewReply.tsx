@@ -16,8 +16,6 @@ const useNewReply = (socket: Socket) => {
     const handleNewReply = (data: POST) => {
       const newReply = data;
 
-      console.log("newReply", newReply);
-
       const checkStatus = queryClient.getQueryState([
         "reply posts",
         newReply.replyPost,

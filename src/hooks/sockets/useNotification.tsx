@@ -14,8 +14,6 @@ const useNotification = (socket: Socket) => {
     if (!socket) return;
 
     const handleNewNotification = (data: NOTIFICATION) => {
-      console.log("notification", data);
-
       const checkStatus = queryClient.getQueryState(["user notification"]);
 
       if (checkStatus?.status === "success") {

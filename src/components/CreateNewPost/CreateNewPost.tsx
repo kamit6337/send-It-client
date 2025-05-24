@@ -58,8 +58,6 @@ const CreateNewPost = ({
 
     const fileReturn = imageAndVideoSizeFilteration(file);
 
-    console.log("fileReturn", fileReturn);
-
     if (fileReturn) {
       setSelectedFile(fileReturn);
     }
@@ -84,24 +82,10 @@ const CreateNewPost = ({
         thumbnail,
       };
 
-      console.log("obj", obj);
-
       if (isOfReply) {
-        const response = await getGraphql(
-          createPostReplySchema,
-          createPostReplyDataQuery,
-          obj
-        );
-
-        console.log("response", response);
+        await getGraphql(createPostReplySchema, createPostReplyDataQuery, obj);
       } else {
-        const response = await getGraphql(
-          createPostSchema,
-          createPostDataQuery,
-          obj
-        );
-
-        console.log("response", response);
+        await getGraphql(createPostSchema, createPostDataQuery, obj);
       }
 
       handleClose();

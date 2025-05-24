@@ -22,7 +22,6 @@ const useNewPost = (socket: Socket) => {
     const handleNewPost = async (data: REPLY) => {
       try {
         const newPost = data;
-        console.log("newPost", newPost);
 
         const isAddToFollowingPost =
           newPost.user._id === actualUser._id ||

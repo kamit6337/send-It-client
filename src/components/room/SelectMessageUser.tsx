@@ -36,13 +36,10 @@ const SelectMessageUser = () => {
 
   const handleCreateRoom = async (id: string) => {
     try {
-      const response = await getGraphql(
-        createNewRoomSchema,
-        createNewRoomDataQuery,
-        { userId: id }
-      );
+      await getGraphql(createNewRoomSchema, createNewRoomDataQuery, {
+        userId: id,
+      });
 
-      console.log("new room response", response);
       handleClose();
     } catch (error) {
       showErrorMessage({

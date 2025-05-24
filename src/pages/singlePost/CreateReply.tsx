@@ -61,19 +61,13 @@ const CreateReply = ({ actualUser, postId }: Props) => {
         selectedFile
       );
 
-      const response = await getGraphql(
-        createPostReplySchema,
-        createPostReplyDataQuery,
-        {
-          postId,
-          message,
-          media,
-          thumbnail,
-          duration,
-        }
-      );
-
-      console.log("response", response);
+      await getGraphql(createPostReplySchema, createPostReplyDataQuery, {
+        postId,
+        message,
+        media,
+        thumbnail,
+        duration,
+      });
 
       setIsFocus(false);
       reset();

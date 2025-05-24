@@ -96,8 +96,6 @@ const ChatRoomMessages = ({ activeRoom }: Props) => {
         setScrollDirection("down");
       }
 
-      console.log("distanceFromBottom", distanceFromBottom);
-
       // Are we at bottom? (threshold 50px)
       setIsAtBottom(distanceFromBottom < 50);
 

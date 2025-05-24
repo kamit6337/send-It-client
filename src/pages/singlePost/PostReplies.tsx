@@ -44,11 +44,7 @@ const PostReplies = ({ id, actualUser }: Props) => {
 
   const posts = data?.pages.flatMap((page) => page) as POST[];
 
-  console.log("posts", posts);
-
   const sortedPosts = sortByDate(posts);
-
-  console.log("sortedPosts", sortedPosts);
 
   return (
     <>

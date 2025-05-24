@@ -59,13 +59,11 @@ const ChatMessages = () => {
 
       const media = await uploadImageOrVideo(selectedFile, "CHAT");
 
-      const response = await getGraphql(
-        createNewChatSchema,
-        createNewChatDataQuery,
-        { roomId: activeRoom?._id, message, media }
-      );
-
-      console.log("response new chat", response);
+      await getGraphql(createNewChatSchema, createNewChatDataQuery, {
+        roomId: activeRoom?._id,
+        message,
+        media,
+      });
 
       reset();
       removeSelectedFile();
@@ -81,8 +79,6 @@ const ChatMessages = () => {
     if (!file) return;
 
     const fileReturn = imageAndVideoSizeFilteration(file);
-
-    console.log("fileReturn", fileReturn);
 
     if (fileReturn) {
       setSelectedFile(fileReturn);
