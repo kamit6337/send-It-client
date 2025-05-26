@@ -5,6 +5,7 @@ echo "window.env = {" > /usr/share/nginx/html/env-config.js
 
 echo "  VITE_APP_SERVER_URL: \"${VITE_APP_SERVER_URL}\"," >> /usr/share/nginx/html/env-config.js
 echo "  VITE_APP_NODE_ENV: \"${VITE_APP_NODE_ENV}\"," >> /usr/share/nginx/html/env-config.js
+echo "  VITE_APP_CLIENT_URL: \"${VITE_APP_CLIENT_URL}\"," >> /usr/share/nginx/html/env-config.js
 
 
 echo "}" >> /usr/share/nginx/html/env-config.js
