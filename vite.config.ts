@@ -11,6 +11,7 @@ export default defineConfig({
     },
   },
   test: {
+    exclude: ["**/TestWrapper.test.tsx"],
     globals: true,
     environment: "jsdom", // Simulate a browser-like environment
     setupFiles: "./src/test/setupTests.ts", // Optional setup file

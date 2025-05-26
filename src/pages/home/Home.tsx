@@ -46,7 +46,7 @@ const Home = () => {
             const { replies } = post;
 
             return (
-              <>
+              <div key={post._id}>
                 {post.replyPost && (
                   <Post post={post.replyPost} showLine={true} />
                 )}
@@ -57,7 +57,7 @@ const Home = () => {
 
                     return <Post post={reply} showLine={!lastReply} />;
                   })}
-              </>
+              </div>
             );
           })
         ) : (

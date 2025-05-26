@@ -16,6 +16,7 @@ const Loading = ({ height, small = false, color = "text-blue-400" }: Props) => {
 
   return (
     <div
+      role="status"
       className={`w-full flex justify-center items-center`}
       style={{ height: height === "full" ? "100%" : "500px" }}
     >
