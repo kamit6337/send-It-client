@@ -1,7 +1,10 @@
 import ReactIcons from "@/assets/icons";
+import newPasswordSchema, {
+  newPasswordDataQuery,
+} from "@/graphql/auth/newPasswordSchema";
 import Loading from "@/lib/Loading";
 import Toastify from "@/lib/Toastify";
-import { postAuthReq } from "@/utils/api/authApi";
+import getGraphql from "@/utils/api/graphql";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { Helmet } from "react-helmet";
@@ -43,25 +46,25 @@ const NewPassword = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof schema>) => {
-    if (!resetToken) {
-      showErrorMessage({ message: "Something went wrong. Please try again." });
-      setTimeout(() => {
-        navigate("/forgotPassword");
-      }, 5000);
-      return;
-    }
-
-    const formData = { ...values };
-    delete formData.confirmPassword;
-
-    const data = { password: formData.password, resetToken };
-
     try {
-      const response = await postAuthReq("/newPassword", data);
-      showSuccessMessage({ message: response.message });
-      setTimeout(() => {
-        navigate("/login");
-      }, 2000);
+      if (!resetToken) {
+        showErrorMessage({
+          message: "Something went wrong. Please try again.",
+        });
+        navigate("/forgotPassword");
+        return;
+      }
+
+      const formData = { ...values };
+      delete formData.confirmPassword;
+
+      const response = await getGraphql(
+        newPasswordSchema,
+        newPasswordDataQuery,
+        { resetToken, password: formData.password }
+      );
+      showSuccessMessage({ message: response });
+      navigate("/login");
     } catch (error) {
       showErrorMessage({
         message:

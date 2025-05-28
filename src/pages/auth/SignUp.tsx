@@ -3,14 +3,16 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Link, useNavigate } from "react-router-dom";
 import Toastify from "@/lib/Toastify";
-import { postAuthReq } from "@/utils/api/authApi";
 import Loading from "@/lib/Loading";
 import environment from "@/utils/environment";
 import Helmet from "react-helmet";
 import { useState } from "react";
 import ReactIcons from "@/assets/icons";
 import CustomImages from "@/assets/images";
-import Cookies from "js-cookie";
+import getGraphql from "@/utils/api/graphql";
+import signUpUserInitialSchema, {
+  signUpUserInitialDataQuery,
+} from "@/graphql/auth/signUpUserInitialSchema";
 
 const schema = z
   .object({
@@ -25,7 +27,7 @@ const schema = z
   });
 
 const SignUp = () => {
-  const { showErrorMessage } = Toastify();
+  const { showErrorMessage, showSuccessMessage } = Toastify();
   const navigate = useNavigate();
   const [toggle, setToggle] = useState({
     password: false,
@@ -49,12 +51,22 @@ const SignUp = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof schema>) => {
-    const formData = { ...values };
-    delete formData.confirmPassword;
-
     try {
-      await postAuthReq("/signup", formData);
-      Cookies.set("email", formData.email, { expires: 1 });
+      const formData = { ...values };
+      delete formData.confirmPassword;
+
+      const { name, email, password } = formData;
+
+      const response = await getGraphql(
+        signUpUserInitialSchema,
+        signUpUserInitialDataQuery,
+        { name, email, password }
+      );
+
+      sessionStorage.setItem("email", email);
+
+      showSuccessMessage({ message: response });
+
       navigate("/signup/verify");
     } catch (error) {
       showErrorMessage({

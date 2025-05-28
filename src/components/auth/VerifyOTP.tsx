@@ -1,6 +1,5 @@
 import Toastify from "@/lib/Toastify";
 import modifyEmail from "@/utils/javascript/modifyEmail";
-import Cookies from "js-cookie";
 import { useState } from "react";
 import OtpInput from "./OtpInput";
 import Loading from "@/lib/Loading";
@@ -12,18 +11,18 @@ type Props = {
 
 const VerifyOTP = ({ callback }: Props) => {
   const navigate = useNavigate();
-  const email = Cookies.get("email") as string;
+  const email = sessionStorage.getItem("email") as string;
   const [otp, setOtp] = useState<string[]>(new Array(6).fill(""));
   const [isLoading, setIsLoading] = useState(false);
   const { showErrorMessage } = Toastify();
 
   const handleSubmit = async () => {
     try {
+      if (isLoading) return; // Prevent multiple calls during loading
+
       if (!email) {
         showErrorMessage({ message: "Something went wrong" });
-        setTimeout(() => {
-          navigate(-1);
-        }, 5000);
+        navigate(-1);
         return;
       }
 

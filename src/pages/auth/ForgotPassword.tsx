@@ -1,6 +1,9 @@
+import forgotPasswordSchema, {
+  forgotPasswordDataQuery,
+} from "@/graphql/auth/forgotPasswordSchema";
 import Loading from "@/lib/Loading";
 import Toastify from "@/lib/Toastify";
-import { postAuthReq } from "@/utils/api/authApi";
+import getGraphql from "@/utils/api/graphql";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Helmet } from "react-helmet";
 import { useForm } from "react-hook-form";
@@ -28,11 +31,19 @@ const ForgotPassword = () => {
 
   const onSubmit = async (values: z.infer<typeof schema>) => {
     try {
-      const response = await postAuthReq("/forgotPassword", values);
-      showSuccessMessage({ message: response.message });
-      setTimeout(() => {
-        navigate("/login");
-      }, 2000);
+      const { email } = values;
+
+      const response = await getGraphql(
+        forgotPasswordSchema,
+        forgotPasswordDataQuery,
+        {
+          email,
+        }
+      );
+
+      showSuccessMessage({ message: response });
+
+      navigate("/login");
     } catch (error) {
       showErrorMessage({
         message:

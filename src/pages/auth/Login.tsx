@@ -3,7 +3,6 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Loading from "@/lib/Loading";
-import { postAuthReq } from "@/utils/api/authApi";
 import Toastify from "@/lib/Toastify";
 import environment from "@/utils/environment";
 import Helmet from "react-helmet";
@@ -12,6 +11,10 @@ import CustomImages from "@/assets/images";
 import ReactIcons from "@/assets/icons";
 import Cookies from "js-cookie";
 import useLoginCheck from "@/hooks/auth/useLoginCheck";
+import getGraphql from "@/utils/api/graphql";
+import loginUserSchema, {
+  loginUserDataQuery,
+} from "@/graphql/auth/loginUserSchema";
 
 const schema = z.object({
   email: z.string().email("Invalid email address"),
@@ -46,8 +49,14 @@ const Login = () => {
 
   const onSubmit = async (values: z.infer<typeof schema>) => {
     try {
-      const token = await postAuthReq("/login", values);
-      Cookies.set("_use", token, { expires: 30 });
+      const { email, password } = values;
+
+      const token = await getGraphql(loginUserSchema, loginUserDataQuery, {
+        email,
+        password,
+      });
+
+      Cookies.set("_use", token, { expires: 90 });
       refetch();
       navigate("/");
     } catch (error) {
@@ -90,7 +99,7 @@ const Login = () => {
 
       {/* MARK: GO TO OAUTH LOGIN PAGE*/}
       <div
-        className="border border-auth_input_border rounded-lg py-3 w-full cursor-pointer flex justify-center items-center gap-4"
+        className="border border-auth_input_border rounded-lg py-3 w-full cursor-pointer flex justify-center items-center gap-4 hover:bg-auth_input_border"
         onClick={() => googleOAuth()}
       >
         <div className="w-6">
