@@ -7,6 +7,8 @@ import getGraphql from "@/utils/api/graphql";
 import isCurrentUserFollowSchema, {
   isCurrentUserFollowDataQuery,
 } from "@/graphql/followers/isCurrentUserFollowSchema";
+import { useDispatch } from "react-redux";
+import { addNewPost } from "@/redux/slice/postSlice";
 
 type OLD = {
   pages: POST[][];
@@ -15,6 +17,7 @@ type OLD = {
 const useNewPost = (socket: Socket) => {
   const queryClient = useQueryClient();
   const { data: actualUser } = useLoginCheck();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!socket) return;
@@ -31,17 +34,21 @@ const useNewPost = (socket: Socket) => {
             { userId: newPost.user._id }
           ));
 
-        const checkStatus = queryClient.getQueryState(["following posts"]);
-
-        if (checkStatus?.status === "success" && isAddToFollowingPost) {
-          queryClient.setQueryData(["following posts"], (old: OLD) => {
-            const modifyPages = old.pages.map((page) => [...page]);
-
-            modifyPages[0] = [newPost, ...modifyPages[0]];
-
-            return { ...old, pages: modifyPages };
-          });
+        if (isAddToFollowingPost) {
+          dispatch(addNewPost(newPost));
         }
+
+        // const checkStatus = queryClient.getQueryState(["following posts"]);
+
+        // if (checkStatus?.status === "success" && isAddToFollowingPost) {
+        //   queryClient.setQueryData(["following posts"], (old: OLD) => {
+        //     const modifyPages = old.pages.map((page) => [...page]);
+
+        //     modifyPages[0] = [newPost, ...modifyPages[0]];
+
+        //     return { ...old, pages: modifyPages };
+        //   });
+        // }
 
         if (newPost.user._id === actualUser._id) {
           const checkStatus = queryClient.getQueryState([

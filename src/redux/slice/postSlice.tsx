@@ -6,12 +6,14 @@ type INITIAL_STATE = {
   allPostIds: string[];
   updatePosts: POST[];
   deletePostIds: string[];
+  allNewPosts: POST[];
 };
 
 const initialState: INITIAL_STATE = {
   allPostIds: [],
   updatePosts: [],
   deletePostIds: [],
+  allNewPosts: [],
 };
 
 const postSlice = createSlice({
@@ -56,10 +58,25 @@ const postSlice = createSlice({
 
       return state;
     },
+    addNewPost: (state, { payload }) => {
+      const newPost = payload as POST;
+      state.allNewPosts = [newPost, ...state.allNewPosts];
+      return state;
+    },
+    removeAllNewPosts: (state) => {
+      state.allNewPosts = [];
+      return state;
+    },
   },
 });
 
-export const { addToPost, addUpdatePost, addDeletePostId } = postSlice.actions;
+export const {
+  addToPost,
+  addUpdatePost,
+  addDeletePostId,
+  addNewPost,
+  removeAllNewPosts,
+} = postSlice.actions;
 
 export const postReducer = postSlice.reducer;
 

@@ -1,6 +1,6 @@
 import { USER } from "@/types";
 import Toastify from "@/lib/Toastify";
-import { ChangeEvent, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import Loading from "@/lib/Loading";
 import ReactIcons from "@/assets/icons";
@@ -20,7 +20,8 @@ type SelectedFile = File | null; // Define type for selectedFile
 type Props = {
   user: USER;
   isOfReply?: boolean;
-  handleClose: () => void;
+  atHomePage?: boolean;
+  handleClose?: () => void;
   postId?: string;
 };
 
@@ -29,12 +30,14 @@ const CreateNewPost = ({
   handleClose,
   isOfReply = false,
   postId,
+  atHomePage = false,
 }: Props) => {
   const { showErrorMessage, showAlertMessage } = Toastify();
   const [selectedFile, setSelectedFile] = useState<SelectedFile>(null);
   const { photo, name } = user;
-  const [isFocused, setIsFocused] = useState(true);
+  const [isFocused, setIsFocused] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
   const maxLength = 200;
 
   const {
@@ -51,6 +54,23 @@ const CreateNewPost = ({
   });
 
   const messageLength = watch("message").length;
+
+  useEffect(() => {
+    const handleMouseDown = (e: MouseEvent) => {
+      if (formRef.current && !formRef.current.contains(e.target as Node)) {
+        const message = getValues().message;
+        if (!message) {
+          setIsFocused(false);
+        }
+      }
+    };
+
+    document.addEventListener("mousedown", handleMouseDown);
+
+    return () => {
+      document.removeEventListener("mousedown", handleMouseDown);
+    };
+  }, []);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -88,7 +108,9 @@ const CreateNewPost = ({
         await getGraphql(createPostSchema, createPostDataQuery, obj);
       }
 
-      handleClose();
+      if (handleClose) {
+        handleClose();
+      }
       reset();
       setSelectedFile(null);
     } catch (error) {
@@ -112,8 +134,9 @@ const CreateNewPost = ({
 
   return (
     <form
+      ref={formRef}
       onSubmit={handleSubmit(onSubmit)}
-      className={`${isOfReply ? "pt-3" : "pt-10"} pb-0 `}
+      className={`${isOfReply || atHomePage ? "pt-3" : "pt-10"} pb-0 `}
     >
       <div className="flex justify-between gap-3 px-3 md:px-6">
         <div className="w-10 grow-0 shrink-0">
@@ -146,7 +169,9 @@ const CreateNewPost = ({
       </div>
 
       {/* MARK: FOOTER */}
-      <div className="flex items-center justify-between border-t border-sky_blue py-2 sticky bottom-0 bg-background px-2 md:px-5">
+      <div
+        className={`flex items-center justify-between border-t border-sky_blue py-2 sticky bottom-0 bg-background px-2 md:px-5`}
+      >
         <p className="cursor-pointer" onClick={openFile}>
           <ReactIcons.media className="text-sky_blue" />
         </p>
