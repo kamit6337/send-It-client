@@ -31,7 +31,7 @@ const FollowerLayout = () => {
         <div className="flex justify-between">
           <Link
             to={`/${email}/following`}
-            className={`flex-1 flex justify-center items-center hover:bg-gray-100 h-10  `}
+            className={`flex-1 flex justify-center items-center hover:bg-post_hover_bg h-10  `}
           >
             <p
               className={`${
@@ -43,7 +43,7 @@ const FollowerLayout = () => {
           </Link>
           <Link
             to={`/${email}/follower`}
-            className={`flex-1 flex justify-center items-center hover:bg-gray-100 h-10 `}
+            className={`flex-1 flex justify-center items-center hover:post_hover_bg h-10 `}
           >
             <p
               className={`${

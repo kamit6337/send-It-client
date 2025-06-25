@@ -79,7 +79,7 @@ const Post = ({
         onClick={() => handleNavigate()}
         className={`${
           showLine ? "" : "border-b border-div_border"
-        }  cursor-pointer  w-full px-5 pt-3 flex gap-5 hover:bg-gray-100`}
+        }  cursor-pointer  w-full px-5 pt-3 flex gap-5 hover:bg-post_hover_bg`}
       >
         <div className="flex flex-col items-center gap-1 ">
           {/* NOTE: USER PROFILE IMAGE */}

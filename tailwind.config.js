@@ -20,6 +20,7 @@ export const theme = {
       sans: ["Poppins", "sans-serif"],
     },
     colors: {
+      post_hover_bg: "var(--post-hover-bg)",
       user_name: "var(--user-name)",
       div_border: "var(--div-border)",
       or_dash: "var(--or-dash)",

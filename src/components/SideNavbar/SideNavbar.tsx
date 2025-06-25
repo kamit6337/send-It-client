@@ -20,8 +20,10 @@ import Profile from "./Profile";
 import CreateNewPost from "../CreateNewPost/CreateNewPost";
 import Cookies from "js-cookie";
 import useNotificationCount from "@/hooks/notification/useNotificationCount";
+import { useTheme } from "@/providers/ThemeProvider";
 
 const SideNavbar = () => {
+  const { theme, setTheme } = useTheme();
   const { pathname } = useLocation();
   const { showErrorMessage } = Toastify();
   const navigate = useNavigate();
@@ -104,6 +106,47 @@ const SideNavbar = () => {
           );
         })}
 
+        {/* MARK: MORE */}
+
+        <DropdownMenu>
+          <DropdownMenuTrigger className="outline-none">
+            <div className="lg:p-3 p-2 rounded-full flex items-center gap-1 lg:gap-3 hover:bg-sidebar_link_hover w-max cursor-default">
+              <p className="text-2xl lg:text-3xl ">
+                <ReactIcons.threeDot />
+              </p>
+              <p className="lg:text-[20px] text-base hidden md:block relative tracking-wide">
+                More
+              </p>
+            </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem>
+              {theme === "dark" ? (
+                <div
+                  className="flex items-center gap-1"
+                  onClick={() => setTheme("light")}
+                >
+                  <p>
+                    <ReactIcons.sun />
+                  </p>
+                  <p>Light</p>
+                </div>
+              ) : (
+                <div
+                  className="flex items-center gap-1"
+                  onClick={() => setTheme("dark")}
+                >
+                  <p>
+                    <ReactIcons.moon />
+                  </p>
+                  <p>Dark</p>
+                </div>
+              )}
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        {/* MARK: NEW POST */}
         <Dialog>
           <DialogTrigger>
             <div className="hidden bg-sky_blue text-white rounded-full md:flex justify-center py-3 font-semibold tracking-widest cursor-pointer hover:bg-sky-600">
@@ -121,6 +164,8 @@ const SideNavbar = () => {
             </DialogClose>
           </DialogContent>
         </Dialog>
+
+        {/* MARK: PROFILE AND LOGOUT */}
 
         <DropdownMenu>
           <DropdownMenuTrigger className="w-full mt-8">

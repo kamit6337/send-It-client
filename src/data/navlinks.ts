@@ -43,12 +43,6 @@ const navlinks = [
     solid: ReactIcons.profileSolid,
     href: "/profile",
   },
-  {
-    name: "More",
-    outline: ReactIcons.threeDot,
-    solid: ReactIcons.threeDot,
-    href: "/more",
-  },
 ];
 
 export default navlinks;

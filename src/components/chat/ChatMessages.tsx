@@ -126,7 +126,7 @@ const ChatMessages = () => {
           {/* NOTE: MESSAGE FORM */}
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="bg-gray-100 text-sky_blue rounded-full flex gap-5 w-full items-center px-5 py-2"
+            className="bg-post_hover_bg text-sky_blue rounded-full flex gap-5 w-full items-center px-5 py-2"
           >
             <button type="button" onClick={() => fileRef.current?.click()}>
               <ReactIcons.media />

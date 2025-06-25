@@ -1,7 +1,6 @@
 import { postState, removeAllNewPosts } from "@/redux/slice/postSlice";
 import { POST } from "@/types";
 import { useQueryClient } from "@tanstack/react-query";
-import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 type OLD = {
@@ -13,7 +12,7 @@ const useAddNewPosts = () => {
   const { allNewPosts } = useSelector(postState);
   const dispatch = useDispatch();
 
-  const addNewPostsToFollowings = useCallback(() => {
+  const addNewPostsToFollowings = () => {
     const checkStatus = queryClient.getQueryState(["following posts"]);
 
     if (checkStatus?.status === "success") {
@@ -30,7 +29,7 @@ const useAddNewPosts = () => {
       top: 0,
       behavior: "smooth",
     });
-  }, []);
+  };
 
   return addNewPostsToFollowings;
 };

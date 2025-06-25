@@ -24,8 +24,8 @@ const SearchUsers = () => {
   };
 
   return (
-    <div className="relative">
-      <div className={`flex items-center p-3 input_div`}>
+    <div className="relative ">
+      <div className={`flex items-center px-3 input_div`}>
         <p>
           <ReactIcons.search
             className={`${isFocused && "text-sky_blue"} text-xl`}
@@ -39,7 +39,7 @@ const SearchUsers = () => {
           onBlur={() => setIsFocused(false)}
           autoComplete="off"
           spellCheck="false"
-          className="bg-inherit text-sm w-full px-2 outline-none"
+          className="bg-inherit text-sm w-full px-2 py-3 h-full outline-none rounded-full"
         />
         {showCancel && (
           <p className="cursor-pointer" onClick={handleCancel}>

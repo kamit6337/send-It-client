@@ -65,7 +65,7 @@ const Room = ({ room, handleNavigate, showDeleteRoom }: Props) => {
         <main
           key={_id}
           className={`${
-            isRoomActive ? "bg-gray-200" : "hover:bg-gray-100"
+            isRoomActive ? "bg-post_hover_bg" : "hover:bg-post_hover_bg"
           } group flex items-center justify-between gap-2 p-3`}
         >
           <div className="flex items-center gap-3">

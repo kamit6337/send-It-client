@@ -18,6 +18,7 @@ const SelectMessageUser = () => {
   const [input, setInput] = useState("");
   const debounceInput = useDebounce(input);
   const { data: searchedUsers = [] } = useUserSearch(debounceInput);
+  const [isPending, setIsPending] = useState(false);
 
   const handleChange = (value: string) => {
     setInput(value);
@@ -36,11 +37,14 @@ const SelectMessageUser = () => {
 
   const handleCreateRoom = async (id: string) => {
     try {
+      setIsPending(true);
+
       await getGraphql(createNewRoomSchema, createNewRoomDataQuery, {
         userId: id,
       });
 
       handleClose();
+      setInput("");
     } catch (error) {
       showErrorMessage({
         message:
@@ -48,6 +52,8 @@ const SelectMessageUser = () => {
             ? error?.message
             : "Something went wrong. Please try later",
       });
+    } finally {
+      setIsPending(false);
     }
   };
 
@@ -88,8 +94,9 @@ const SelectMessageUser = () => {
                 return (
                   <button
                     key={_id}
+                    disabled={isPending}
                     className="p-3 flex gap-3 w-full hover:bg-sidebar_link_hover border-b border-div_border"
-                    onClick={() => handleCreateRoom(_id)}
+                    onClick={() => (!isPending ? handleCreateRoom(_id) : "")}
                   >
                     <div className="w-10">
                       <img

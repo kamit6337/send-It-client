@@ -8,6 +8,7 @@ import { Provider } from "react-redux";
 import { store } from "./redux/store.tsx";
 import { disableReactDevTools } from "@fvilers/disable-react-devtools";
 import environment from "./utils/environment.ts";
+import { ThemeProvider } from "./providers/ThemeProvider.tsx";
 
 const PRODUCTION = "production";
 
@@ -19,7 +20,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <BrowserRouter>
     <QueryClientProvider client={queryClient}>
       <Provider store={store}>
-        <App />
+        <ThemeProvider defaultTheme="dark" storageKey="send-it-theme">
+          <App />
+        </ThemeProvider>
       </Provider>
       <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-left" />
     </QueryClientProvider>

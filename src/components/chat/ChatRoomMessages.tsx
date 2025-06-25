@@ -138,7 +138,7 @@ const ChatRoomMessages = ({ activeRoom }: Props) => {
       {/* NOTE: MEMBER INFO */}
       <Link
         to={`/${member?.email}`}
-        className="h-60 w-full flex flex-col pt-10 items-center border-b border-div_border hover:bg-gray-50"
+        className="h-60 w-full flex flex-col pt-10 items-center border-b border-div_border hover:bg-post_hover_bg"
       >
         <div className="w-10">
           <img

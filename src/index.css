@@ -59,6 +59,8 @@
     --or-dash: #ddd7d7;
     --div-border: #e0dddd;
     --user-name: #000000;
+
+    --post-hover-bg: #f3f4f6;
   }
 
   .dark {
@@ -97,6 +99,8 @@
     --div-border: #2b2b2b;
     --sidebar-div-hover: rgb(31, 32, 32);
     --user-name: #ffffff;
+
+    --post-hover-bg: #0f172a;
   }
 }
 
@@ -140,7 +144,7 @@
   }
 
   .input_div {
-    @apply bg-gray-100 rounded-full  border-sky_blue focus-within:border;
+    @apply bg-post_hover_bg rounded-full  border-sky_blue focus-within:border;
   }
 
   .input {
@@ -172,7 +176,7 @@
   }
 
   .follow {
-    @apply px-5 py-2 border border-border rounded-full bg-foreground text-background hover:bg-slate-800;
+    @apply px-5 py-2 border border-border rounded-full bg-foreground text-background hover:bg-slate-700 hover:text-white;
   }
 
   .left_arrow {

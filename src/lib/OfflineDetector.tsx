@@ -48,7 +48,7 @@ const OfflineDetector = () => {
             Network problem. Check your internet connection
           </p>
           <p
-            className="w-full border rounded py-2 cursor-pointer mt-10 text-center hover:bg-gray-100 text-slate-600 duration-500"
+            className="w-full border rounded py-2 cursor-pointer mt-10 text-center"
             onClick={refreshPage}
           >
             Refresh

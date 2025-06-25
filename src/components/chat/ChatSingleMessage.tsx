@@ -20,7 +20,7 @@ const ChatSingleMessage = ({ chat, actualUser }: Props) => {
           <div className="flex items-center gap-4 justify-end group">
             <ChatOptions chatId={chatId} roomId={roomId} />
 
-            <div className="w-60 self-end ">
+            <div className="w-60 self-end break_long">
               <Dialog>
                 <DialogTrigger className="w-full border border-div_border rounded-xl  cursor-pointer">
                   <img
@@ -55,7 +55,7 @@ const ChatSingleMessage = ({ chat, actualUser }: Props) => {
           <div className="flex items-center gap-4 justify-end group">
             <ChatOptions chatId={chatId} roomId={roomId} />
 
-            <div className="w-60 self-end ">
+            <div className="w-60 self-end break_long ">
               <Dialog>
                 <DialogTrigger className="w-full border border-div_border rounded-xl cursor-pointer">
                   <img
@@ -83,8 +83,8 @@ const ChatSingleMessage = ({ chat, actualUser }: Props) => {
         <div className="flex items-center gap-4 justify-end group">
           <ChatOptions chatId={chatId} roomId={roomId} />
 
-          <div className="w-60 self-end ">
-            <p className="w-full bg-sky_blue text-white rounded-2xl text-sm py-2 px-3">
+          <div className="w-60 self-end break_long  ">
+            <p className="w-full bg-sky_blue text-white rounded-2xl text-sm py-2 px-3 break-all text-wrap">
               {message}
             </p>
           </div>
@@ -99,7 +99,7 @@ const ChatSingleMessage = ({ chat, actualUser }: Props) => {
   // NOTE: SENDER MEDIA AND MESSAGE
   if (message && media) {
     return (
-      <div className="w-60 self-start">
+      <div className="w-60 self-start break_long">
         <Dialog>
           <DialogTrigger className="w-full border border-div_border rounded-xl  cursor-pointer">
             <img
@@ -128,7 +128,7 @@ const ChatSingleMessage = ({ chat, actualUser }: Props) => {
   // NOTE: SENDER MEDIA
   if (media) {
     return (
-      <div className="w-60 self-start">
+      <div className="w-60 self-start break_long">
         <Dialog>
           <DialogTrigger className="w-full border border-div_border rounded-xl cursor-pointer">
             <img
@@ -151,7 +151,7 @@ const ChatSingleMessage = ({ chat, actualUser }: Props) => {
 
   // NOTE: SENDER MESSAGE
   return (
-    <div className="w-60 self-start">
+    <div className="w-60 self-start break_long">
       <p className="w-full bg-gray-100 text-black rounded-2xl text-sm py-2 px-3">
         {message}
       </p>

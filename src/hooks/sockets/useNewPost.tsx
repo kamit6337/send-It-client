@@ -26,31 +26,20 @@ const useNewPost = (socket: Socket) => {
       try {
         const newPost = data;
 
-        const isAddToFollowingPost =
-          newPost.user._id === actualUser._id ||
-          (await getGraphql(
-            isCurrentUserFollowSchema,
-            isCurrentUserFollowDataQuery,
-            { userId: newPost.user._id }
-          ));
+        // MARK: NEW POST BY USER HIMSELF
+        if (newPost.user._id.toString() === actualUser._id?.toString()) {
+          const checkFollowingStatus = queryClient.getQueryState([
+            "following posts",
+          ]);
 
-        if (isAddToFollowingPost) {
-          dispatch(addNewPost(newPost));
-        }
+          if (checkFollowingStatus?.status === "success") {
+            queryClient.setQueryData(["following posts"], (old: OLD) => {
+              const modifyPages = old.pages.map((page) => [...page]);
+              modifyPages[0] = [newPost, ...modifyPages[0]];
+              return { ...old, pages: modifyPages };
+            });
+          }
 
-        // const checkStatus = queryClient.getQueryState(["following posts"]);
-
-        // if (checkStatus?.status === "success" && isAddToFollowingPost) {
-        //   queryClient.setQueryData(["following posts"], (old: OLD) => {
-        //     const modifyPages = old.pages.map((page) => [...page]);
-
-        //     modifyPages[0] = [newPost, ...modifyPages[0]];
-
-        //     return { ...old, pages: modifyPages };
-        //   });
-        // }
-
-        if (newPost.user._id === actualUser._id) {
           const checkStatus = queryClient.getQueryState([
             "user posts",
             actualUser._id,
@@ -61,13 +50,21 @@ const useNewPost = (socket: Socket) => {
               ["user posts", actualUser._id],
               (old: OLD) => {
                 const modifyPages = old.pages.map((page) => [...page]);
-
                 modifyPages[0] = [newPost, ...modifyPages[0]];
-
                 return { ...old, pages: modifyPages };
               }
             );
           }
+        } else if (
+          await getGraphql(
+            isCurrentUserFollowSchema,
+            isCurrentUserFollowDataQuery,
+            { userId: newPost.user._id }
+          )
+        ) {
+          // MARK: NEW POST BY FOLLOWING USER
+
+          dispatch(addNewPost(newPost));
         }
       } catch (error) {
         console.error("error in add new post", error);

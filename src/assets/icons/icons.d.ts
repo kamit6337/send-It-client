@@ -93,6 +93,8 @@ declare module "@/assets/icons" {
     reply: IconType;
     heartOutline: IconType;
     heartSolid: IconType;
+    sun: IconType;
+    moon: IconType;
   };
 
   export default ReactIcons;

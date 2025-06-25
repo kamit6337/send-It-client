@@ -84,6 +84,8 @@ import { TbMailPlus } from "react-icons/tb";
 import { BiSend } from "react-icons/bi";
 import { IoArrowDownSharp } from "react-icons/io5";
 import { IoPerson } from "react-icons/io5";
+import { MdOutlineWbSunny } from "react-icons/md";
+import { IoIosMoon } from "react-icons/io";
 
 const ReactIcons = {
   notepad: PiNotepadFill,
@@ -167,6 +169,8 @@ const ReactIcons = {
   twitterLogo: FaXTwitter,
   media: MdPermMedia,
   dot: LuDot,
+  sun: MdOutlineWbSunny,
+  moon: IoIosMoon,
 };
 
 export default ReactIcons;

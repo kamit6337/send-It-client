@@ -32,7 +32,7 @@ const ShowPostMessage = ({ message, media }: Props) => {
       <p className="mb-5">{message}</p>
 
       {imageTypeList.includes(imageType) ? (
-        <div className="rounded-xl w-full h-[500px]">
+        <div className="rounded-xl w-full lg:h-[500px] md:h-[450px] sm:h-[400px] h-[350px]">
           <img
             onClick={handleShowFullImage}
             src={media}
