@@ -13,6 +13,7 @@ const getUserProfileSchema = gql`
       bio
       location
       website
+      messageBy
       followersCount
       followingCount
       isFollowed

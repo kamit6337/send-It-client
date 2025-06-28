@@ -4,7 +4,17 @@ export const createNewRoomDataQuery = "createNewRoom";
 
 const createNewRoomSchema = gql`
   mutation CreateNewRoom($userId: ID!) {
-    createNewRoom(userId: $userId)
+    createNewRoom(userId: $userId) {
+      _id
+      createdAt
+      updatedAt
+      users {
+        _id
+        name
+        email
+        photo
+      }
+    }
   }
 `;
 

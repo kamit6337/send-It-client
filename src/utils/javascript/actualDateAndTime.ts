@@ -1,5 +1,11 @@
+const isNumeric = (str: string): boolean => {
+  return /^[0-9]+$/.test(str);
+};
+
 const actualDateAndTime = (dateString: string) => {
-  const date = new Date(dateString);
+  const date = isNumeric(dateString)
+    ? new Date(Number(dateString))
+    : new Date(dateString);
 
   const dayMonth = date.toLocaleDateString("en-US", {
     day: "numeric",

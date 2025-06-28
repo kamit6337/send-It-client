@@ -10,9 +10,32 @@ type Props = {
 };
 
 const ChatSingleMessage = ({ chat, actualUser }: Props) => {
-  const { _id: chatId, room: roomId, sender, message, createdAt, media } = chat;
+  const {
+    _id: chatId,
+    room: roomId,
+    sender,
+    message,
+    createdAt,
+    media,
+    deleted,
+  } = chat;
 
   if (sender === actualUser._id) {
+    // NOTE: DELETED CHAT
+    if (deleted)
+      return (
+        <div>
+          <div className="w-full flex items-center justify-end">
+            <p className="w-60 bg-gray-500 text-white italic rounded-2xl text-sm py-2 px-3">
+              This message was deleted
+            </p>
+          </div>
+          <p className="text-end text-xs mt-1 mr-3">
+            {actualDateAndTime(createdAt)}
+          </p>
+        </div>
+      );
+
     // NOTE: USER MEDIA AND MESSAGE
     if (message && media) {
       return (
@@ -95,6 +118,19 @@ const ChatSingleMessage = ({ chat, actualUser }: Props) => {
       </div>
     );
   }
+
+  // NOTE: DELETED CHAT
+  if (deleted)
+    return (
+      <div className="w-60 self-start break_long">
+        <p className="w-full bg-gray-500 text-white italic rounded-2xl text-sm py-2 px-3">
+          This message was deleted
+        </p>
+        <p className="text-start text-xs mt-1 ml-3">
+          {actualDateAndTime(createdAt)}
+        </p>
+      </div>
+    );
 
   // NOTE: SENDER MEDIA AND MESSAGE
   if (message && media) {

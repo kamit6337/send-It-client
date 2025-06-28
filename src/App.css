@@ -5,65 +5,36 @@
 }
 
 /* NOTE: CUSTOMISE SCROLL BAR */
-/* WORK: CHANGE WIDTH OF SCROLL BAR */
-::-webkit-scrollbar {
-  width: 8px; /* Width of the scrollbar */
-}
-*::-webkit-scrollbar {
-  width: 8px; /* Width of the scrollbar */
-}
-
-/* WORK: CHANGE BACKGROUND COLOR OF TRACK */
-::-webkit-scrollbar-track {
-  background: #f1f1f1; /* Track color */
-}
-*::-webkit-scrollbar-track {
-  background: #f1f1f1; /* Track color */
-}
-
-/* WORK: CHANGE COLOR OF SCROLLBAR */
-::-webkit-scrollbar-thumb {
-  background: hsl(0, 3%, 75%); /* Thumb color */
-  border-radius: 6px; /* Roundness of the thumb */
-}
-
-* {
-  scrollbar-width: thin;
+/* === Base Scrollbar Styles (Light Mode) === */
+:root {
   scrollbar-color: #888 #f1f1f1;
+  scrollbar-width: auto;
 }
-
-*::-webkit-scrollbar-thumb {
-  background: hsl(0, 3%, 75%); /* Thumb color */
-  border-radius: 16px; /* Roundness of the thumb */
-}
-/* WORK: CHANGE COLOR OF SCROLLBAR ON HOVER */
-::-webkit-scrollbar-thumb:hover {
-  background: #555; /* Thumb color on hover */
-}
-
-*::-webkit-scrollbar-thumb:hover {
-  background: hsla(0, 2%, 39%, 0.63); /* Thumb color on hover */
-}
-
 * {
-  -ms-overflow-style: none; /* Hide the default scrollbar */
+  -ms-overflow-style: none;
+}
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(0, 3%, 75%);
+  border-radius: 16px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsla(0, 2%, 39%, 0.63);
 }
 
-/* NOTE: HIDE THE DEFAULT SCROLLBAR BUT PERSIST VERTICAL SCROLLING */
-/* Hide the scrollbar in the container */
-.hide_scroll_bar::-webkit-scrollbar {
-  width: 0.01rem; /* Set a very small width for the scrollbar */
+/* === Dark Mode === */
+.dark {
+  scrollbar-color: #a8aaa8 #5c5c5e;
 }
-
-/* Optionally, you can style the scrollbar thumb for visual consistency */
-.hide_scroll_bar::-webkit-scrollbar-thumb {
-  background-color: transparent; /* Make the thumb transparent */
+.dark ::-webkit-scrollbar-track {
+  background: #3f3c3c;
 }
-
-/* Enable vertical scrolling for the hide_scroll_bar */
-.hide_scroll_bar {
-  overflow-y: scroll; /* Enable vertical scrolling */
-  scrollbar-width: thin; /* Firefox scrollbar width */
-  scrollbar-color: transparent transparent; /* Firefox thumb color */
-  /* Additional styles for the container go here */
+.dark ::-webkit-scrollbar-thumb {
+  background: #a8aaa8;
+  border-radius: 16px;
 }

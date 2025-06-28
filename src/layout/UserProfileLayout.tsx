@@ -1,6 +1,8 @@
 import ReactIcons from "@/assets/icons";
 import LeftArrowBtn from "@/components/LeftArrowBtn";
+import { AlertDialog, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import UserFollowAndUnfollow from "@/components/UserFollowAndUnfollow";
+import UserProfileMsgBtn from "@/components/UserProfileMsgBtn";
 import userProfileLinks from "@/data/userProfileLinks";
 import useLoginCheck from "@/hooks/auth/useLoginCheck";
 import { USER_PROFILE } from "@/types";
@@ -83,7 +85,13 @@ const UserProfileLayout = () => {
             </div>
           </div>
           <div className="px-5 flex flex-col">
-            <div className="my-5 self-end">
+            <div className="my-5 self-end flex items-center gap-2">
+              <AlertDialog>
+                <AlertDialogTrigger className="text-lg p-2 border rounded-full">
+                  <ReactIcons.messageOutline />
+                </AlertDialogTrigger>
+                <UserProfileMsgBtn actualUser={actualUser} user={user} />
+              </AlertDialog>
               <UserFollowAndUnfollow currentUser={user} />
             </div>
 

@@ -23,7 +23,7 @@ const useNewRoomAndChat = (socket: Socket) => {
 
     const handleNewRoom = (data: ROOM) => {
       const newRoom = data;
-      dispatch(setActiveRoom(newRoom));
+      // dispatch(setActiveRoom(newRoom));
 
       const checkStatus = queryClient.getQueryState(["user rooms"]);
 
@@ -91,9 +91,13 @@ const useNewRoomAndChat = (socket: Socket) => {
       if (checkStatus?.status === "success") {
         queryClient.setQueryData(["room chats", roomId], (old: OLD_CHAT) => {
           const modifyPages = old.pages.map((page) =>
-            page.filter((chat) => chat._id !== chatId)
+            page.map((chat) => {
+              if (chat._id === chatId) {
+                return { ...chat, deleted: true };
+              }
+              return chat;
+            })
           );
-
           return { ...old, pages: modifyPages };
         });
       }

@@ -10,6 +10,7 @@ const getRoomChatsSchema = gql`
       sender
       message
       media
+      deleted
       createdAt
       updatedAt
     }

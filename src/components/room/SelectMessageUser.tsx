@@ -9,8 +9,11 @@ import createNewRoomSchema, {
 } from "@/graphql/room/createNewRoomSchema";
 import Toastify from "@/lib/Toastify";
 import { DialogClose, DialogContent } from "../ui/dialog";
+import { useDispatch } from "react-redux";
+import { setActiveRoom } from "@/redux/slice/roomSlice";
 
 const SelectMessageUser = () => {
+  const dispatch = useDispatch();
   const closeRef = useRef<HTMLButtonElement>(null);
   const [isFocused, setIsFocused] = useState(false);
   const { showErrorMessage } = Toastify();
@@ -39,9 +42,15 @@ const SelectMessageUser = () => {
     try {
       setIsPending(true);
 
-      await getGraphql(createNewRoomSchema, createNewRoomDataQuery, {
-        userId: id,
-      });
+      const response = await getGraphql(
+        createNewRoomSchema,
+        createNewRoomDataQuery,
+        {
+          userId: id,
+        }
+      );
+
+      dispatch(setActiveRoom(response));
 
       handleClose();
       setInput("");

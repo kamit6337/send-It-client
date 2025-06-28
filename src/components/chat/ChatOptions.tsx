@@ -19,15 +19,14 @@ type Props = {
 };
 
 const ChatOptions = ({ chatId, roomId }: Props) => {
-  const { showSuccessMessage, showErrorMessage } = Toastify();
+  const { showErrorMessage } = Toastify();
 
   const handleDelete = async () => {
     try {
-      const result = await getGraphql(deleteChatSchema, deleteChatDataQuery, {
+      await getGraphql(deleteChatSchema, deleteChatDataQuery, {
         chatId,
         roomId,
       });
-      showSuccessMessage({ message: result });
     } catch (error) {
       showErrorMessage({
         message:

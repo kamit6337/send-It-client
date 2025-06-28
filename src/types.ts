@@ -38,6 +38,7 @@ export type CHAT = {
   sender: string;
   message: string;
   media: string;
+  deleted: boolean;
   createdAt: string;
   updatedAt: string;
 };
@@ -110,6 +111,7 @@ export type USER_PROFILE = {
   bio: string;
   location: string;
   website: string;
+  messageBy: "anyone" | "followers" | "followings" | "no_one";
   followingCount: number;
   followersCount: number;
   userPosts: number;
