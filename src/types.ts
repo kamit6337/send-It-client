@@ -28,6 +28,7 @@ export type FOLLOWER = {
 export type ROOM = {
   _id: string;
   users: USER[];
+  unSeenChatsCount: number;
   createdAt: string;
   updatedAt: string;
 };
@@ -38,6 +39,7 @@ export type CHAT = {
   sender: string;
   message: string;
   media: string;
+  isSeen: boolean;
   deleted: boolean;
   createdAt: string;
   updatedAt: string;

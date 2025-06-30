@@ -25,12 +25,12 @@ const useNotification = (socket: Socket) => {
       }
     };
 
-    const handleNotificationCount = (data: number | string) => {
+    const handleNotificationCount = (data: number) => {
       const checkStatus = queryClient.getQueryState(["notification count"]);
 
       if (checkStatus?.status === "success") {
-        queryClient.setQueryData(["notification count"], () => {
-          return data;
+        queryClient.setQueryData(["notification count"], (old: number) => {
+          return old + data;
         });
       }
     };

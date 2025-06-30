@@ -4,6 +4,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Socket } from "socket.io-client";
+import useLoginCheck from "../auth/useLoginCheck";
 
 type OLD_CHAT = {
   pages: CHAT[][];
@@ -15,9 +16,11 @@ type DELETE_CHAT = {
 };
 
 const useNewRoomAndChat = (socket: Socket) => {
+  const { data: actualUser } = useLoginCheck();
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
 
+  // MARK: ROOM NEW AND DELETE
   useEffect(() => {
     if (!socket) return;
 
@@ -58,6 +61,7 @@ const useNewRoomAndChat = (socket: Socket) => {
     };
   }, [socket, queryClient]);
 
+  // MARK: CHAT NEW AND DELETE
   useEffect(() => {
     if (!socket) return;
 
@@ -80,6 +84,26 @@ const useNewRoomAndChat = (socket: Socket) => {
             return { ...old, pages: modifyPages };
           }
         );
+      }
+
+      const checkRoomStatus = queryClient.getQueryState(["user rooms"]);
+
+      if (
+        checkRoomStatus?.status === "success" &&
+        newChat.sender !== actualUser._id
+      ) {
+        queryClient.setQueryData(["user rooms"], (old: ROOM[] = []) => {
+          const modifyRoom = old.map((room) => {
+            if (room._id === newChat.room) {
+              const prevCount = room.unSeenChatsCount;
+              return { ...room, unSeenChatsCount: prevCount + 1 };
+            }
+
+            return room;
+          });
+
+          return modifyRoom;
+        });
       }
     };
 

@@ -1,5 +1,12 @@
 import Loading from "@/lib/Loading";
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Link } from "react-router-dom";
 import { useInView } from "react-intersection-observer";
 import { CHAT, ROOM } from "@/types";
@@ -9,9 +16,18 @@ import ChatSingleMessage from "./ChatSingleMessage";
 import debounce from "@/utils/javascript/debounce";
 import ReactIcons from "@/assets/icons";
 import waitForImagesToLoad from "@/utils/waitForImagesToLoad";
+import getGraphql from "@/utils/api/graphql";
+import isSeenChatSchema, {
+  isSeenChatDataQuery,
+} from "@/graphql/chat/isSeenChatSchema";
+import { useQueryClient } from "@tanstack/react-query";
 
 type Props = {
   activeRoom: ROOM;
+};
+
+type OLD_CHAT = {
+  pages: CHAT[][];
 };
 
 const ChatRoomMessages = ({ activeRoom }: Props) => {
@@ -23,10 +39,13 @@ const ChatRoomMessages = ({ activeRoom }: Props) => {
     isFetchingNextPage,
     hasNextPage,
   } = useRoomChats(activeRoom._id);
+  const queryClient = useQueryClient();
   const { data: actualUser } = useLoginCheck();
   const [isAtBottom, setIsAtBottom] = useState(true);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const seenChatIds = useRef(new Set<string>());
+  const newSeenChatIds = useRef(new Set<string>());
 
   const { ref: newPageRef, inView } = useInView();
 
@@ -118,6 +137,68 @@ const ChatRoomMessages = ({ activeRoom }: Props) => {
     };
   }, []);
 
+  const markChatsSeen = useCallback(
+    debounce(async () => {
+      try {
+        if (newSeenChatIds.current.size === 0) return;
+
+        const idsToSend = Array.from(newSeenChatIds.current);
+
+        await getGraphql(isSeenChatSchema, isSeenChatDataQuery, {
+          chatIds: idsToSend,
+        });
+
+        const checkRoomStatus = queryClient.getQueryState(["user rooms"]);
+
+        if (checkRoomStatus?.status === "success") {
+          queryClient.setQueryData(["user rooms"], (old: ROOM[]) => {
+            const modifyRoom = old.map((room) => {
+              if (room._id === activeRoom._id) {
+                const prevCount = room.unSeenChatsCount;
+                return {
+                  ...room,
+                  unSeenChatsCount: prevCount - idsToSend.length,
+                };
+              }
+
+              return room;
+            });
+
+            return modifyRoom;
+          });
+        }
+
+        const checkRoomChatStatus = queryClient.getQueryState([
+          "room chats",
+          activeRoom._id,
+        ]);
+
+        if (checkRoomChatStatus?.status === "success") {
+          queryClient.setQueryData(
+            ["room chats", activeRoom._id],
+            (old: OLD_CHAT) => {
+              const modifyPages = old.pages.map((page) =>
+                page.map((chat) => {
+                  if (idsToSend.includes(chat._id)) {
+                    return { ...chat, isSeen: true };
+                  }
+
+                  return chat;
+                })
+              );
+
+              return { ...old, pages: modifyPages };
+            }
+          );
+        }
+        newSeenChatIds.current.clear();
+      } catch (error) {
+        console.error(error);
+      }
+    }, 1000),
+    []
+  );
+
   if (isLoading) {
     return <Loading />;
   }
@@ -129,6 +210,14 @@ const ChatRoomMessages = ({ activeRoom }: Props) => {
       </div>
     );
   }
+
+  const handleChatVisible = (chatId: string) => {
+    if (!seenChatIds.current.has(chatId)) {
+      seenChatIds.current.add(chatId);
+      newSeenChatIds.current.add(chatId);
+      markChatsSeen(); // Trigger debounced batch request
+    }
+  };
 
   return (
     <div
@@ -163,6 +252,7 @@ const ChatRoomMessages = ({ activeRoom }: Props) => {
                 key={chat._id}
                 chat={chat}
                 actualUser={actualUser}
+                onVisible={handleChatVisible}
               />
             );
           })

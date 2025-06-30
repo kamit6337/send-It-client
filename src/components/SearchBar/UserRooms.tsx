@@ -19,10 +19,8 @@ const UserRooms = ({ showMessageArea, handleCloseMessage }: Props) => {
         <div className="flex text-xl">
           <div onClick={(e) => e.stopPropagation()}>
             <Dialog>
-              <DialogTrigger className="">
-                <button className="p-2 rounded-full hover:bg-sidebar_link_hover">
-                  <ReactIcons.messagePlus />
-                </button>
+              <DialogTrigger className="p-2 rounded-full hover:bg-sidebar_link_hover">
+                <ReactIcons.messagePlus />
               </DialogTrigger>
               <SelectMessageUser />
             </Dialog>

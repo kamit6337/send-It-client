@@ -101,13 +101,11 @@ const LikeAndComment = ({ post, user }: Props) => {
       >
         {/* NOTE: REPLY */}
         <Dialog>
-          <DialogTrigger>
-            <div className="flex items-center">
-              <button className="hover:text-sky-500 hover:bg-sky-200 p-2 rounded-full">
-                <ReactIcons.reply />
-              </button>
-              <p className="-ml-1 text-sm">{replyCount}</p>
-            </div>
+          <DialogTrigger className="flex items-center cursor-pointer">
+            <p className="hover:text-sky-500 hover:bg-sky-200 p-2 rounded-full">
+              <ReactIcons.reply />
+            </p>
+            <p className="-ml-1 text-sm">{replyCount}</p>
           </DialogTrigger>
           <DialogContent className="top-[3%] p-0 translate-y-0 max-h-[500px] overflow-y-auto w-full max-w-2xl">
             <CreatePostReply
@@ -176,10 +174,8 @@ const LikeAndComment = ({ post, user }: Props) => {
 
         {/* NOTE: SHARE */}
         <DropdownMenu>
-          <DropdownMenuTrigger>
-            <button className="text-grey flex items-center ">
-              <ReactIcons.share />
-            </button>
+          <DropdownMenuTrigger className="text-grey flex items-center">
+            <ReactIcons.share />
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className=" w-40">
             <DropdownMenuItem

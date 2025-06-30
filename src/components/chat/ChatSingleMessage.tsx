@@ -3,13 +3,21 @@ import actualDateAndTime from "@/utils/javascript/actualDateAndTime";
 import { CHAT, USER } from "@/types";
 import FullScreenImage from "../FullScreenImage";
 import ChatOptions from "./ChatOptions";
+import { useInView } from "react-intersection-observer";
+import { useEffect } from "react";
 
 type Props = {
   chat: CHAT;
   actualUser: USER;
+  onVisible: (chatId: string) => void;
 };
 
-const ChatSingleMessage = ({ chat, actualUser }: Props) => {
+const ChatSingleMessage = ({ chat, actualUser, onVisible }: Props) => {
+  const { ref, inView } = useInView({
+    triggerOnce: true,
+    threshold: 0.1,
+  });
+
   const {
     _id: chatId,
     room: roomId,
@@ -17,9 +25,18 @@ const ChatSingleMessage = ({ chat, actualUser }: Props) => {
     message,
     createdAt,
     media,
+    isSeen,
     deleted,
   } = chat;
 
+  useEffect(() => {
+    if (inView && !isSeen) {
+      // i have to make post request to backend using chatId
+      onVisible(chatId);
+    }
+  }, [inView]);
+
+  // MARK: ACTUAL USER MESSAGE
   if (sender === actualUser._id) {
     // NOTE: DELETED CHAT
     if (deleted)
@@ -119,10 +136,12 @@ const ChatSingleMessage = ({ chat, actualUser }: Props) => {
     );
   }
 
+  // MARK: SECOND USER MESSAGE
+
   // NOTE: DELETED CHAT
   if (deleted)
     return (
-      <div className="w-60 self-start break_long">
+      <div ref={ref} className="w-60 self-start break_long">
         <p className="w-full bg-gray-500 text-white italic rounded-2xl text-sm py-2 px-3">
           This message was deleted
         </p>
@@ -135,7 +154,7 @@ const ChatSingleMessage = ({ chat, actualUser }: Props) => {
   // NOTE: SENDER MEDIA AND MESSAGE
   if (message && media) {
     return (
-      <div className="w-60 self-start break_long">
+      <div ref={ref} className="w-60 self-start break_long">
         <Dialog>
           <DialogTrigger className="w-full border border-div_border rounded-xl  cursor-pointer">
             <img
@@ -164,7 +183,7 @@ const ChatSingleMessage = ({ chat, actualUser }: Props) => {
   // NOTE: SENDER MEDIA
   if (media) {
     return (
-      <div className="w-60 self-start break_long">
+      <div ref={ref} className="w-60 self-start break_long">
         <Dialog>
           <DialogTrigger className="w-full border border-div_border rounded-xl cursor-pointer">
             <img
@@ -187,7 +206,7 @@ const ChatSingleMessage = ({ chat, actualUser }: Props) => {
 
   // NOTE: SENDER MESSAGE
   return (
-    <div className="w-60 self-start break_long">
+    <div ref={ref} className="w-60 self-start break_long">
       <p className="w-full bg-gray-100 text-black rounded-2xl text-sm py-2 px-3">
         {message}
       </p>

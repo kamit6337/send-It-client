@@ -3,14 +3,14 @@ import { useNavigate } from "react-router-dom";
 import UpperPortion from "./UpperPortion";
 import { useInView } from "react-intersection-observer";
 import { useEffect } from "react";
-import useUpdateNotification from "@/hooks/notification/useUpdateNotification";
 import useLoginCheck from "@/hooks/auth/useLoginCheck";
 
 type Props = {
   notification: NOTIFICATION;
+  isVisible: (value: string) => void;
 };
 
-const SingleNotification = ({ notification }: Props) => {
+const SingleNotification = ({ notification, isVisible }: Props) => {
   const navigate = useNavigate();
   const { data: actualUser } = useLoginCheck();
 
@@ -19,13 +19,11 @@ const SingleNotification = ({ notification }: Props) => {
     threshold: 0.1,
   });
 
-  const { _id: notificationID, post, type } = notification;
-
-  const { mutate } = useUpdateNotification(notificationID);
+  const { _id: notificationID, post, type, isRead } = notification;
 
   useEffect(() => {
-    if (inView && notificationID) {
-      mutate(notificationID);
+    if (inView && notificationID && !isRead) {
+      isVisible(notificationID);
     }
   }, [inView, notificationID]);
 
@@ -35,7 +33,7 @@ const SingleNotification = ({ notification }: Props) => {
     return (
       <div
         ref={ref}
-        className="border-b py-2 px-5 space-y-5 hover:bg-gray-50 cursor-pointer"
+        className="border-b py-2 px-5 space-y-5 hover:bg-post_hover_bg cursor-pointer"
         onClick={() => navigate(`/posts/${postId}`)}
       >
         <UpperPortion notification={notification} />
@@ -59,7 +57,7 @@ const SingleNotification = ({ notification }: Props) => {
     return (
       <div
         ref={ref}
-        className="border-b py-2 px-5 space-y-5 hover:bg-gray-50 cursor-pointer"
+        className="border-b py-2 px-5 space-y-5 hover:bg-post_hover_bg cursor-pointer"
         onClick={() => navigate(`/${actualUser.email}/follower`)}
       >
         <UpperPortion notification={notification} />

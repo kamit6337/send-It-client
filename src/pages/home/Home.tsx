@@ -92,14 +92,28 @@ const Home = () => {
             return (
               <>
                 {post.replyPost && (
-                  <Post post={post.replyPost} showLine={true} />
+                  <Post
+                    key={post.replyPost._id}
+                    post={post.replyPost}
+                    showLine={true}
+                  />
                 )}
-                <Post post={post} showLine={replies.length > 0} />
+                <Post
+                  key={post._id}
+                  post={post}
+                  showLine={replies.length > 0}
+                />
                 {replies.length > 0 &&
                   replies.map((reply, i, arr) => {
                     const lastReply = i === arr.length - 1;
 
-                    return <Post post={reply} showLine={!lastReply} />;
+                    return (
+                      <Post
+                        key={reply._id}
+                        post={reply}
+                        showLine={!lastReply}
+                      />
+                    );
                   })}
               </>
             );

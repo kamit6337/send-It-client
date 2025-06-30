@@ -14,6 +14,7 @@ const getUserRoomsSchema = gql`
         email
         photo
       }
+      unSeenChatsCount
     }
   }
 `;

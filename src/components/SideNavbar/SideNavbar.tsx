@@ -74,7 +74,7 @@ const SideNavbar = () => {
 
           const showNotificationCount =
             to === "/notifications" &&
-            pathname !== "/notifications" &&
+            // pathname !== "/notifications" &&
             notificationCount !== 0;
 
           return (
@@ -85,7 +85,7 @@ const SideNavbar = () => {
                 isActive ? "font-semibold w-max" : "font-medium w-max"
               }
             >
-              <div className="lg:p-3 p-2 rounded-full flex items-center gap-1 lg:gap-3 hover:bg-sidebar_link_hover">
+              <div className="lg:p-3 p-2 rounded-full flex items-center gap-1 lg:gap-3 hover:bg-sidebar_link_hover relative">
                 <p className="text-2xl lg:text-3xl ">
                   {pathname === href || singleMessageHref ? (
                     <SolidIcon />
@@ -93,14 +93,14 @@ const SideNavbar = () => {
                     <OutlineIcon />
                   )}
                 </p>
-                <div className="lg:text-[20px] text-base hidden md:block relative tracking-wide">
+                <div className="lg:text-[20px] text-base hidden md:block tracking-wide">
                   {name}
-                  {showNotificationCount && (
-                    <div className="absolute bottom-full left-[97%] -top-[10px] text-xs size-5 bg-blue-500 rounded-full flex justify-center items-center text-white">
-                      {notificationCount}
-                    </div>
-                  )}
                 </div>
+                {showNotificationCount && (
+                  <div className="absolute right-[60%] top-0 -mt-1 md:right-[88%] xl:mt-0 text-xs size-5 bg-blue-500 rounded-full flex justify-center items-center text-white">
+                    {notificationCount}
+                  </div>
+                )}
               </div>
             </NavLink>
           );

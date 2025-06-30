@@ -27,7 +27,7 @@ type Props = {
 
 const Room = ({ room, handleNavigate, showDeleteRoom }: Props) => {
   const navigate = useNavigate();
-  const { _id, users } = room;
+  const { _id, users, unSeenChatsCount = 10 } = room;
   const { data: actualUser } = useLoginCheck();
   const { pathname } = useLocation();
   const { showErrorMessage, showSuccessMessage } = Toastify();
@@ -70,7 +70,7 @@ const Room = ({ room, handleNavigate, showDeleteRoom }: Props) => {
         >
           <div className="flex items-center gap-3">
             <div
-              className="w-10 shrink-0 cursor-pointer"
+              className="w-10 shrink-0 cursor-pointer relative"
               onClick={() => handleNavigate(room)}
             >
               <img
@@ -78,6 +78,11 @@ const Room = ({ room, handleNavigate, showDeleteRoom }: Props) => {
                 alt={name}
                 className="w-full object-cover rounded-full"
               />
+              {unSeenChatsCount !== 0 && (
+                <div className="absolute z-10 top-0 text-[10px] w-5 h-5 rounded-full flex justify-center items-center bg-sky-500 -mt-3 left-0 -ml-1">
+                  {unSeenChatsCount}
+                </div>
+              )}
             </div>
             <div
               className="flex-1 flex items-center justify-between cursor-pointer"
