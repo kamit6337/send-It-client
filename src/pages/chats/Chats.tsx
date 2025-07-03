@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useMemo } from "react";
-import { useSelector } from "react-redux";
-import { roomState } from "@/redux/slice/roomSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { roomState, setActiveRoom } from "@/redux/slice/roomSlice";
 import { PARAMS, ROOM } from "@/types";
 import useLoginCheck from "@/hooks/auth/useLoginCheck";
 import useUserRooms from "@/hooks/rooms/useUserRooms";
@@ -10,6 +10,7 @@ import ChatMessages from "@/components/chat/ChatMessages";
 import { Helmet } from "react-helmet";
 
 const Chats = () => {
+  const dispatch = useDispatch();
   const { id } = useParams<PARAMS>();
   const navigate = useNavigate();
   const { activeRoom } = useSelector(roomState);
@@ -21,6 +22,8 @@ const Chats = () => {
 
     if (!findRoom) {
       navigate("/messages");
+    } else {
+      dispatch(setActiveRoom(findRoom));
     }
   }, [id, rooms, navigate]);
 

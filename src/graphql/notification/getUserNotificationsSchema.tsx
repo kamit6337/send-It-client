@@ -31,6 +31,8 @@ const getUserNotificationsSchema = gql`
       room {
         _id
       }
+      createdAt
+      updatedAt
     }
   }
 `;

@@ -14,6 +14,8 @@ const useNotification = (socket: Socket) => {
     if (!socket) return;
 
     const handleNewNotification = (data: NOTIFICATION) => {
+      console.log("notification", data);
+
       const checkStatus = queryClient.getQueryState(["user notification"]);
 
       if (checkStatus?.status === "success") {
@@ -26,6 +28,8 @@ const useNotification = (socket: Socket) => {
     };
 
     const handleNotificationCount = (data: number) => {
+      console.log("notification count", data);
+
       const checkStatus = queryClient.getQueryState(["notification count"]);
 
       if (checkStatus?.status === "success") {

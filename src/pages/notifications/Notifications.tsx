@@ -140,10 +140,8 @@ const Notifications = () => {
             </div>
           )}
         </div>
-        <div
-          ref={hasNextPage && !isFetchingNextPage ? ref : null}
-          className="h-96"
-        />
+        {hasNextPage && !isFetchingNextPage && <div ref={ref} />}
+        <div className="h-96" />
         {isFetchingNextPage && <div>Loading ...</div>}
       </div>
     </>

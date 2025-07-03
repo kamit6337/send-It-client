@@ -2,7 +2,7 @@ import ReactIcons from "@/assets/icons";
 import { useRef, useState } from "react";
 import useDebounce from "@/hooks/general/useDebounce";
 import useUserSearch from "@/hooks/user/useUserSearch";
-import { USER } from "@/types";
+import { ROOM, USER } from "@/types";
 import getGraphql from "@/utils/api/graphql";
 import createNewRoomSchema, {
   createNewRoomDataQuery,
@@ -11,8 +11,13 @@ import Toastify from "@/lib/Toastify";
 import { DialogClose, DialogContent } from "../ui/dialog";
 import { useDispatch } from "react-redux";
 import { setActiveRoom } from "@/redux/slice/roomSlice";
+import useUserRooms from "@/hooks/rooms/useUserRooms";
+import { useNavigate } from "react-router-dom";
 
 const SelectMessageUser = () => {
+  const navigate = useNavigate();
+  const { data } = useUserRooms(true);
+  const rooms = data as ROOM[];
   const dispatch = useDispatch();
   const closeRef = useRef<HTMLButtonElement>(null);
   const [isFocused, setIsFocused] = useState(false);
@@ -42,7 +47,7 @@ const SelectMessageUser = () => {
     try {
       setIsPending(true);
 
-      const response = await getGraphql(
+      const response: string = await getGraphql(
         createNewRoomSchema,
         createNewRoomDataQuery,
         {
@@ -50,7 +55,14 @@ const SelectMessageUser = () => {
         }
       );
 
-      dispatch(setActiveRoom(response));
+      const findRoom =
+        rooms.length > 0 ? rooms.find((room) => room._id === response) : null;
+
+      if (findRoom) {
+        dispatch(setActiveRoom(findRoom));
+      } else {
+        navigate(`/messages/${response}`);
+      }
 
       handleClose();
       setInput("");

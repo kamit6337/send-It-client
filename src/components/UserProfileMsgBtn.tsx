@@ -18,8 +18,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import createNewRoomSchema, {
   createNewRoomDataQuery,
 } from "@/graphql/room/createNewRoomSchema";
-import { useDispatch } from "react-redux";
-import { setActiveRoom } from "@/redux/slice/roomSlice";
 import { useNavigate } from "react-router-dom";
 
 type Props = {
@@ -31,7 +29,6 @@ type CheckboxType = "anyone" | "followers" | "followings" | "no_one";
 
 const UserProfileMsgBtn = ({ user, actualUser }: Props) => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const queryClient = useQueryClient();
   const { showAlertMessage, showErrorMessage } = Toastify();
   const [checkSelected, setCheckSelected] = useState<CheckboxType>(
@@ -85,7 +82,7 @@ const UserProfileMsgBtn = ({ user, actualUser }: Props) => {
     try {
       setIsPending(true);
 
-      const response: ROOM = await getGraphql(
+      const response: string = await getGraphql(
         createNewRoomSchema,
         createNewRoomDataQuery,
         {
@@ -93,9 +90,10 @@ const UserProfileMsgBtn = ({ user, actualUser }: Props) => {
         }
       );
 
-      dispatch(setActiveRoom(response));
+      console.log("response", response);
+
+      navigate(`/messages/${response}`);
       closeRef.current?.click();
-      navigate(`/messages/${response._id}`);
     } catch (error) {
       showErrorMessage({
         message:

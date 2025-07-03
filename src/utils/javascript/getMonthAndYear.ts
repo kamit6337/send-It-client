@@ -2,7 +2,8 @@ const getMonthAndYear = (dateString: string) => {
   const date = new Date(dateString);
 
   const monthAndYear = date.toLocaleDateString("en-US", {
-    month: "long",
+    day: "2-digit",
+    month: "short",
     year: "numeric",
   });
 

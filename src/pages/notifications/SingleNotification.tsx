@@ -19,7 +19,7 @@ const SingleNotification = ({ notification, isVisible }: Props) => {
     threshold: 0.1,
   });
 
-  const { _id: notificationID, post, type, isRead } = notification;
+  const { _id: notificationID, post, type, isRead, room } = notification;
 
   useEffect(() => {
     if (inView && notificationID && !isRead) {
@@ -53,12 +53,26 @@ const SingleNotification = ({ notification, isVisible }: Props) => {
     );
   }
 
-  if (type === "follower") {
+  if (type === "follower" || type === "unfollow") {
     return (
       <div
         ref={ref}
         className="border-b py-2 px-5 space-y-5 hover:bg-post_hover_bg cursor-pointer"
-        onClick={() => navigate(`/${actualUser.email}/follower`)}
+        onClick={() =>
+          type === "follower" ? navigate(`/${actualUser.email}/follower`) : ""
+        }
+      >
+        <UpperPortion notification={notification} />
+      </div>
+    );
+  }
+
+  if (type === "message" && room) {
+    return (
+      <div
+        ref={ref}
+        className="border-b py-2 px-5 space-y-5 hover:bg-post_hover_bg cursor-pointer"
+        onClick={() => navigate(`/messages/${room._id}`)}
       >
         <UpperPortion notification={notification} />
       </div>

@@ -1,4 +1,4 @@
-type TYPE = "like" | "reply" | "follower" | "message";
+type TYPE = "like" | "reply" | "follower" | "unfollow" | "message";
 
 export type NOTIFICATION = {
   _id: string;
@@ -10,6 +10,8 @@ export type NOTIFICATION = {
   isRead: boolean;
   post?: POST;
   room?: ROOM;
+  createdAt: string;
+  updatedAt: string;
 };
 
 export type PARAMS = {

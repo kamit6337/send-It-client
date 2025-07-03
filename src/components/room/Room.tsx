@@ -27,7 +27,7 @@ type Props = {
 
 const Room = ({ room, handleNavigate, showDeleteRoom }: Props) => {
   const navigate = useNavigate();
-  const { _id, users, unSeenChatsCount = 10 } = room;
+  const { _id, users, unSeenChatsCount } = room;
   const { data: actualUser } = useLoginCheck();
   const { pathname } = useLocation();
   const { showErrorMessage, showSuccessMessage } = Toastify();
